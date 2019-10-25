@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Hello World!</title>
+</head>
+<link rel="stylesheet" href="assets/css/reset.css">
+<link rel="stylesheet" href="assets/css/login.css">
+<link rel="stylesheet" href="assets/css/index.css">
+<link rel="import" href="html/email.html">
+<style>
+    html,
+    body {
+        width: 100%;
+        height: 100%;
+        border-radius: 5px;
+        box-sizing: border-box;
+        overflow: hidden;
+    }
+    
+</style>
+
+<body>
+    <div id="logBox" class="logBoxStyle">
+        <header class="loginHeader">
+            <img class="logo" src="assets/img/logo.png" />
+        </header>
+        <section class="loginSection">
+            <button class="ImportBtn ImportBtnAccount">导入账户</button>
+            <div style="display: none;">
+                <canvas id="logBoxCanvas" width="400" height="400"></canvas>
+                <input id="upload" name="file" accept="image/*" type="file" />
+            </div>
+        </section>
+        <footer class="loginFooter">
+            <p class="footerp1">导入Private Key QR Cod</p>
+            <p class="footerp2">Mac Confidant 需要导入你的手机 Confidant 私钥二维码</p>
+        </footer>
+    </div>
+    <div id="logBoxA" class="logBoxStyle">
+        <header class="loginHeader">
+            <img class="logo" src="assets/img/logo.png" style="margin-top:47px;" />
+            <p class="helloP">
+                Hello Alejandro
+            </p>
+            <p class="helloP">
+                Welcome back!
+            </p>
+        </header>
+        <section class="loginSection">
+            <button class="ImportBtn ImportBtnCircle">导入圈子</button>
+            <div style="display: none;">
+                <canvas id="logBoxCanvasA" width="400" height="400"></canvas>
+                <input id="uploadA" name="file" accept="image/*" type="file" />
+            </div>
+        </section>
+        <footer class="loginFooter">
+            <p class="footerp1">导入Private Key QR Cod</p>
+            <p class="footerp2">Mac Confidant 需要导入你的手机 Confidant 私钥二维码</p>
+            <p class="footerp3">
+                <span class="footerQuit">退出登录</span>
+            </p>
+        </footer>
+    </div>
+    <div id="logBoxB" class="logBoxStyle">
+        <header class="loginHeader">
+            <img class="logo" src="assets/img/logo.png" style="margin-top:47px;" />
+            <p class="helloP">
+                Hello Alejandro
+            </p>
+            <p class="helloP">
+                Welcome back!
+            </p>
+        </header>
+        <section class="loginSection">
+            <div class="mt">
+                MT’s Power Station
+                <span class="mt-tabbar_arrow_lower">
+                    <img src="assets/img/tabbar_arrow_lower.png">
+                </span>
+            </div>
+
+            <button class="ImportBtn ImportBtnLogin" style="margin-top:38px;">Login</button>
+        </section>
+        <footer class="loginFooter">
+            <p class="footerp3">
+                <span class="footerQuit">退出登录</span>
+                <span class="footerImpor">导入圈子</span>
+            </p>
+        </footer>
+    </div>
+
+    <div id="logBoxC" class="logBoxStyle content"></div>
+
+
+</body>
+
+<script>window.$ = window.jQuery = require('jquery');</script>
+<link rel="stylesheet" href="assets/js/selectmenu/selectmenu.css" />
+<script src='assets/js/selectmenu/selectmenu.min.js'></script>
+<script src='assets/js/utils/base.js'></script>
+<script src='assets/js/section/mailos.js'></script>
+<script src='assets/js/section/index.js'></script>
+
+<script src='assets/js/section/email.js'></script>
+<script>
+   
+
+</script>
+
+</html>

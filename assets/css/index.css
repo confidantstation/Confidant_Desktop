@@ -1,0 +1,486 @@
+.nomail {
+    margin-top: 28px;
+    font-size: 12px;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: rgba(148, 150, 161, 1);
+    line-height: 17px;
+    text-align: center;
+}
+
+.mini-dialog-header {
+    background: rgba(242, 242, 242, 1);
+    box-shadow: 0px 1px 0px 0px rgba(230, 230, 230, 1);
+    text-align: center;
+}
+
+.index {
+    width: 960px;
+    float: left;
+    height: 100%;
+    background: #E6E6E6;
+}
+
+#menu .userLogo {
+    margin-top: 60px;
+}
+
+#menu {
+    width: 70px;
+    float: left;
+    height: 100%;
+    background: #1E1E24;
+}
+
+#menu header {
+    width: 100%;
+    height: 130px;
+    text-align: center;
+}
+
+#menu section {
+    width: 100%;
+    height: 420px;
+}
+
+#menu footer {
+    width: 100%;
+    height: 80px;
+    text-align: center;
+}
+.settingImg{
+    width:24px;
+    height: 24px;
+}
+
+.nav {
+    width: 100%;
+    height: 180px;
+    display: flex;
+    flex-direction: column;
+}
+
+.nav li {
+    width: 100%;
+    flex: 1;
+    text-align: center;
+}
+
+#new-emall {
+    width: 200px;
+    height: 100%;
+    float: left;
+    z-index: 999;
+    background: #E6E6E6;
+}
+
+#new-emall header {
+    width: 200px;
+    height: 48px;
+    background: rgba(245, 246, 247, 1);
+    box-shadow: 0px 1px 0px 0px rgba(230, 230, 230, 1);
+    text-align: center;
+    line-height: 24px;
+}
+
+#new-emall section {}
+
+#new-emall footer {
+    margin-top: 9px;
+}
+
+#list-emall {
+    width: 310px;
+    height: 100%;
+    background: #fff;
+    float: left;
+    z-index: 999;
+}
+
+#inbox-emall {
+    width: 450px;
+    height: 100%;
+    float: left;
+    z-index: 999;
+    background: rgba(245, 246, 247, 1);
+
+}
+
+.newTag {
+    width: 24px;
+    height: 24px;
+}
+
+.userLogo {
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+
+.emall-card {
+    width: 100%;
+    height: 100%;
+    background: rgba(245, 246, 247, 1);
+}
+
+.emall-card li {
+    width: 100%;
+    display: flex;
+    height: 40px;
+    border-bottom: 1px solid #E6E6E6;
+    box-sizing: border-box;
+    font-size: 12px;
+}
+
+.jusCenter {
+    align-items: center;
+    justify-content: center;
+    display: flex;
+}
+
+.new-email {
+    width: 177px;
+    height: 32px;
+    background: rgba(255, 255, 255, 1);
+    border-radius: 6px;
+    border: 1px solid rgba(230, 230, 230, 1);
+}
+
+.new-email .newTag {
+    position: relative;
+    top: 6px;
+}
+
+.spanA,
+.spanC {
+    text-align: center;
+}
+
+.spanA {
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    padding: 0 6px;
+}
+
+.spanB {
+    flex: 128px;
+    line-height: 40px;
+}
+
+.spanC {
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+}
+
+.spanC img {
+    width: 11px;
+    height: 8px;
+}
+
+.list-search {
+    width: 286px;
+    height: 32px;
+    background: #F5F6F7;
+    overflow: hidden;
+}
+
+#list-emall header {
+    width: 310px;
+    height: 48px;
+}
+
+.list-search input {
+    margin-left: 4%;
+    width: 96%;
+    height: 32px;
+    background: #F5F6F7;
+    border: 0;
+}
+
+.list-emallDiv {
+    width: 310px;
+    height: 80px;
+    background: rgba(230, 230, 230, 1);
+    box-shadow: 0px 0px 0px 0px rgba(230, 230, 230, 1);
+    display: flex;
+    border-bottom: 1px solid #e6e6e6;
+}
+
+.list-emallDiv:nth-of-type(even) {
+    background: #FFFFFF;
+}
+
+.emallDivA {
+    flex: 1;
+    height: 100%;
+}
+
+.emallDivB {
+    font-size: 14px;
+    flex: 3;
+    line-height: 20px;
+}
+
+.font12 {
+    font-size: 12px;
+    line-height: 14px;
+}
+
+.emallDivA .userLogo {
+    width: 44px;
+    height: 44px;
+}
+
+.emallDivB p:first-child {
+    margin-top: 18px;
+}
+
+#inbox-emall header {
+    float: left;
+    width: 100%;
+    height: 48px;
+    background: rgba(245, 246, 247, 1);
+    box-shadow: 0px 1px 0px 0px rgba(230, 230, 230, 1);
+    line-height: 24px;
+    display: flex;
+}
+
+
+.inboxEmallA {
+    line-height: 48px;
+    text-indent: 1em;
+    flex: 2;
+}
+
+.inboxEmallB {
+    line-height: 60px;
+    text-align: right;
+    margin-right: 12px;
+    flex: 1;
+}
+
+#inbox-emall section {
+    float: left;
+    width: 100%;
+    height: 504px;
+}
+
+#inbox-emall footer {
+    width: 100%;
+    height: 40px;
+    float: left;
+    position: relative;
+    top: 7px;
+    text-align: right;
+}
+
+.inbox-content {
+    position: relative;
+    top: 7px;
+    width: 435px;
+    height: 504px;
+    background: rgba(255, 255, 255, 1);
+    border-radius: 2px;
+    border: 1px solid rgba(232, 231, 233, 1);
+    overflow-x: hidden;
+    overflow-y:auto;
+}
+
+.inboxBtn {
+    width: 100px;
+    height: 28px;
+    background: rgba(102, 70, 247, 1);
+    border-radius: 5px;
+    color: #fff;
+}
+
+.inboxBtnA {
+    width: 100px;
+    height: 28px;
+    background: rgba(255, 255, 255, 1);
+    border-radius: 5px;
+    border: 1px solid rgba(204, 204, 204, 1);
+}
+
+#inbox-emall footer button {
+    margin: 6px;
+}
+
+.list-search input {
+    background: url(../img/Search/statusbar_search_n.png) no-repeat left center;
+    text-indent: 2em;
+}
+
+section .emall-card .newTag {
+    width: 20px;
+    height: 20px;
+}
+
+footer .emall-card .newTag {
+    width: 14px;
+    height: 14px;
+}
+
+.time {
+    float: right;
+    transform: scale(0.8);
+    margin-right: 5px;
+    color: #9B9B9B;
+}
+
+.annex {
+    float: right;
+    color: rgba(74, 74, 74, 1);
+    height: 14px;
+    width: 30px;
+    display: table-cell;
+    transform: scale(0.8)
+}
+
+.annex em {
+    position: relative;
+    top: -3px;
+}
+
+.newAccountBtn {
+    width: 120px;
+    height: 29px;
+    background: rgba(255, 255, 255, 1);
+    border-radius: 4px;
+    border: 1px solid rgba(230, 230, 230, 1);
+    margin-top: 15px;
+}
+
+.newAccount {
+    width: 340px;
+
+    box-sizing: border-box;
+}
+
+.newAccountDiv {
+
+    width: 340px;
+    box-sizing: border-box;
+    height: auto;
+    position: absolute;
+    top: 30px;
+    left: 30%;
+    box-shadow: 0px 4px 18px 0px rgba(43, 43, 51, 0.34);
+    border-radius: 5px;
+    overflow: hidden;
+    font-size: 14px;
+}
+
+.newAccountHead {
+    width: 340px;
+    height: 48px;
+    background: rgba(242, 242, 242, 1);
+    text-align: center;
+    line-height: 48px;
+
+}
+
+.newAccountFooter {
+    width: 100%;
+    height: 48px;
+    line-height: 48px;
+    text-align: right;
+    background: rgba(242, 242, 242, 1);
+
+}
+
+.newAccountCancel {
+    width: 70px;
+    height: 20px;
+    background: rgba(255, 255, 255, 1);
+    border-radius: 4px;
+    border: 1px solid rgba(230, 230, 230, 1);
+    font-size: 14px;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: rgba(30, 30, 36, 1);
+    line-height: 20px;
+
+    margin-right: 42px;
+}
+
+.newAccountList {
+    width: 340px;
+    display: flex;
+    background: #fff;
+    min-height: 30px;
+}
+
+.newAccount .ia {
+    width: 66px;
+    display: block;
+    text-align: right;
+    height: 48px;
+    line-height: 48px;
+    margin-right: 15px;
+}
+
+#imap .ia {
+    width: 120px;
+    text-align: left;
+    padding-left: 30px;
+    box-sizing: border-box;
+    background: rgba(245, 246, 247, 1);
+}
+
+.newAccount .ia img {
+    position: relative;
+    top: 8px;
+
+}
+
+.newAccount .ib {
+    flex: 1;
+    display: block;
+    height: 48px;
+    line-height: 48px;
+
+
+}
+
+#imap .ib {
+    border-bottom: 0px solid #e6e6e6;
+
+}
+
+.newAccountTxt {
+    margin: 15px 0 5px 30px;
+
+}
+
+#imap .newAccountList {
+    background: #F5F6F7;
+}
+
+.mailLogin {
+    width: 300px;
+    height: 400px;
+    background: rgba(245, 246, 247, 1);
+    box-shadow: 0px 4px 18px 0px rgba(30, 30, 36, 0.2);
+    border-radius: 8px;
+    position: absolute;
+    top:50px;
+    left:30%;
+}
+.mailLoginInput{
+    width:240px;
+height:38px;
+background:rgba(255,255,255,1);
+border-radius:4px;
+border:1px solid rgba(230,230,230,1);
+}
+.mailLoginBtn{
+    width:240px;
+    height:44px;
+    background:rgba(102,70,247,1);
+    border-radius:7px;
+}

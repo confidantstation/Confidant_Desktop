@@ -1,0 +1,41 @@
+{
+  "name": "chat",
+  "version": "1.0.0",
+  "main": "main.js",
+  "description": "",
+  "build": {
+    "appId": "com.xxx.app",
+    "mac": {
+      "target": [
+        "dmg",
+        "zip"
+      ]
+    },
+    "win": {
+      "target": [
+        "nsis",
+        "zip"
+      ]
+    }
+  },
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --win --x64"
+  },
+  "author": "chenjun",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^6.0.10",
+    "electron-builder": "^21.2.0"
+  },
+  "dependencies": {
+    "crypto-js": "^3.1.9-1",
+    "electron-settings": "^3.2.0",
+    "imap": "^0.8.19",
+    "jquery": "^3.4.1",
+    "jsqr": "^1.2.0",
+    "libsodium-wrappers": "^0.7.6",
+    "mailparser": "^2.7.1",
+    "moment": "^2.24.0"
+  }
+}

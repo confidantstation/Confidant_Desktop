@@ -1,0 +1,133 @@
+#logBoxA,#logBoxB,#logBoxC{
+    display: none;
+}
+#logBoxC{
+    border:2px solid rgba(168,168,168,0.25);
+    overflow: hidden;
+    text-align: left;
+}
+.logBoxStyle {
+    background: #fff;
+    width:1032px;
+    height: 600px;
+
+}
+#inbox-emall .inbox-content table{
+    width:100%;
+}
+
+.loginHeader {
+    width: 100%;
+    height: 204px;
+    text-align: center;
+}
+
+.loginSection {
+    text-align: center;
+}
+
+.loginFooter {
+    text-align: center;
+}
+
+.loginHeader .logo {
+    margin-top: 92px;
+}
+
+.ImportBtn {
+    width: 240px;
+    height: 42px;
+    background: rgba(102, 70, 247, 1);
+    border-radius: 8px;
+    font-size: 18px;
+    font-family: 'PingFangSC-Medium,PingFang SC';
+    font-weight: 500;
+    color: rgba(255, 255, 255, 1);
+}
+
+.footerp1 {
+    height: 20px;
+    font-size: 14px;
+    font-family: 'PingFangSC-Medium, PingFang SC';
+    font-weight: 500;
+    color: rgba(30, 30, 36, 1);
+    line-height: 20px;
+    text-align: center;
+    margin-top: 26px;
+}
+
+.footerp2 {
+    width: 240px;
+    height: 34px;
+    font-size: 12px;
+    font-family: 'PingFangSC-Regular, PingFang SC';
+    font-weight: 400;
+    color: rgba(153, 153, 153, 1);
+    line-height: 17px;
+    text-align: center;
+    display: inline-table;
+    margin-top: 8px;
+}
+
+.footerp3 {
+    margin: 24px 0 0 30px;
+    text-align: left;
+    font-size: 14px;
+    font-family: 'PingFangSC-Regular, PingFang SC';
+    font-weight: 500;
+    color: rgba(128, 128, 128, 1);
+    line-height: 20px;
+}
+.footerImpor{
+    float: right;
+    margin-right: 30px;
+    display: none;
+}
+
+.helloP {
+    font-size: 20px;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: rgba(77, 77, 77, 1);
+    line-height: 28px;
+}
+
+
+/* 导入圈子，下拉菜单组件*/
+.mt{
+background: url("../img/sign_email_circle.png") no-repeat;
+width:240px;
+height:30px;
+border-bottom: 2px solid #e6e6e6;
+display:inline-table;
+line-height: 26px;
+margin-bottom: 10px;
+}
+.mt-tabbar_arrow_lower{
+    float: right;
+    margin-right:2px;
+}
+.mt-select{
+    display: none;
+    position:absolute;
+    left:30px;
+    background: #fff;
+    box-shadow: 10px 10px 5px #f8f8f8;
+    border-radius: 5px;
+    width:240px;
+    height: 150px;
+    overflow-y:auto;
+}
+.mt-select li{
+    padding:8px 5px;
+    color: #1E1E24;
+}
+.mt-gray{
+    color: #EFEFF2;
+}
+#box{
+    width:100%;
+    height: 100%;
+    background: #666;
+    display: none;
+}
