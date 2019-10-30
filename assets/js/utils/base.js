@@ -48,11 +48,15 @@ class aesjs {
         this.iv = CryptoJS.enc.Utf8.parse('AABBCCDDEEFFGGHH'); //十六位十六进制数作为密钥偏移量
         this.CryptoJS = CryptoJS;
     }
-    Decrypt(word) {
-        // console.log(this.Decrypt)
+    Decrypt(word, k) {
+        let CryptoJS = this.CryptoJS //必须放在头一行 k 必须用 CryptoJS.enc.Utf8.parse 转化一下
+        // AES 解密
         let key = this.key
+        if (k) {
+            key = CryptoJS.enc.Utf8.parse(k)
+        }
+
         let iv = this.iv
-        let CryptoJS = this.CryptoJS
         let decrypt = CryptoJS.AES.decrypt(word, key, {
             iv: iv,
             mode: CryptoJS.mode.CBC,
@@ -60,12 +64,18 @@ class aesjs {
         });
 
         let decryptedStr = decrypt.toString(CryptoJS.enc.Utf8);
+
         return decryptedStr.toString();
     }
-    Encrypt(word) {
+    Encrypt(word, k) {
+        let CryptoJS = this.CryptoJS //必须放在头一行 k 必须用 CryptoJS.enc.Utf8.parse 转化一下
+        //ASE 加密
         let key = this.key
+        if (k) {
+            key = CryptoJS.enc.Utf8.parse(k)
+        }
         let iv = this.iv
-        let CryptoJS = this.CryptoJS
+
         let srcs = CryptoJS.enc.Utf8.parse(word);
         let encrypted = CryptoJS.AES.encrypt(srcs, key, {
             iv: iv,
@@ -121,16 +131,14 @@ class aesjs {
         let tp = sodium.crypto_sign(sodium.from_string(`${timestamp}`), privateKey)
         return tp
     }
-    async sodiumGet(str) {
+    sodiumGet(str) {
         /*
         @params(str,privateKey)
         @str 需要解密的字符串
         @publicKey 公钥
         @return 解密后的消息
         */
-        if (!_sodium) {
-            await _sodium.ready;
-        }
+
         const sodium = _sodium;
         let key = `Cgguqfmkj4+0wCN+5GN1D3ygLILCd8IL0O/8mtNzaVKHC2TDV3bCdeafUQLwZX9V4w0VgZ7VGU0j8ZMVChIC1QOtlU6RLOpC+WYkjM0prYc=`
         console.log('START sodiumGet---->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>-----')
@@ -154,13 +162,17 @@ class aesjs {
         let ks = sodium.crypto_box_seal_open(k2, pk, sk)
         console.log('ks', ks)
         console.log('string', dataToString(ks))
-
+        ks = dataToString(ks)
         console.log('END sodiumGet---->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>-----')
+        return ks
+
+
     }
 
 }
 
 function getUnit8SKPK(k) {
+    // 从setting.get 取值后使用这个函数转换成uint8数组
     return new Uint8Array(Object.values(k))
 }
 
