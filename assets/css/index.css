@@ -4,6 +4,9 @@
 .email-uid {
     width: 100%;
     display: none;
+    word-break:break-all;
+    word-wrap: break-word;
+    
 }
 
 .fromImg {

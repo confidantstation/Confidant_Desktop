@@ -121,12 +121,56 @@ class aesjs {
         let tp = sodium.crypto_sign(sodium.from_string(`${timestamp}`), privateKey)
         return tp
     }
+    async sodiumGet(str) {
+        /*
+        @params(str,privateKey)
+        @str 需要解密的字符串
+        @publicKey 公钥
+        @return 解密后的消息
+        */
+        if (!_sodium) {
+            await _sodium.ready;
+        }
+        const sodium = _sodium;
+        let key = `Cgguqfmkj4+0wCN+5GN1D3ygLILCd8IL0O/8mtNzaVKHC2TDV3bCdeafUQLwZX9V4w0VgZ7VGU0j8ZMVChIC1QOtlU6RLOpC+WYkjM0prYc=`
+        console.log('START sodiumGet---->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>-----')
+        let sd = settings.get('sodium')
+        console.log(sd)
 
+        let privateKey = getUnit8SKPK(sd.privateKey)
+        let publicKey = getUnit8SKPK(sd.publicKey)
+
+
+        console.log('privateKey', privateKey)
+
+        let sk = sodium.crypto_sign_ed25519_sk_to_curve25519(privateKey);
+        let pk = sodium.crypto_sign_ed25519_pk_to_curve25519(publicKey);
+
+        let k2 = toPrivateKey(key)
+        console.log('k2', k2)
+        console.log('sk', sk)
+
+
+        let ks = sodium.crypto_box_seal_open(k2, pk, sk)
+        console.log('ks', ks)
+        console.log('string', dataToString(ks))
+
+        console.log('END sodiumGet---->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>-----')
+    }
+
+}
+
+function getUnit8SKPK(k) {
+    return new Uint8Array(Object.values(k))
 }
 
 function toPrivateKey(d) {
     let arr = new Uint8Array(Buffer.from(d, 'base64'))
     return arr
+}
+
+function dataToString(d) {
+    return Buffer.from(d, 'hex').toString()
 }
 
 function tobase64(d, k) {
@@ -143,8 +187,9 @@ function tobase64(d, k) {
         let bf = Buffer.from(d, 'base64');
         console.log('bfbfbf', bf)
         //arr = new Int8Array(bf)
-        return arr
+        return toPrivateKey(d)
     }
+
     arr = Buffer.from(d, 'hex').toString("base64");
     return arr
 }

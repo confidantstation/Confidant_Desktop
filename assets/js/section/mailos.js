@@ -298,8 +298,19 @@ function getMailUid(uid) {
 //控制邮箱如果显示，及以取内容前32个字符
 function getHtmlText(str, uid) {
     let html
-    if (str.indexOf('newconfidant') > 0) {
-
+    if (str.html&&str.html.indexOf('newconfidant') > 0) {
+        html = str.html
+        str = str.html
+        console.log('html-=-=-=-==')
+        console.log(html)
+        let n = html.indexOf('<span')
+        let strAes = html.substr(0,n)
+        console.log(strAes)
+        WinAES.sodiumGet(strAes)
+     
+        console.log(str)
+       
+        console.log('END sodiumGet---->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>-----')
     } else {
         if (str.html) {
             str = str.html
@@ -310,7 +321,7 @@ function getHtmlText(str, uid) {
         };
 
     }
-
+    
     $('.inbox-content').append(`<div class="email-uid" uid="${uid}">${str}</div>`);
 
     html = html.replace(/\s+/g, ' ');
