@@ -271,8 +271,8 @@
                  if (data.retcode == 225) {
                      $('#logBoxB').hide();
                      $('#logBoxC').show()
-                     //remote.getCurrentWindow().setSize(1032, 600)
-                     remote.getCurrentWindow().maximize()
+                     remote.getCurrentWindow().setSize(1032, 600)
+                     //remote.getCurrentWindow().maximize()
                      remote.getCurrentWindow().center()
                    
                      settings.set('status','login');

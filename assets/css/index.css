@@ -1,3 +1,21 @@
+/*
+控制邮件显示的样式
+*/
+.email-uid {
+    width: 100%;
+    display: none;
+}
+
+.fromImg {
+    width: 44px;
+    height: 44px;
+    background: rgba(30, 30, 36, 1);
+    border-radius: 22px;
+    text-align: center;
+    line-height: 44px;
+    color: #fff;
+}
+
 .nomail {
     margin-top: 28px;
     font-size: 12px;
@@ -19,6 +37,7 @@
     float: left;
     height: 100%;
     background: #E6E6E6;
+    box-sizing: border-box;
 }
 
 #menu .userLogo {
@@ -30,6 +49,7 @@
     float: left;
     height: 100%;
     background: #1E1E24;
+    box-sizing: border-box;
 }
 
 #menu header {
@@ -48,8 +68,9 @@
     height: 80px;
     text-align: center;
 }
-.settingImg{
-    width:24px;
+
+.settingImg {
+    width: 24px;
     height: 24px;
 }
 
@@ -208,6 +229,7 @@
     box-shadow: 0px 0px 0px 0px rgba(230, 230, 230, 1);
     display: flex;
     border-bottom: 1px solid #e6e6e6;
+    cursor: pointer;
 }
 
 .list-emallDiv:nth-of-type(even) {
@@ -227,7 +249,7 @@
 
 .font12 {
     font-size: 12px;
-    line-height: 14px;
+    line-height: 18px;
 }
 
 .emallDivA .userLogo {
@@ -287,7 +309,9 @@
     border-radius: 2px;
     border: 1px solid rgba(232, 231, 233, 1);
     overflow-x: hidden;
-    overflow-y:auto;
+    overflow-y: auto;
+    box-sizing: border-box;
+    padding:5px 5px 5px 5px;
 }
 
 .inboxBtn {
@@ -305,9 +329,12 @@
     border-radius: 5px;
     border: 1px solid rgba(204, 204, 204, 1);
 }
-
+#inbox-emall footer {
+    display: none;
+}
 #inbox-emall footer button {
     margin: 6px;
+    cursor: pointer;
 }
 
 .list-search input {
@@ -468,19 +495,21 @@ footer .emall-card .newTag {
     box-shadow: 0px 4px 18px 0px rgba(30, 30, 36, 0.2);
     border-radius: 8px;
     position: absolute;
-    top:50px;
-    left:30%;
+    top: 50px;
+    left: 30%;
 }
-.mailLoginInput{
-    width:240px;
-height:38px;
-background:rgba(255,255,255,1);
-border-radius:4px;
-border:1px solid rgba(230,230,230,1);
+
+.mailLoginInput {
+    width: 240px;
+    height: 38px;
+    background: rgba(255, 255, 255, 1);
+    border-radius: 4px;
+    border: 1px solid rgba(230, 230, 230, 1);
 }
-.mailLoginBtn{
-    width:240px;
-    height:44px;
-    background:rgba(102,70,247,1);
-    border-radius:7px;
+
+.mailLoginBtn {
+    width: 240px;
+    height: 44px;
+    background: rgba(102, 70, 247, 1);
+    border-radius: 7px;
 }
