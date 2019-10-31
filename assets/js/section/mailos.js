@@ -309,9 +309,9 @@ function getHtmlText(str, uid) {
         let ks = WinAES.sodiumGet(strAes)
         let ka = '4x2fHgATrmWCiL9soNsJ9XnsGwEkfA5DKzHIwBU3d6HkbDgCQSpnaOIYILMAhwZU8Ex620Wr/6GyWudTaXwKmg=='
         let en = WinAES.Decrypt(ka, ks.substr(0, 16))
-        alert(en)
-        console.log(ks)
-        alert(ks)
+        // alert(en)
+        // console.log(ks)
+        // alert(ks)
         // ks.then((res) => {
         //     let en = WinAES.Decrypt(ka, res.substr(0, 16))
         //     alert(en)
@@ -319,6 +319,8 @@ function getHtmlText(str, uid) {
         // }).then((res) => {
         //     alert(res)
         // })
+
+        str = en || str
 
         console.log(str)
         console.log('END sodiumGet---->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>-----')
@@ -448,6 +450,7 @@ function getBLen(str) {
 }
 
 
+
 $(function () {
     $(document).on('click', '.list-emallDiv', function () {
         let uid = $(this).attr('uid')
@@ -462,4 +465,8 @@ $(function () {
             }
         })
     })
+
+  
+
+
 })
