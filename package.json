@@ -31,6 +31,7 @@
   "dependencies": {
     "crypto-js": "^3.1.9-1",
     "electron-settings": "^3.2.0",
+    "glob": "^7.1.5",
     "imap": "^0.8.19",
     "jquery": "^3.4.1",
     "jsqr": "^1.2.0",

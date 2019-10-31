@@ -3,6 +3,8 @@ const {
     BrowserWindow,
     Menu
 } = require('electron')
+const glob = require('glob')
+const path = require('path')
 app.commandLine.appendSwitch('ignore-certificate-errors')
 // 保持对window对象的全局引用，如果不这么做的话，当JavaScript对象被
 // 垃圾回收的时候，window对象将会自动的关闭
@@ -21,6 +23,8 @@ if (debug.log === 0) {
 //是否打开debug 调试
 // debug.log = 0
 
+//载入所有进程间通信的JS
+loadIpcMain()
 
 function createWindow() {
     // 创建浏览器窗口。
@@ -98,17 +102,27 @@ const getRemoteObject = (event) => {
 // 挂载方法到 app 模块上，供 remote 模块使用
 app.getRemoteObject = getRemoteObject;
 
-const {ipcMain, dialog} = require('electron')
+const {
+    ipcMain,
+    dialog
+} = require('electron')
 
 ipcMain.on('open-information-dialog', (event) => {
-  const options = {
-    type: 'info',
-    title: 'Information',
-    message: "This is an information dialog. Isn't it nice?",
-    buttons: ['Yes', 'No']
-  }
-  event.sender.send('information-dialog-selection', 'index')
-//   dialog.showMessageBox(options, (index) => {
-//     event.sender.send('information-dialog-selection', index)
-//   })
+    const options = {
+        type: 'info',
+        title: 'Information',
+        message: "This is an information dialog. Isn't it nice?",
+        buttons: ['Yes', 'No']
+    }
+    event.sender.send('information-dialog-selection', 'index')
+    //   dialog.showMessageBox(options, (index) => {
+    //     event.sender.send('information-dialog-selection', index)
+    //   })
 })
+
+function loadIpcMain() {
+    const files = glob.sync(path.join(__dirname, 'app/main-process/**/*.js'))
+    files.forEach((file) => {
+        require(file)
+    })
+}
