@@ -6,14 +6,14 @@ const {
 app.commandLine.appendSwitch('ignore-certificate-errors')
 // 保持对window对象的全局引用，如果不这么做的话，当JavaScript对象被
 // 垃圾回收的时候，window对象将会自动的关闭
-let win,debug
+let win, debug
 
 debug = {
-    log:1,
-    width:1300,
-    height:800,
+    log: 1,
+    width: 1300,
+    height: 800,
 }
-if(debug.log===0){
+if (debug.log === 0) {
     debug.width = 300;
     debug.height = 400;
 }
@@ -25,11 +25,11 @@ if(debug.log===0){
 function createWindow() {
     // 创建浏览器窗口。
     win = new BrowserWindow({
-        width:debug.width|| 300,
-        height:debug.height|| 400,
+        width: debug.width || 300,
+        height: debug.height || 400,
         frame: false,
         resizable: false,
-        setMovable:true,
+        setMovable: true,
         transparent: true,
         alwaysOnTop: false,
         webPreferences: {
@@ -43,11 +43,11 @@ function createWindow() {
     win.loadFile('index.html')
 
     // 打开开发者工具
-    if(debug.log){
+    if (debug.log) {
         win.maximize()
         win.webContents.openDevTools()
     }
-    
+
 
     // 当 window 被关闭，这个事件会被触发。
     win.on('closed', () => {
@@ -78,4 +78,37 @@ app.on('activate', () => {
     if (win === null) {
         createWindow()
     }
+})
+
+const remoteObj = {
+    name: '1st',
+};
+
+const getRemoteObject = (event) => {
+    // 一秒后修改 remoteObj.name 的值
+    // 并通知渲染进程重新打印一遍 remoteObj 对象
+    setTimeout(() => {
+        remoteObj.name = 'modified name';
+        win.webContents.send('modified');
+    }, 3000);
+
+    return remoteObj;
+}
+
+// 挂载方法到 app 模块上，供 remote 模块使用
+app.getRemoteObject = getRemoteObject;
+
+const {ipcMain, dialog} = require('electron')
+
+ipcMain.on('open-information-dialog', (event) => {
+  const options = {
+    type: 'info',
+    title: 'Information',
+    message: "This is an information dialog. Isn't it nice?",
+    buttons: ['Yes', 'No']
+  }
+  event.sender.send('information-dialog-selection', 'index')
+//   dialog.showMessageBox(options, (index) => {
+//     event.sender.send('information-dialog-selection', index)
+//   })
 })
