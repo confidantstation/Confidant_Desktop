@@ -102,23 +102,7 @@ const getRemoteObject = (event) => {
 // 挂载方法到 app 模块上，供 remote 模块使用
 app.getRemoteObject = getRemoteObject;
 
-const {
-    ipcMain,
-    dialog
-} = require('electron')
 
-ipcMain.on('open-information-dialog', (event) => {
-    const options = {
-        type: 'info',
-        title: 'Information',
-        message: "This is an information dialog. Isn't it nice?",
-        buttons: ['Yes', 'No']
-    }
-    event.sender.send('information-dialog-selection', 'index')
-    //   dialog.showMessageBox(options, (index) => {
-    //     event.sender.send('information-dialog-selection', index)
-    //   })
-})
 
 function loadIpcMain() {
     const files = glob.sync(path.join(__dirname, 'app/main-process/**/*.js'))
