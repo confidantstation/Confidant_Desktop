@@ -50,11 +50,11 @@
       </div>`
 
     function getNewconfidantkeyid(str) {
-      let len 
-      if (str.indexOf('newconfidantkey')===0) {
-         len = 'newconfidantkey'.length
-      }else if(str.indexOf('newconfidantuserid')===0){
-         len = 'newconfidantuserid'.length
+      let len
+      if (str.indexOf('newconfidantkey') === 0) {
+        len = 'newconfidantkey'.length
+      } else if (str.indexOf('newconfidantuserid') === 0) {
+        len = 'newconfidantuserid'.length
       }
       return str.substr(len)
     }
@@ -79,14 +79,30 @@
       let newconfidantkey = getNewconfidantkeyid(id1)
       let newconfidantuserid = getNewconfidantkeyid(id2)
 
-      let {emailName,sodiumKey} = splitNewconfidant(newconfidantkey)
-     
+      let { emailName, sodiumKey } = splitNewconfidant(newconfidantkey)
+
       return {
         newconfidantkey,
         newconfidantuserid,
         emailName,
         sodiumKey
       }
+    }
+
+    function toNewconfidantHtml(text, key, uid) {
+
+      /* 返回加密后的html
+      *
+      * @param  {text}       
+      * @param  {key} 
+      * @param  {uid} 
+      * @return {html}           
+      */
+      let html = `${text}
+    <span style='display:none' id='newconfidantkey${key}'></span>
+    <span style='display:none' id='newconfidantuserid${uid}'></span>
+    <div myconfidantbegin=''><br /><br /><br /><span>Sent from MyConfidant, the app for encrypted email.</span></div>`
+      return html
     }
 
     $('#SearchB').click(function () {
@@ -118,6 +134,10 @@
       console.log(html)
 
 
+
+
+      let n = randomPassword(16)
+      console.log('16位随机字符', n)
     })
   });
 </script>

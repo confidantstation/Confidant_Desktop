@@ -17,7 +17,7 @@ settings.set('msgid', settings.get('msgid') + 1)
 */
 // winWS 全局的ws
 window.winWS = ""
-let QRcode, CircleQRcode, WinASE
+let QRcode, CircleQRcode, WinAES
 //设置登录状态，方便之后的email.js 模块启动
 settings.set('status', 0);
 
@@ -114,7 +114,7 @@ $(function () {
                         console.log('USN', rd.USN)
                         console.log('USN', rd.USN.length)
 
-                        let wsdata = ASE.getserverip()
+                        ASE.getserverip()
                         let privateKey = toPrivateKey(QRcode[1])
                         let publicKey = privateKey.slice(-32);
                         publicKey = tobase64(publicKey)
@@ -126,6 +126,7 @@ $(function () {
                         settings.set('sodium', {
                             privateKey,
                             publicKey: toPrivateKey(publicKey),
+                           
                         })
                         let str = {
                             "Action": "Recovery",
@@ -198,6 +199,7 @@ $(function () {
                                 app1.params = str1
                                 console.log('app1----------------------', app1)
                                 settings.set('login', app1)
+                                settings.set('UserId', str1.UserId)
                                 ws.close();
                                 $('#logBoxA').hide();
                                 $('#logBoxB').show();
@@ -224,41 +226,13 @@ $(function () {
             }
         });
 
-    })
-    let menuData = [{
-            content: 'News Site',
-            header: true
-        }, //定义子标题栏
+    });
+    
 
-        {
-            content: 'MT’s Power Station',
-            callback: () => {}
-        },
-        {
-            content: 'MT’s Power Station1',
-            callback: () => {}
-        },
-        {
-            content: 'MT’s Power Station2',
-            callback: () => {}
-        },
-        {
-            content: 'MT’s Power Station',
-            callback: () => {}
-        },
-    ];
-
-    $('.mt').click(function () {
-
-        $(this).selectMenu({
-            //设置常规菜单模式
-            regular: true,
-            data: menuData
-        });
-    })
+    
     const {
         remote
-    } = require('electron')
+    } = require('electron');
     $('.ImportBtnLogin').click(function () {
         //选择圈子登录
         let app = settings.get('login')
@@ -274,15 +248,17 @@ $(function () {
         //alert("登录...");
 
         let data = settings.get('wsdata') || 0
-
+        
         if (data) {
             ws = new WebSocket(`wss://${data.ServerHost}:${data.ServerPort}`, "lws-minimal");
         } else {
             alert('wsdata 不存在！')
             ws = new WebSocket('wss://47.244.138.61:18006', "lws-minimal");
         }
-        ws.send(app);
-      
+
+        ws.onopen = function () {
+            ws.send(app);
+        }
         ws.onmessage = function (evt) {
             //alert('接收消息成功...')
             console.log('接收消息成功...', evt)
@@ -299,21 +275,20 @@ $(function () {
                 settings.set('status', 'login');
                 require('./assets/js/section/email.js');
 
-            } else {
-                alert('登录失败，请重新选择')
+            } 
+            if(data.params){
+                let params = data.params
+                if(params.Action ==="CheckmailUkey"){
+                    console.log('CheckmailUkey')
+                }
             }
+
         }
 
         ws.onclose = function () {
             // 关闭 websocket
             console.log('ws onclose')
         };
-
-
-
-
     })
-
-
 
 })

@@ -38,6 +38,24 @@ function request(url, options) {
         }));
 }
 
+function randomPassword(size, n) {
+    //生成随机数 位数为size 如果n值大于0则返回带大小写的随机数
+    var seed = new Array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+        'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'm', 'n', 'p', 'Q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+        '2', '3', '4', '5', '6', '7', '8', '9'
+    ); //数组
+    seedlength = seed.length; //数组长度
+    var createPassword = '';
+    for (i = 0; i < size; i++) {
+        j = Math.floor(Math.random() * seedlength);
+        createPassword += seed[j];
+    }
+    if (n) {
+        return createPassword
+    }
+    return createPassword.toLowerCase()
+}
+
 
 const CryptoJS = require('crypto-js');
 const _sodium = require('libsodium-wrappers');
@@ -116,7 +134,7 @@ class aesjs {
         }
         return ws
     }
-    async initSodium(){
+    async initSodium() {
         if (!_sodium) {
             await _sodium.ready;
         }
@@ -147,9 +165,9 @@ class aesjs {
         console.log(sd)
 
         let arr = toNewconfidantObj(str)
-      
+
         key = arr.sodiumKey[0]
-       
+
         let privateKey = getUnit8SKPK(sd.privateKey)
         let publicKey = getUnit8SKPK(sd.publicKey)
 
@@ -171,29 +189,77 @@ class aesjs {
         console.log('END sodiumGet---->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>-----')
         return ks
     }
+    crypto_sign_ed25519_sk_to_curve25519(privateKey) {
+        const sodium = _sodium;
+        let sk = sodium.crypto_sign_ed25519_sk_to_curve25519(privateKey);
+        return sk
+    }
+    crypto_sign_ed25519_pk_to_curve25519(publicKey) {
+        const sodium = _sodium;
+        let pk = sodium.crypto_sign_ed25519_pk_to_curve25519(publicKey);
+        return pk
+    }
+    crypto_box_seal(key, Pubkey) {
+        const sodium = _sodium;
+        let sd = settings.get('sodium')
+        let privateKey = getUnit8SKPK(sd.privateKey)
+        let publicKey = getUnit8SKPK(sd.publicKey)
+        let sk = sodium.crypto_sign_ed25519_sk_to_curve25519(privateKey);
+        let pk = sodium.crypto_sign_ed25519_pk_to_curve25519(publicKey);
+
+        let k = new Uint8Array(Buffer.from(key))
+        let ks = sodium.crypto_box_seal(k, pk)
+        return ks
+    }
+    crypto_box_seal_open(){
+        const sodium = _sodium;
+        let key = "jPWhxw36S+W425TgadLMnQDTiOmNOgwY4mxPZD5Mk7U="
+        console.log('START sodiumGet---->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>-----')
+        let sd = settings.get('sodium')
+
+        let privateKey = getUnit8SKPK(sd.privateKey)
+        let publicKey = getUnit8SKPK(sd.publicKey)
+
+
+      
+        let sk = sodium.crypto_sign_ed25519_sk_to_curve25519(privateKey);
+        let pk = sodium.crypto_sign_ed25519_pk_to_curve25519(publicKey);
+
+        let k2 = toPrivateKey(key)
+        console.log('k2', k2)
+        console.log('sk', sk)
+
+
+        let ks = sodium.crypto_box_seal_open(k2, pk, sk)
+        console.log('ks', ks)
+        console.log('string', dataToString(ks))
+        ks = dataToString(ks)
+        console.log('END sodiumGet---->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>-----')
+        return ks
+    }
 }
 
 
 function getNewconfidantkeyid(str) {
-    let len 
-    if (str.indexOf('newconfidantkey')===0) {
-       len = 'newconfidantkey'.length
-    }else if(str.indexOf('newconfidantuserid')===0){
-       len = 'newconfidantuserid'.length
+    let len
+    if (str.indexOf('newconfidantkey') === 0) {
+        len = 'newconfidantkey'.length
+    } else if (str.indexOf('newconfidantuserid') === 0) {
+        len = 'newconfidantuserid'.length
     }
     return str.substr(len)
-  }
+}
 
-  function splitNewconfidant(str) {
+function splitNewconfidant(str) {
     let arr = str.split('&&')
     let obj = {
-      emailName: arr[0].split('##'),
-      sodiumKey: arr[1].split('##')
+        emailName: arr[0].split('##'),
+        sodiumKey: arr[1].split('##')
     }
     return obj
-  }
+}
 
-  function toNewconfidantObj(str) {
+function toNewconfidantObj(str) {
 
     let $str = $(`<div>${str}</div>`)
     let span = $str.find('span')
@@ -204,15 +270,33 @@ function getNewconfidantkeyid(str) {
     let newconfidantkey = getNewconfidantkeyid(id1)
     let newconfidantuserid = getNewconfidantkeyid(id2)
 
-    let {emailName,sodiumKey} = splitNewconfidant(newconfidantkey)
-   
+    let {
+        emailName,
+        sodiumKey
+    } = splitNewconfidant(newconfidantkey)
+
     return {
-      newconfidantkey,
-      newconfidantuserid,
-      emailName,
-      sodiumKey
+        newconfidantkey,
+        newconfidantuserid,
+        emailName,
+        sodiumKey
     }
-  }
+}
+
+function toNewconfidantHtml(text, key, uid) {
+    /* 返回加密后的html
+     *
+     * @param  {text}       
+     * @param  {key} 
+     * @param  {uid} 
+     * @return {html}           
+     */
+    let html = `${text}
+  <span style='display:none' id='newconfidantkey${key}'></span>
+  <span style='display:none' id='newconfidantuserid${uid}'></span>
+  <div myconfidantbegin=''><br /><br /><br /><span>Sent from MyConfidant, the app for encrypted email.</span></div>`
+    return html
+}
 
 function getUnit8SKPK(k) {
     // 从setting.get 取值后使用这个函数转换成uint8数组
@@ -226,6 +310,33 @@ function toPrivateKey(d) {
 
 function dataToString(d) {
     return Buffer.from(d, 'hex').toString()
+}
+
+function sendString(obj, ASE) {
+    let str = {
+        "Action": "Recovery",
+        "RouteId": rd.RID,
+        "UserSn": rd.USN,
+        "Pubkey": publicKey,
+    }
+
+    str = obj
+
+    let app = {
+        appid: 'MIFI',
+        timestamp: new Date().getTime(),
+        apiversion: 6,
+        msgid: settings.get('msgid') + 1,
+        offset: 0,
+        more: 0
+    }
+
+
+    let tp = ASE.sodium(app.timestamp, privateKey)
+
+    app.Sign = tobase64(tp)
+    app.params = str
+    console.log('set app str')
 }
 
 function tobase64(d, k) {
