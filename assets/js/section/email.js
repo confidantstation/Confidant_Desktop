@@ -1,11 +1,12 @@
-let status = settings.get('status')
-if (status === 'login') {
-
-    getMail()
-
-}
-
 $(function () {
+    let status = settings.get('status')
+    if (status === 'login') {
+
+        getMail()
+
+    };
+
+
     $(document).on('click', '.list-emallDiv', function () {
         let uid = $(this).attr('uid')
         console.log('list uid', uid)
@@ -19,6 +20,6 @@ $(function () {
             }
         })
 
-
-    })
+        
+    });
 })

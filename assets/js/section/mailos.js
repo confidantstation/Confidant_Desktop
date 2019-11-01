@@ -335,7 +335,7 @@ function getHtmlText(str, uid) {
 
     }
 
-    $('.inbox-content').append(`<div class="email-uid" uid="${uid}">${str}</div>`);
+    $('.inbox-content').append(`<div class="email-uid emHtml${uid}" uid="${uid}">${str}</div>`);
 
     html = html.replace(/\s+/g, ' ');
     if (html[0] == " ") {
@@ -379,7 +379,7 @@ function setMailBody(uid, text, file) {
 
 function setMailHeader(uid, headers) {
 
-    let hd = headers;
+   
     console.log(`setMailHeader-----------`)
     console.log("邮件主题: " + headers.get('subject'));
     console.log("发件人: " + headers.get('from').text);
@@ -401,13 +401,13 @@ function setMailHeader(uid, headers) {
 
     subject = getGBK32(subject)
 
-    let html = `<div class="list-emallDiv" uid="${uid}">
+    let html = `<div class="list-emallDiv emuid${uid}" uid="${uid}">
     <div class="emallDivA jusCenter">
         <div class="fromImg">${fromImg}</div>
     </div>
         <div class="emallDivB">
-            <p class="font12">${subject}<span class="time">${date}</span></p>
-            
+            <p class="font12"><span class='subject'>${subject}</span><span class="time date">${date}</span></p>
+            <p style="display:none"><span class="to">${to}</span><span class="from">${from}</span></p>
         </div>
     </div>`
     $('#list-emall section').prepend(html)

@@ -37,6 +37,7 @@
     "jsqr": "^1.2.0",
     "libsodium-wrappers": "^0.7.6",
     "mailparser": "^2.7.1",
-    "moment": "^2.24.0"
+    "moment": "^2.24.0",
+    "nodemailer": "^6.3.1"
   }
 }
