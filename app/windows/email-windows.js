@@ -48,7 +48,7 @@ $(function () {
            html,
         }
         obj = JSON.stringify(obj)
-        console.log('obj',obj)
+        //console.log('obj',obj)
         
         win.webContents.on('did-finish-load', function () {
             win.webContents.send('Reply', obj);
@@ -66,9 +66,9 @@ $(function () {
 
     ipcRenderer.on('information-dialog-selection', (event, index) => {
 
-
-        let uid = settings.get('uid')
-        document.getElementById('sendEmail').innerHTML = index + uid
+       // document.getElementById('sendEmail').innerHTML = index
+        
+        
     })
 
 

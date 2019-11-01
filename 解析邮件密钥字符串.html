@@ -1,0 +1,123 @@
+<style>
+  body {
+    background-color: #8aba87;
+    overflow: hidden;
+  }
+
+  * {
+    margin: 0;
+    outline: 0;
+    padding: 0;
+  }
+
+  header {
+    display: flex;
+  }
+
+  header {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+  }
+
+  header>div:nth-child(3) {
+    grid-column: 10;
+  }
+
+  #emailSendPage div {
+    margin: 10px;
+    padding: 10px;
+  }
+</style>
+
+<div id='emailSendPage'>
+  <header>
+    <div id="SearchA">生成密钥</div>
+    <div id="SearchB">解析密钥</div>
+    <div>Logout</div>
+  </header>
+
+</div>
+<script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+
+<script>
+  $(function () {
+
+    let str = `
+    <span style='display:none' id='newconfidantkeyMzQ1NjMyODI4QHFxLmNvbQ==&&Cgguqfmkj4+0wCN+5GN1D3ygLILCd8IL0O/8mtNzaVKHC2TDV3bCdeafUQLwZX9V4w0VgZ7VGU0j8ZMVChIC1QOtlU6RLOpC+WYkjM0prYc=##a3Vhbmd6aWh1aUAxNjMuY29t&&Rc9Qfsx3DbKwlOM0a6HjjfqF8+Kz29pTLFo+EWqZIW2pY/Sq6YIytH06OureHb67VSwi+qJBJ0hHVqtNGTxxe5eDJqdL/XHXMWIyg+eYLU4='></span>
+    <span style='display:none' id='newconfidantuserid36C6B7A37844EC79C62CCC8D4D265C41712BB2F21A1370897B9C5D35AE3D7B4E35609D93FCF4'></span>
+    <div myconfidantbegin=''>
+      <br /><br /><br /><span>Sent from MyConfidant, the app for encrypted email.</span>
+      </div>`
+
+    function getNewconfidantkeyid(str) {
+      let len 
+      if (str.indexOf('newconfidantkey')===0) {
+         len = 'newconfidantkey'.length
+      }else if(str.indexOf('newconfidantuserid')===0){
+         len = 'newconfidantuserid'.length
+      }
+      return str.substr(len)
+    }
+
+    function splitNewconfidant(str) {
+      let arr = str.split('&&')
+      let obj = {
+        emailName: arr[0].split('##'),
+        sodiumKey: arr[1].split('##')
+      }
+      return obj
+    }
+
+    function toNewconfidantObj(str) {
+
+      let $str = $(`<div>${str}</div>`)
+      let span = $str.find('span')
+
+      let id1 = span.eq(0).attr('id')
+      let id2 = span.eq(1).attr('id')
+
+      let newconfidantkey = getNewconfidantkeyid(id1)
+      let newconfidantuserid = getNewconfidantkeyid(id2)
+
+      let {emailName,sodiumKey} = splitNewconfidant(newconfidantkey)
+     
+      return {
+        newconfidantkey,
+        newconfidantuserid,
+        emailName,
+        sodiumKey
+      }
+    }
+
+    $('#SearchB').click(function () {
+      // 解析密钥
+      let $str = $(`<div>${str}</div>`)
+      let span = $str.find('span')
+
+      let id1 = span.eq(0).attr('id')
+      let id2 = span.eq(1).attr('id')
+      let obj = {
+        newconfidantkey: getNewconfidantkeyid(id1),
+        newconfidantuserid: getNewconfidantkeyid(id2),
+      }
+      console.log(obj)
+      let arr = splitNewconfidant(obj.newconfidantkey)
+      console.log(arr)
+      console.log(toNewconfidantObj(str))
+    })
+
+    $('#SearchA').click(function () {
+      //生成密钥
+      let newconfidantText = '4x2fHgATrmWCiL9soNsJ9XnsGwEkfA5DKzHIwBU3d6HkbDgCQSpnaOIYILMAhwZU8Ex620Wr/6GyWudTaXwKmg=='
+      let newconfidantkey = 'MzQ1NjMyODI4QHFxLmNvbQ==&&Cgguqfmkj4+0wCN+5GN1D3ygLILCd8IL0O/8mtNzaVKHC2TDV3bCdeafUQLwZX9V4w0VgZ7VGU0j8ZMVChIC1QOtlU6RLOpC+WYkjM0prYc=##a3Vhbmd6aWh1aUAxNjMuY29t&&Rc9Qfsx3DbKwlOM0a6HjjfqF8+Kz29pTLFo+EWqZIW2pY/Sq6YIytH06OureHb67VSwi+qJBJ0hHVqtNGTxxe5eDJqdL/XHXMWIyg+eYLU4='
+      let newconfidantuserid = '36C6B7A37844EC79C62CCC8D4D265C41712BB2F21A1370897B9C5D35AE3D7B4E35609D93FCF4'
+      let html = `${newconfidantText}
+    <span style='display:none' id='newconfidantkey${newconfidantkey}'></span>
+    <span style='display:none' id='newconfidantuserid${newconfidantuserid}'></span>
+    <div myconfidantbegin=''><br /><br /><br /><span>Sent from MyConfidant, the app for encrypted email.</span></div>`
+      console.log(html)
+
+
+    })
+  });
+</script>

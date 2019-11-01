@@ -85,7 +85,7 @@ class mailos {
         });
 
         imap.once('end', function () {
-            console.log('this.list', this.list)
+           
             console.log('关闭邮箱');
         });
 
@@ -104,6 +104,8 @@ function getMail(user, password) {
     //let MailParser = require("mailparser").MailParser
     //let fs = require("fs")
     let inspect = require('util').inspect;
+    const settings = require('electron-settings');
+
     let imap = new Imap({
         user: '345632828@qq.com', //你的邮箱账号
         password: 'cjdfhabfwwaicbbd', //你的邮箱密码
@@ -124,7 +126,17 @@ function getMail(user, password) {
         openInbox(function (err, box) {
             if (err) throw err;
             //拉取最新 10条邮件
-            let seq = box.messages.total - 3
+            let seq;
+            // if(settings.get('messagesTotal')){
+            //     seq = settings.get('messagesTotal') -1
+            //     settings.set('messagesTotal',seq)
+            // }else{
+            //      seq = box.messages.total - 3
+            //      settings.set('messagesTotal',seq)
+            // }
+            seq = box.messages.total - 7
+            
+
             let seq1 = [`${seq}:*`]
             let f = imap.seq.fetch(seq1, {
                 bodies: ['HEADER.FIELDS (FROM TO SUBJECT DATE)', 'TEXT'],
@@ -142,18 +154,18 @@ function getMail(user, password) {
                         buffer += chunk.toString('utf8');
                     });
                     stream.once('end', function () {
-                        console.log(prefix + 'Parsed header: %s', inspect(Imap.parseHeader(buffer)));
+                       // console.log(prefix + 'Parsed header: %s', inspect(Imap.parseHeader(buffer)));
                     });
 
                 });
                 msg.once('attributes', function (attrs) {
                     let attr = inspect(attrs, false, 8)
-                    console.log(prefix + 'Attributes: %s', attr);
-                    console.log(attrs.uid)
+                    // console.log(prefix + 'Attributes: %s', attr);
+                    // console.log(attrs.uid)
                     getMailUid(attrs.uid)
                 });
                 msg.once('end', function () {
-                    console.log(prefix + 'Finished');
+                   // console.log(prefix + 'Finished');
                 });
             });
             f.once('error', function (err) {
@@ -297,6 +309,7 @@ function getMailUid(uid) {
 
 //控制邮箱如果显示，及以取内容前32个字符
 function getHtmlText(str, uid) {
+    
     let html
     if (str.html && str.html.indexOf('newconfidant') > 0) {
         html = str.html
@@ -305,24 +318,14 @@ function getHtmlText(str, uid) {
         console.log(html)
         let n = html.indexOf('<span')
         let strAes = html.substr(0, n)
-        console.log(strAes)
-        let ks = WinAES.sodiumGet(strAes)
-        let ka = '4x2fHgATrmWCiL9soNsJ9XnsGwEkfA5DKzHIwBU3d6HkbDgCQSpnaOIYILMAhwZU8Ex620Wr/6GyWudTaXwKmg=='
+        console.log('strAes',strAes)
+        let ks = WinAES.sodiumGet(html)
+        let ka = strAes||'4x2fHgATrmWCiL9soNsJ9XnsGwEkfA5DKzHIwBU3d6HkbDgCQSpnaOIYILMAhwZU8Ex620Wr/6GyWudTaXwKmg=='
         let en = WinAES.Decrypt(ka, ks.substr(0, 16))
-        // alert(en)
-        // console.log(ks)
-        // alert(ks)
-        // ks.then((res) => {
-        //     let en = WinAES.Decrypt(ka, res.substr(0, 16))
-        //     alert(en)
-        //     return res
-        // }).then((res) => {
-        //     alert(res)
-        // })
-
+       
         str = en || str
 
-        console.log(str)
+        console.log('str',str)
         console.log('END sodiumGet---->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>-----')
     } else {
         if (str.html) {
@@ -365,7 +368,7 @@ function setMailBody(uid, text, file) {
         let _this = $(this)
         let id = _this.attr('uid')
         if (id == uid) {
-            console.log('each uid', uid)
+            //console.log('each uid', uid)
             _this.find('.emallDivB').append(str)
 
 
@@ -421,7 +424,7 @@ function setMailHeader(uid, headers) {
 
 function getGBK32(str) {
     let gbk = getBLen(str)
-    console.log('gbk', gbk)
+    //console.log('gbk', gbk)
     let ask = str.length
     let strb = ""
     let d = '...'

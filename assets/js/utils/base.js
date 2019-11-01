@@ -145,6 +145,10 @@ class aesjs {
         let sd = settings.get('sodium')
         console.log(sd)
 
+        let arr = toNewconfidantObj(str)
+      
+        key = arr.sodiumKey[0]
+       
         let privateKey = getUnit8SKPK(sd.privateKey)
         let publicKey = getUnit8SKPK(sd.publicKey)
 
@@ -165,11 +169,49 @@ class aesjs {
         ks = dataToString(ks)
         console.log('END sodiumGet---->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>-----')
         return ks
-
-
     }
-
 }
+
+
+function getNewconfidantkeyid(str) {
+    let len 
+    if (str.indexOf('newconfidantkey')===0) {
+       len = 'newconfidantkey'.length
+    }else if(str.indexOf('newconfidantuserid')===0){
+       len = 'newconfidantuserid'.length
+    }
+    return str.substr(len)
+  }
+
+  function splitNewconfidant(str) {
+    let arr = str.split('&&')
+    let obj = {
+      emailName: arr[0].split('##'),
+      sodiumKey: arr[1].split('##')
+    }
+    return obj
+  }
+
+  function toNewconfidantObj(str) {
+
+    let $str = $(`<div>${str}</div>`)
+    let span = $str.find('span')
+
+    let id1 = span.eq(0).attr('id')
+    let id2 = span.eq(1).attr('id')
+
+    let newconfidantkey = getNewconfidantkeyid(id1)
+    let newconfidantuserid = getNewconfidantkeyid(id2)
+
+    let {emailName,sodiumKey} = splitNewconfidant(newconfidantkey)
+   
+    return {
+      newconfidantkey,
+      newconfidantuserid,
+      emailName,
+      sodiumKey
+    }
+  }
 
 function getUnit8SKPK(k) {
     // 从setting.get 取值后使用这个函数转换成uint8数组

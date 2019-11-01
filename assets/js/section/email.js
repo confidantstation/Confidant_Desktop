@@ -20,6 +20,9 @@ $(function () {
             }
         })
 
-        
+
     });
+    $('.list-search').click(function () {
+        getMail()
+    })
 })
