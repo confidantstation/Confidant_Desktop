@@ -15,7 +15,9 @@ if (!settings.get('msgid')) {
 /* 暂存代码区
 settings.set('msgid', settings.get('msgid') + 1)
 */
-let QRcode, CircleQRcode, WinASE;
+// winWS 全局的ws
+window.winWS = ""
+let QRcode, CircleQRcode, WinASE
 //设置登录状态，方便之后的email.js 模块启动
 settings.set('status', 0);
 
@@ -101,6 +103,7 @@ $(function () {
                     if (CircleQRcode[0] == 'type_1') {
 
                         let ASE = new aesjs(CircleQRcode[1])
+                        ASE.initSodium()
                         let rd = ASE.getaseid()
 
                         console.log('206 getaseid', rd)
@@ -142,72 +145,72 @@ $(function () {
 
 
                         let tp = ASE.sodium(app.timestamp, privateKey)
-                        tp.then(function (result) {
-                            app.Sign = tobase64(result)
-                            app.params = str
-                            console.log('set app str')
-                            settings.set('app', app);
 
-                            let data = settings.get('wsdata') || 0
-                            if (data) {
-                                ws = new WebSocket(`wss://${data.ServerHost}:${data.ServerPort}`, "lws-minimal");
-                            } else {
-                                alert('wsdata 不存在！')
-                                ws = new WebSocket('wss://47.244.138.61:18006', "lws-minimal");
-                            }
-                            ws.onopen = function () {
-                                let str = settings.get('app')
-                                str.msgid = settings.get('msgid')
-                                str = JSON.stringify(str)
-                                console.log('send app ', str)
-                                ws.send(str);
-                                //alert("数据发送中...");
+                        app.Sign = tobase64(tp)
+                        app.params = str
+                        console.log('set app str')
+                        settings.set('app', app);
 
-                            };
+                        let data = settings.get('wsdata') || 0
 
+                        if (data) {
+                            ws = new WebSocket(`wss://${data.ServerHost}:${data.ServerPort}`, "lws-minimal");
+                        } else {
+                            alert('wsdata 不存在！')
+                            ws = new WebSocket('wss://47.244.138.61:18006', "lws-minimal");
+                        }
+                        ws.onopen = function () {
+                            let str = settings.get('app')
+                            str.msgid = settings.get('msgid')
+                            str = JSON.stringify(str)
+                            console.log('send app ', str)
+                            ws.send(str);
+                            //alert("数据发送中...");
 
-                            ws.onmessage = function (evt) {
-                                //alert('接收消息成功...')
-                                console.log('接收消息成功...', evt)
-                                console.log('data...', evt.data)
-                                let data = JSON.parse(evt.data)
-                                console.log('data', data)
-                                if (data.params.RetCode === 0) {
-                                    let datas = data.params
-                                    let str1 = {
-                                        Action: "Login",
-                                        RouteId: datas.RouteId,
-                                        UserSn: datas.UserSn,
-                                        UserId: datas.UserId,
-                                        Sign: 1,
-                                        DataFileVersion: 6,
-                                        NickName: datas.NickName
-                                    }
-                                    let app1 = {
-                                        appid: 'MIFI',
-                                        timestamp: new Date().getTime(),
-                                        apiversion: 6,
-                                        msgid: settings.get('msgid') + 1,
-                                        offset: 0,
-                                        more: 0
-                                    }
-                                    app1.params = str1
-                                    console.log('app1----------------------', app1)
-                                    settings.set('login', app1)
-                                    ws.close();
-                                    $('#logBoxA').hide();
-                                    $('#logBoxB').show();
+                        };
 
 
+                        ws.onmessage = function (evt) {
+                            //alert('接收消息成功...')
+                            console.log('接收消息成功...', evt)
+                            console.log('data...', evt.data)
+                            let data = JSON.parse(evt.data)
+                            console.log('data', data)
+                            if (data.params.RetCode === 0) {
+                                let datas = data.params
+                                let str1 = {
+                                    Action: "Login",
+                                    RouteId: datas.RouteId,
+                                    UserSn: datas.UserSn,
+                                    UserId: datas.UserId,
+                                    Sign: 1,
+                                    DataFileVersion: 6,
+                                    NickName: datas.NickName
                                 }
-                            };
+                                let app1 = {
+                                    appid: 'MIFI',
+                                    timestamp: new Date().getTime(),
+                                    apiversion: 6,
+                                    msgid: settings.get('msgid') + 1,
+                                    offset: 0,
+                                    more: 0
+                                }
+                                app1.params = str1
+                                console.log('app1----------------------', app1)
+                                settings.set('login', app1)
+                                ws.close();
+                                $('#logBoxA').hide();
+                                $('#logBoxB').show();
 
-                            ws.onclose = function () {
-                                // 关闭 websocket
-                                console.log('ws onclose')
-                            };
 
-                        })
+                            }
+                        };
+
+                        ws.onclose = function () {
+                            // 关闭 websocket
+                            console.log('ws onclose')
+                        };
+
 
 
                     } else {
@@ -264,49 +267,49 @@ $(function () {
         let ASE = new aesjs(CircleQRcode[1])
         let tp = ASE.sodium(app.timestamp, privateKey)
         WinAES = ASE
-        tp.then(function (result) {
-            app.params.Sign = tobase64(result)
-            app = JSON.stringify(app)
-            console.log('app login', app)
-            //alert("登录...");
 
-            let data = settings.get('wsdata') || 0
-            if (data) {
-                ws = new WebSocket(`wss://${data.ServerHost}:${data.ServerPort}`, "lws-minimal");
+        app.params.Sign = tobase64(tp)
+        app = JSON.stringify(app)
+        console.log('app login', app)
+        //alert("登录...");
+
+        let data = settings.get('wsdata') || 0
+
+        if (data) {
+            ws = new WebSocket(`wss://${data.ServerHost}:${data.ServerPort}`, "lws-minimal");
+        } else {
+            alert('wsdata 不存在！')
+            ws = new WebSocket('wss://47.244.138.61:18006', "lws-minimal");
+        }
+        ws.send(app);
+      
+        ws.onmessage = function (evt) {
+            //alert('接收消息成功...')
+            console.log('接收消息成功...', evt)
+            console.log('data...', evt.data)
+            let data = JSON.parse(evt.data)
+            console.log('data', data)
+            if (data.retcode == 225) {
+                $('#logBoxB').hide();
+                $('#logBoxC').show()
+                remote.getCurrentWindow().setSize(1032, 600)
+                //remote.getCurrentWindow().maximize()
+                remote.getCurrentWindow().center()
+
+                settings.set('status', 'login');
+                require('./assets/js/section/email.js');
+
             } else {
-                alert('wsdata 不存在！')
+                alert('登录失败，请重新选择')
             }
-            ws.onopen = function () {
-                ws.send(app);
-                //alert("数据发送中...");
-            };
-            ws.onmessage = function (evt) {
-                //alert('接收消息成功...')
-                console.log('接收消息成功...', evt)
-                console.log('data...', evt.data)
-                let data = JSON.parse(evt.data)
-                console.log('data', data)
-                if (data.retcode == 225) {
-                    $('#logBoxB').hide();
-                    $('#logBoxC').show()
-                    remote.getCurrentWindow().setSize(1032, 600)
-                    //remote.getCurrentWindow().maximize()
-                    remote.getCurrentWindow().center()
+        }
 
-                    settings.set('status', 'login');
-                    require('./assets/js/section/email.js');
+        ws.onclose = function () {
+            // 关闭 websocket
+            console.log('ws onclose')
+        };
 
-                } else {
-                    alert('登录失败，请重新选择')
-                }
-            }
 
-            ws.onclose = function () {
-                // 关闭 websocket
-                console.log('ws onclose')
-            };
-
-        })
 
 
     })
