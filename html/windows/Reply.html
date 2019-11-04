@@ -1,0 +1,180 @@
+<style>
+  body {
+    background-color: #8aba87;
+    overflow: hidden;
+  }
+
+  * {
+    margin: 0;
+    outline: 0;
+    padding: 0;
+  }
+
+  #close {
+    color: white;
+    opacity: 0.7;
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 12px;
+    text-decoration: none;
+  }
+
+  #emailSendPage {
+    width: 760px;
+    height: 600px;
+    background: rgba(255, 255, 255, 1);
+    display: flex;
+    color: black;
+    flex-direction: column;
+
+  }
+
+  section,
+  header,
+  article,
+  footer {
+    width: 100%;
+    background: #e6e6e6;
+
+  }
+
+  #emailSendPage header {
+    height: 48px;
+  }
+
+  #emailSendPage section {
+    height: 164px;
+    box-sizing: border-box;
+
+  }
+
+  #emailSendPage section p {
+    padding: 0 10px;
+  }
+
+  #emailSendPage article {}
+
+  .SendBtn {
+    width: 100px;
+    height: 28px;
+    background: rgba(102, 70, 247, 1);
+    border-radius: 5px;
+
+    margin: 8px;
+  }
+
+  .SaveDraftBtn {
+    width: 100px;
+    height: 28px;
+    background: rgba(255, 255, 255, 1);
+    border-radius: 5px;
+    border: 1px solid rgba(204, 204, 204, 1);
+
+    margin: 8px;
+  }
+
+  .emailTitleLabel b {
+    width: 64px;
+    display: table-cell;
+    font-weight: 400;
+  }
+
+  .emailSendPageText {
+    background: #fff;
+    padding: 10px;
+
+  }
+</style>
+
+<div id='emailSendPage'>
+  <header>
+    <button class="SaveDraftBtn">Save Draft</button><button class="SendBtn" id='SendBtn'>Send</button>
+  </header>
+  <section>
+    <p><label class="emailTitleLabel"><b>To</b><input type="text" id='To'></label></p>
+    <p><label class="emailTitleLabel"><b>Cc</b><input type="text" id='Cc'></label></p>
+    <p><label class="emailTitleLabel"><b>Bcc</b><input type="text" id='Bcc'></label></p>
+    <p><label class="emailTitleLabel"><b>Subject</b><input type="text" id='Subject'></label></p>
+  </section>
+  <article>
+    <div class="emailSendPageText" id='content2' contenteditable="true">
+
+    </div>
+    <div class="emailSendPageText" id='content'>
+
+    </div>
+    <div class="emailSendPageAttachment">
+      <a id="close" href="javascript:window.close()">Close this Window</a>
+    </div>
+  </article>
+
+</div>
+<script>window.$ = window.jQuery = require('jquery');</script>
+<script>
+  const {
+    ipcRenderer
+  } = require('electron')
+  const nodemailer = require('nodemailer')
+
+  ipcRenderer.on('Reply', function (event, message) { // 监听父页面定义的端口
+    debugger;
+    let d = JSON.parse(message)
+    $('#To').val(d.to)
+    $('#Subject').val(d.subject)
+
+    $('#content').html(d.html)
+  });
+
+  $('#SendBtn').click(function () {
+
+    let to = $('#To').val()
+    let subject = $('#Subject').val()
+    let cc = $('#Cc').val()
+    let bcc = $('#Bcc').val()
+    let html = $('#content').html()
+    let html2 = $('#content2').html()
+    html = html +html2
+    let transporter = nodemailer.createTransport({
+      // host: 'smtp.ethereal.email',
+      service: 'qq', // 使用了内置传输发送邮件 查看支持列表：https://nodemailer.com/smtp/well-known/
+      port: 465, // SMTP 端口
+      secureConnection: true, // 使用了 SSL
+      auth: {
+        user: '345632828@qq.com',
+        // 这里密码不是qq密码，是你设置的smtp授权码
+        pass: 'cjdfhabfwwaicbbd',
+      }
+    });
+
+    let mailOptions = {
+      from: '"345632828" <345632828@qq.com>', // sender address
+      to, // list of receivers
+      subject, // Subject line
+      // 发送text或者html格式
+      // text: 'Hello world?', // plain text body
+      html,
+    };
+    if (cc) {
+      mailOptions.cc = cc
+    }
+    if (bcc) {
+      mailOptions.cc = bcc
+    }
+    console.log('------mailOptions-------')
+    console.log(mailOptions)
+
+    //send mail with defined transport object
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        return console.log(error);
+      }
+      console.log('Message sent: %s', info.messageId);
+      // Message sent: <04ec7731-cc68-1ef6-303c-61b0f796b78f@qq.com>
+    });
+
+
+  })
+  //alert(location.href)
+</script>

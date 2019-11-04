@@ -1,0 +1,304 @@
+<style>
+  body {
+    background-color: #8aba87;
+    overflow: hidden;
+  }
+
+  * {
+    margin: 0;
+    outline: 0;
+    padding: 0;
+  }
+
+  #close {
+    color: white;
+    opacity: 0.7;
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 12px;
+    text-decoration: none;
+  }
+
+  #emailSendPage {
+    width: 760px;
+    height: 600px;
+    background: rgba(255, 255, 255, 1);
+    display: flex;
+    color: black;
+    flex-direction: column;
+
+  }
+
+  section,
+  header,
+  article,
+  footer {
+    width: 100%;
+    background: #e6e6e6;
+
+  }
+
+  #emailSendPage header {
+    height: 48px;
+  }
+
+  #emailSendPage section {
+    height: 164px;
+    box-sizing: border-box;
+
+  }
+
+  #emailSendPage section p {
+    padding: 0 10px;
+  }
+
+  #emailSendPage article {}
+
+  .SendBtn {
+    width: 100px;
+    height: 28px;
+    background: rgba(102, 70, 247, 1);
+    border-radius: 5px;
+
+    margin: 8px;
+  }
+
+  .SaveDraftBtn {
+    width: 100px;
+    height: 28px;
+    background: rgba(255, 255, 255, 1);
+    border-radius: 5px;
+    border: 1px solid rgba(204, 204, 204, 1);
+
+    margin: 8px;
+  }
+
+  .emailTitleLabel b {
+    width: 64px;
+    display: table-cell;
+    font-weight: 400;
+  }
+
+  .emailSendPageText {
+    background: #fff;
+    padding: 10px;
+    ;
+  }
+</style>
+
+<div id='emailSendPage'>
+  <header>
+    <button class="SaveDraftBtn">Save Draft</button><button class="SendBtn" id='SendBtn'>Send</button>
+  </header>
+  <section>
+    <p><label class="emailTitleLabel"><b>To</b><input type="text" id='To'></label></p>
+    <p><label class="emailTitleLabel"><b>Cc</b><input type="text" id='Cc'></label></p>
+    <p><label class="emailTitleLabel"><b>Bcc</b><input type="text" id='Bcc'></label></p>
+    <p><label class="emailTitleLabel"><b>Subject</b><input type="text" id='Subject'></label></p>
+  </section>
+  <article>
+    <div class="emailSendPageText" id='content' contenteditable="true">
+
+    </div>
+    <div class="emailSendPageAttachment">
+      <a id="close" href="javascript:window.close()">Close this Window</a>
+    </div>
+  </article>
+
+</div>
+<script>window.$ = window.jQuery = require('jquery');</script>
+<script src='../../assets/js/utils/base.js'></script>
+<script>
+  const {
+    ipcRenderer
+  } = require('electron')
+  const nodemailer = require('nodemailer')
+  const settings = require('electron-settings');
+  let AES = new aesjs()
+  $(function () {
+
+    ipcRenderer.on('NewEmail', function (event, message) { // 监听父页面定义的端口
+
+      console.table(message)
+    });
+
+
+
+
+    $('#SendBtn').click(function () {
+
+      let data = settings.get('wsdata') || 0
+
+      if (data) {
+        ws = new WebSocket(`wss://${data.ServerHost}:${data.ServerPort}`, "lws-minimal");
+      } else {
+        alert('wsdata 不存在！')
+        ws = new WebSocket('wss://47.244.138.61:18006', "lws-minimal");
+      }
+
+
+      let to = $('#To').val()
+      let subject = $('#Subject').val()
+      let cc = $('#Cc').val()
+      let bcc = $('#Bcc').val()
+      let html = $('#content').html()
+
+      let transporter = nodemailer.createTransport({
+        // host: 'smtp.ethereal.email',
+        service: 'qq', // 使用了内置传输发送邮件 查看支持列表：https://nodemailer.com/smtp/well-known/
+        port: 465, // SMTP 端口
+        secureConnection: true, // 使用了 SSL
+        auth: {
+          user: '345632828@qq.com',
+          // 这里密码不是qq密码，是你设置的smtp授权码
+          pass: 'cjdfhabfwwaicbbd',
+        }
+      });
+
+      let mailOptions = {
+        from: '"345632828" <345632828@qq.com>', // sender address
+        to, // list of receivers
+        subject, // Subject line
+        // 发送text或者html格式
+        // text: 'Hello world?', // plain text body
+        html,
+      };
+      if (cc) {
+        mailOptions.cc = cc
+      }
+      if (bcc) {
+        mailOptions.cc = bcc
+      }
+      console.log('------mailOptions-------')
+      console.log(mailOptions)
+
+      ws.onopen = function () {
+        sendMailAES(to, ws)
+      }
+      ws.onmessage = function (evt) {
+        //alert('接收消息成功...')
+        console.log('接收消息成功...', evt)
+        console.log('data...', evt.data)
+        let data = JSON.parse(evt.data)
+        console.log('data', data)
+
+        if (data.params) {
+          let params = data.params
+          if (params.Action === "CheckmailUkey") {
+            console.log(params.Action)
+            let rand = randomPassword(16)
+            let text = AES.Encrypt(html, 'AAAAAAAAAAAAAAAA')
+
+            let arr = params.Payload
+            let PubKey = toPrivateKey(arr[0].PubKey)
+            console.log('arr[0].PubKey', arr[0].PubKey)
+            //PubKey = new Uint8Array(Buffer.from(arr[0].PubKey))
+            console.log('.PubKey', PubKey)
+            console.log('from_string', AES.from_string(window.btoa(arr[0].PubKey)))
+
+            let t1 = Buffer.from('IGt1YW5nemlodWlAMTYzLmNvbQ==', 'base64')
+            let t2 = window.atob('IGt1YW5nemlodWlAMTYzLmNvbQ==')
+
+            console.log('t1', t1)
+            console.log('t2', t2)
+            let uid = settings.get('UserId')
+
+
+
+            let AA = 'AAAAAAAAAAAAAAAA'
+            rand = new Buffer(AA, 'base64');
+            rand = new Uint8Array(rand)
+            let std = AES.crypto_box_seal(rand, PubKey)
+            std = tobase64(std)
+            console.log('std', std)
+
+
+            let NewconfidantHtml = toNewconfidantHtml(text, std, uid);
+
+            console.log(NewconfidantHtml)
+            mailOptions.html = NewconfidantHtml
+
+            let ks = AES.sodiumGet(NewconfidantHtml)
+
+           
+            let en =AES.Decrypt(text, ks.substr(0, 16))
+
+            let c1 =  AES.Encrypt('show')
+            let c2 =  AES.Decrypt(c1)
+           
+           debugger;
+
+            console.log('en', en)
+            console.log('ks html ', ks)
+            // transporter.sendMail(mailOptions, (error, info) => {
+            //   if (error) {
+            //     return console.log(error);
+            //   }
+            //   console.log('Message sent: %s', info.messageId);
+            //   // Message sent: <04ec7731-cc68-1ef6-303c-61b0f796b78f@qq.com>
+            // });
+          }
+
+        }
+
+      }
+
+      ws.onclose = function () {
+        // 关闭 websocket
+        console.log('ws onclose')
+      };
+
+    })
+
+    //alert(location.href)
+  })
+
+
+  function sendMailAES(To, ws) {
+
+
+    let sodiumKey = settings.get('sodium')
+    // kuangzihui@163.com
+    let str = {
+      "Action": "CheckmailUkey",
+      "Unum": 1,
+      "Users": window.btoa(To),
+      "Type": 1
+    }
+
+    console.log(getUnit8SKPK(sodiumKey.privateKey))
+
+    let app = {
+      appid: 'MIFI',
+      timestamp: new Date().getTime(),
+      apiversion: 6,
+      msgid: settings.get('msgid') + 1,
+      offset: 0,
+      more: 0
+    }
+
+    let tp = AES.sodium(app.timestamp, getUnit8SKPK(sodiumKey.privateKey))
+
+    app.Sign = tobase64(tp)
+    app.params = str
+    app = JSON.stringify(app)
+    ws.send(app)
+  }
+
+  function toNewconfidantHtml(text, key, uid) {
+    /* 返回加密后的html
+     *
+     * @param  {text}       
+     * @param  {key} 
+     * @param  {uid} 
+     * @return {html}           
+     */
+    let html = `${text}
+  <span style='display:none' id='newconfidantkey${key}'></span>
+  <span style='display:none' id='newconfidantuserid${uid}'></span>
+  <div myconfidantbegin=''><br /><br /><br /><span>Sent from MyConfidant, the app for encrypted email.</span></div>`
+    return html
+  }
+</script>

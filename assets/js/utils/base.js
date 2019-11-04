@@ -100,7 +100,9 @@ class aesjs {
             mode: CryptoJS.mode.CBC,
             padding: CryptoJS.pad.Pkcs7
         });
-        return encrypted.ciphertext.toString().toUpperCase();
+        encrypted = encrypted.ciphertext.toString().toUpperCase();
+        let encryptedHexStr = CryptoJS.enc.Hex.parse(encrypted);
+        return  CryptoJS.enc.Base64.stringify(encryptedHexStr)
     }
     getaseid(n) {
         n = this.asetxt || n
@@ -150,6 +152,14 @@ class aesjs {
         let tp = sodium.crypto_sign(sodium.from_string(`${timestamp}`), privateKey)
         return tp
     }
+    from_string(str) {
+        const sodium = _sodium;
+        return sodium.from_string(str)
+    }
+    to_string(str) {
+        const sodium = _sodium;
+        return sodium.to_string(str)
+    }
     sodiumGet(str) {
         /*
         @params(str,privateKey)
@@ -179,12 +189,14 @@ class aesjs {
 
         let k2 = toPrivateKey(key)
         console.log('k2', k2)
-        console.log('sk', sk)
+        console.log('解密私钥sk', sk)
 
 
         let ks = sodium.crypto_box_seal_open(k2, pk, sk)
         console.log('ks', ks)
         console.log('string', dataToString(ks))
+        console.log('from_string', sodium.from_string(ks))
+        console.log('to_string', sodium.to_string(ks))
         ks = dataToString(ks)
         console.log('END sodiumGet---->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>-----')
         return ks
@@ -200,18 +212,34 @@ class aesjs {
         return pk
     }
     crypto_box_seal(key, Pubkey) {
+        /*
+           @params(key, Pubkey)
+           @key {string | Unit8Array}
+        */
         const sodium = _sodium;
         let sd = settings.get('sodium')
         let privateKey = getUnit8SKPK(sd.privateKey)
         let publicKey = getUnit8SKPK(sd.publicKey)
+        if (Pubkey) {
+            publicKey = Pubkey
+        }
         let sk = sodium.crypto_sign_ed25519_sk_to_curve25519(privateKey);
         let pk = sodium.crypto_sign_ed25519_pk_to_curve25519(publicKey);
 
-        let k = new Uint8Array(Buffer.from(key))
-        let ks = sodium.crypto_box_seal(k, pk)
+        // let k = new Uint8Array(Buffer.from(key))
+        let AA = 'AAAAAAAAAAAAAAAA'
+        // if (key) {
+        //     AA = key
+        // }
+        let ks = sodium.crypto_box_seal(AA, pk)
+
+        let ks2 = sodium.crypto_box_seal_open(ks, pk, sk)
+        let abc = sodium.to_string(ks2)
+        console.log('abc', abc)
+
         return ks
     }
-    crypto_box_seal_open(){
+    crypto_box_seal_open() {
         const sodium = _sodium;
         let key = "jPWhxw36S+W425TgadLMnQDTiOmNOgwY4mxPZD5Mk7U="
         console.log('START sodiumGet---->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>-----')
@@ -221,7 +249,7 @@ class aesjs {
         let publicKey = getUnit8SKPK(sd.publicKey)
 
 
-      
+
         let sk = sodium.crypto_sign_ed25519_sk_to_curve25519(privateKey);
         let pk = sodium.crypto_sign_ed25519_pk_to_curve25519(publicKey);
 
@@ -252,9 +280,18 @@ function getNewconfidantkeyid(str) {
 
 function splitNewconfidant(str) {
     let arr = str.split('&&')
-    let obj = {
-        emailName: arr[0].split('##'),
-        sodiumKey: arr[1].split('##')
+
+    let obj
+    if (arr[1]) {
+        obj = {
+            emailName: arr[0].split('##'),
+            sodiumKey: arr[1].split('##')
+        }
+    } else {
+        obj = {
+            emailName: arr,
+            sodiumKey: arr
+        }
     }
     return obj
 }
@@ -304,11 +341,13 @@ function getUnit8SKPK(k) {
 }
 
 function toPrivateKey(d) {
+    //base64 解码再转化成 Uint8Array数组
     let arr = new Uint8Array(Buffer.from(d, 'base64'))
     return arr
 }
 
 function dataToString(d) {
+    // 等同于 Encrypt 方法最后二句的作用
     return Buffer.from(d, 'hex').toString()
 }
 
