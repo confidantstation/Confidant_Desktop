@@ -1,14 +1,7 @@
 const moment = require('moment');
 
 function getObjectURL(file) {
-    var url = null;
-    if (window.createObjectURL != undefined) { // basic
-        url = window.createObjectURL(file);
-    } else if (window.URL != undefined) { // mozilla(firefox)
-        url = window.URL.createObjectURL(file);
-    } else if (window.webkitURL != undefined) { // webkit or chrome
-        url = window.webkitURL.createObjectURL(file);
-    }
+    let url = window.webkitURL.createObjectURL(file)
     return url;
 }
 
@@ -160,7 +153,7 @@ class aesjs {
         const sodium = _sodium;
         return sodium.to_string(str)
     }
-    sodiumGet(str) {
+    sodiumGet(str,k) {
         /*
         @params(str,privateKey)
         @str 需要解密的字符串
@@ -169,11 +162,11 @@ class aesjs {
         */
 
         const sodium = _sodium;
-        let key = `Cgguqfmkj4+0wCN+5GN1D3ygLILCd8IL0O/8mtNzaVKHC2TDV3bCdeafUQLwZX9V4w0VgZ7VGU0j8ZMVChIC1QOtlU6RLOpC+WYkjM0prYc=`
+        let key =k || this.key
         console.log('START sodiumGet---->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>-----')
         let sd = settings.get('sodium')
         console.log(sd)
-
+      
         let arr = toNewconfidantObj(str)
 
         key = arr.sodiumKey[0]
@@ -228,10 +221,8 @@ class aesjs {
 
         // let k = new Uint8Array(Buffer.from(key))
         let AA = 'AAAAAAAAAAAAAAAA'
-        // if (key) {
-        //     AA = key
-        // }
-        let ks = sodium.crypto_box_seal(AA, pk)
+      
+        let ks = sodium.crypto_box_seal(key, pk)
 
         let ks2 = sodium.crypto_box_seal_open(ks, pk, sk)
         let abc = sodium.to_string(ks2)

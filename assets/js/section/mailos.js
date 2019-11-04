@@ -337,8 +337,11 @@ function getHtmlText(str, uid) {
         };
 
     }
-
-    $('.inbox-content').append(`<div class="email-uid emHtml${uid}" uid="${uid}">${str}</div>`);
+    let $inboxContent= $('.inbox-content')
+   
+        $inboxContent.append(`<div class="email-uid emHtml${uid}" uid="${uid}">${str}</div>`);
+   
+  
 
     html = html.replace(/\s+/g, ' ');
     if (html[0] == " ") {

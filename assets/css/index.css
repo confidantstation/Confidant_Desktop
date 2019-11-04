@@ -1,6 +1,15 @@
 /*
 控制邮件显示的样式
 */
+#inbox-emall .inbox-content div{
+    max-width: 380px;
+}
+#inbox-emall .inbox-content tr{
+    max-width: 380px;
+}
+#inbox-emall .inbox-content img{
+    max-width: 380px;
+}
 .email-uid {
     width: 100%;
     display: none;

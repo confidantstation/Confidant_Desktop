@@ -189,7 +189,8 @@
           if (params.Action === "CheckmailUkey") {
             console.log(params.Action)
             let rand = randomPassword(16)
-            let text = AES.Encrypt(html, 'AAAAAAAAAAAAAAAA')
+            let text = AES.Encrypt(html, rand)
+            
 
             let arr = params.Payload
             let PubKey = toPrivateKey(arr[0].PubKey)
@@ -207,9 +208,11 @@
 
 
 
-            let AA = 'AAAAAAAAAAAAAAAA'
-            rand = new Buffer(AA, 'base64');
-            rand = new Uint8Array(rand)
+            // let AA = 'AAAAAAAAAAAAAAAA'
+            // rand = new Buffer(AA, 'base64');
+          
+            // rand = new Buffer(rand, 'base64');
+            // rand = new Uint8Array(rand)
             let std = AES.crypto_box_seal(rand, PubKey)
             std = tobase64(std)
             console.log('std', std)
@@ -219,8 +222,8 @@
 
             console.log(NewconfidantHtml)
             mailOptions.html = NewconfidantHtml
-
-            let ks = AES.sodiumGet(NewconfidantHtml)
+            debugger;
+            let ks = AES.sodiumGet(NewconfidantHtml,rand)
 
            
             let en =AES.Decrypt(text, ks.substr(0, 16))
@@ -228,10 +231,11 @@
             let c1 =  AES.Encrypt('show')
             let c2 =  AES.Decrypt(c1)
            
-           debugger;
+          
 
             console.log('en', en)
             console.log('ks html ', ks)
+            alert('邮件发送--需要真正发邮件修改NewEmail.html 238行的代码')
             // transporter.sendMail(mailOptions, (error, info) => {
             //   if (error) {
             //     return console.log(error);
