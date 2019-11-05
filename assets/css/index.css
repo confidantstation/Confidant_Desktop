@@ -84,8 +84,12 @@
 .settingImg {
     width: 24px;
     height: 24px;
+    cursor: pointer;
 }
-
+.newAccountBtnImg{
+    border:1px dashed  #ccc;padding:3px;margin-top:-30px;
+    cursor: pointer;
+}
 .nav {
     width: 100%;
     height: 180px;
@@ -392,6 +396,7 @@ footer .emall-card .newTag {
     border-radius: 4px;
     border: 1px solid rgba(230, 230, 230, 1);
     margin-top: 15px;
+    cursor: pointer;
 }
 
 .newAccount {
@@ -439,11 +444,10 @@ footer .emall-card .newTag {
     border-radius: 4px;
     border: 1px solid rgba(230, 230, 230, 1);
     font-size: 14px;
-    font-family: PingFangSC-Regular, PingFang SC;
     font-weight: 400;
     color: rgba(30, 30, 36, 1);
     line-height: 20px;
-
+    cursor: pointer;
     margin-right: 42px;
 }
 
@@ -452,6 +456,7 @@ footer .emall-card .newTag {
     display: flex;
     background: #fff;
     min-height: 30px;
+    cursor: pointer;
 }
 
 .newAccount .ia {
@@ -482,8 +487,6 @@ footer .emall-card .newTag {
     display: block;
     height: 48px;
     line-height: 48px;
-
-
 }
 
 #imap .ib {
@@ -509,6 +512,26 @@ footer .emall-card .newTag {
     position: absolute;
     top: 50px;
     left: 30%;
+    box-sizing: border-box;
+    padding:50px 30px 30px;
+}
+.mailLogin header{
+    text-align: center;
+}
+
+.mailLogin section p{
+    line-height: 36px;
+}
+.mailLogin section p input{
+    text-indent: 0.5em;
+}
+.mailLoginTitle{
+    margin-top:5px ;
+}
+.mailLogin footer button{
+    margin-top:38px;
+    color: #fff;
+    cursor: pointer;
 }
 
 .mailLoginInput {
