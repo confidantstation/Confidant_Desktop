@@ -1,0 +1,95 @@
+<template class="task-template">
+    <div id='setEmailHtml' class="html">
+        <div id='inbox-emall' class="jusCenter" style="width:900px;">
+            <div>
+                <p>
+                    <img class="newAccountBtnImg" src="./assets/img/emailLogo.png">
+                </p>
+                <p class="nomail">您当前没有绑定的邮箱</p>
+                <p class="jusCenter"><button class="newAccountBtn">New Account</button></p>
+            </div>
+        </div>
+    </div>
+    <!--modal-->
+    <div class="newAccountDiv" style="display: none;">
+        <div class="newAccountHead">New Account</div>
+        <section>
+            <div class="newAccount">
+                <div class="newAccountList">
+                    <i class="ia"><img src="./assets/img/mails/email_icon_qqmailbox.png"></i>
+                    <i class="ib">QQMailbox</i>
+                </div>
+                <div class="newAccountList">
+                    <i class="ia"><img src="./assets/img/mails/email_icon_google.png"></i>
+                    <i class="ib">QQMail</i>
+                </div>
+                <div class="newAccountList">
+                    <i class="ia"><img src="./assets/img/mails/email_icon_163.png"></i>
+                    <i class="ib">163Mail</i>
+                </div>
+                <div class="newAccountList">
+                    <i class="ia"><img src="./assets/img/mails/email_icon_google.png"></i>
+                    <i class="ib">Gmail</i>
+                </div>
+                <div class="newAccountList">
+                    <i class="ia"><img src="./assets/img/mails/email_icon_outlook.png"></i>
+                    <i class="ib">Outlook, Hotmail, live</i>
+                </div>
+                <div class="newAccountList">
+                    <i class="ia"><img src="./assets/img/mails/email_icon_icloud.png"></i>
+                    <i class="ib">iCloud</i>
+                </div>
+                <div class="newAccountList">
+                    <i class="ia"><img src="./assets/img/mails/email_icon_other.png"></i>
+                    <i class="ib">Other (IMAP)</i>
+                </div>
+                <div class="newAccountFooter">
+                    <button class="newAccountCancel">Cancel</button>
+                </div>
+            </div>
+        </section>
+    </div>
+    <!--modal-->
+    <div class="mailLogin" style="display: none;">
+        <header>
+            <img id='mailLoginImg' src="./assets/img/mails/email_icon_163_n.png">
+        </header>
+        <section>
+            <p class="mailLoginTitle">Email</p>
+            <p><input class="mailLoginInput" type="text" placeholder="example@gmail.com"></p>
+            <p class="mailLoginTitle">Password</p>
+            <p><input class="mailLoginInput" type="text" placeholder="Password/Authorization code"></p>
+        </section>
+        <footer>
+            <button class="mailLoginBtn">Login</button>
+        </footer>
+    </div>
+
+
+    <script>
+        $(function () {
+            $('.newAccountBtn,.newAccountBtnImg').click(function () {
+               
+                $('.newAccountDiv').show()
+            })
+            $('.newAccountCancel').click(function () {
+                $('.newAccountDiv').hide()
+            })
+            $('.newAccountList').hover(function () {
+                $(this).css({ 'background': "#6646F7", 'color': '#fff' })
+            }, function () {
+                $(this).css({ 'background': "#fff", 'color': '#000' })
+            })
+
+            $('.newAccountList').click(function () {
+                let _this = $(this)
+                let val = _this.find('.ib').text()
+                let img = _this.find('.ia img').attr('src')
+                img = img.replace('.png', '_n.png')
+                $('#mailLoginImg').attr('src', img)
+                $('.newAccountDiv').hide()
+                $('.mailLogin').show()
+            })
+        })
+    </script>
+</template>

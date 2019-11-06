@@ -200,7 +200,7 @@ $(function () {
                                 console.log('app1----------------------', app1)
                                 settings.set('login', app1)
                                 settings.set('UserId', str1.UserId)
-                                ws.close();
+                                //ws.close();
                                 $('#logBoxA').hide();
                                 $('#logBoxB').show();
 
@@ -235,11 +235,8 @@ $(function () {
     } = require('electron');
     $('.ImportBtnLogin').click(function () {
         /* 邮件配置测试*/
-        let setMail = 0;
-        if($(this).attr('rel')){
-           
-            setMail =$(this).attr('rel')
-        }
+        let setMail = $(this).attr('rel')||'loginHtml';
+       
         //选择圈子登录
         let app = settings.get('login')
         let privateKey = toPrivateKey(QRcode[1])
@@ -272,14 +269,17 @@ $(function () {
             let data = JSON.parse(evt.data)
             console.log('data', data)
             if (data.retcode == 225) {
-                $('#logBoxB').hide();
-                if(setMail==='setEmail'){
-                    $('#logBoxC').show()
-                    settings.set('status', 'setEmail');
-                }else{
-                    $('#logBoxC').show()
-                    settings.set('status', 'login');
-                }
+                
+                hideInbox(setMail)
+                // if(setMail==='setEmail'){
+                //     $('#logBoxC').show()
+                //     hideInbox(setMail)
+                //     settings.set('status', 'setEmail');
+                // }else{
+                //     $('#logBoxC,#emailHtml').show()
+                    
+                //     settings.set('status', 'login');
+                // }
                
                 remote.getCurrentWindow().setSize(1032, 600)
                 //remote.getCurrentWindow().maximize()
@@ -287,7 +287,7 @@ $(function () {
 
                
                 require('./assets/js/section/email.js');
-                ws.close();
+                
             } 
             if(data.params){
                 let params = data.params
@@ -306,3 +306,37 @@ $(function () {
 
 })
 
+function hideInbox(id){
+    $('#logBoxB').hide();
+    debugger;
+    if(id ==='setEmailHtml'){
+        $('#list-emall,#inbox-emall,#new-emall,#menu').hide()
+        $('#setEmailHtml').show()
+    }
+    else if(id ==='loginHtml'){
+        $('#logBoxC,#emailHtml').show()
+    }
+    else if(id ===''){
+        
+    }
+    else if(id ===''){
+        
+    }
+    else if(id ===''){
+        
+    }
+    else if(id ===''){
+        
+    }
+    else if(id ===''){
+        
+    }
+    else if(id ===''){
+        
+    }
+    else if(id ===''){
+        
+    }
+
+    settings.set('status', id);
+}

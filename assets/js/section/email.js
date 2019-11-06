@@ -1,9 +1,9 @@
 
 $(function () {
     let status = settings.get('status')
-    if (status === 'login') {
+    if (status === 'loginHtml') {
         getMail();
-    }else if(status === 'setEmail'){
+    }else if(status === 'setEmailHtml'){
 
     }
 
