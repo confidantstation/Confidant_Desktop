@@ -417,12 +417,7 @@ function setMailHeader(uid, headers) {
         </div>
     </div>`
     $('#list-emall section').prepend(html)
-    // let seqClass = $list.find(`seq${seq}`)
-    // if (seqClass) {
-    //     seqClass.html(html)
-    // } else {
-    //     $list.append(html)
-    // }
+   
 }
 
 function getGBK32(str) {

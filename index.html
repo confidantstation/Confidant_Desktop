@@ -85,10 +85,136 @@
                 <span class="footerQuit">退出登录</span>
                 <span class="footerImpor">导入圈子</span>
             </p>
+            <p class="ImportBtnLogin" rel='setEmail'>配置邮件</p>
         </footer>
     </div>
 
-    <div id="logBoxC" class="logBoxStyle content"></div>
+    <!-- 邮件客户端主页 -->
+    <div id="logBoxC" class="logBoxStyle">
+        <div id='menu'>
+            <header>
+                <img class="userLogo" src="assets/img/user/1.jpg" width="44" height="44">
+            </header>
+            <section>
+                <ul class="nav">
+                    <li><img src="assets/img/nav/navibar_me_email.png"> </li>
+                    <li><img src="assets/img/nav/navibar_chats_unselected.png"> </li>
+                    <li><img src="assets/img/nav/navibar_files_unselected.png"> </li>
+                    <li><img src="assets/img/nav/navibar_contacts_unselected.png"> </li>
+                </ul>
+            </section>
+            <footer>
+                <img class="settingImg" src="assets/img/navibar_files_settings.png" width="24" height="24">
+            </footer>
+        </div>
+        <div class="index">
+            <div id='new-emall'>
+                <header class="jusCenter">
+                    <div class="new-email" id='NewEmail'>
+                        <img class="newTag" src="assets/img/email_icon_other_n.png"> New Email
+                    </div>
+                </header>
+                <section>
+                    <ul class="emall-card">
+                        <li>
+                            <div class="spanA">
+                                <div class="centerDiv"><img class="newTag userLogo" src="assets/img/user/1.jpg"></div>
+                            </div>
+                            <div class="spanB">user@example.com</div>
+                            <div class="spanC"><img src="assets/img/tabbar_hook.png"></div>
+                        </li>
+                        <li>
+                            <div class="spanA">
+                                <div class="centerDiv"><img class="newTag" src="assets/img/email_icon_qqmailbox_n.png">
+                                </div>
+                            </div>
+                            <div class="spanB">chenkai@example.com</div>
+                            <div class="spanC"></div>
+                        </li>
+                        <li>
+                            <div class="spanA">
+                                <div class="centerDiv"><img class="newTag" src="assets/img/email_icon_addemail.png">
+                                </div>
+                            </div>
+                            <div class="spanB">New Account</div>
+                            <div class="spanC"></div>
+                        </li>
+                    </ul>
+                </section>
+                <footer>
+                    <ul class="emall-card">
+                        <li>
+                            <div class="spanA">
+                                <div class="centerDiv"><img class="newTag"
+                                        src="assets/img/newEmail/tabbar_inbox_selected.png">
+                                </div>
+                            </div>
+                            <div class="spanB">Inbox</div>
+                            <div class="spanC"></div>
+                        </li>
+                        <li>
+                            <div class="spanA">
+                                <div class="centerDiv"><img class="newTag"
+                                        src="assets/img/newEmail/tabbar_backups_selected.png">
+                                </div>
+                            </div>
+                            <div class="spanB">Node backed up</div>
+                            <div class="spanC"></div>
+                        </li>
+                        <li>
+                            <div class="spanA">
+                                <div class="centerDiv"><img class="newTag"
+                                        src="assets/img/newEmail/tabbar_attach_selected.png">
+                                </div>
+                            </div>
+                            <div class="spanB">Starred</div>
+                            <div class="spanC"></div>
+                        </li>
+                        <li>
+                            <div class="spanA">
+                                <div class="centerDiv"><img class="newTag"
+                                        src="assets/img/newEmail/tabbar_drafts_selected.png">
+                                </div>
+                            </div>
+                            <div class="spanB">Drafts</div>
+                            <div class="spanC"></div>
+                        </li>
+                        <li>
+                            <div class="spanA">
+                                <div class="centerDiv"><img class="newTag"
+                                        src="assets/img/newEmail/tabbar_sent_selected.png">
+                                </div>
+                            </div>
+                            <div class="spanB">Sent</div>
+                            <div class="spanC"></div>
+                        </li>
+                        <li>
+                            <div class="spanA">
+                                <div class="centerDiv"><img class="newTag"
+                                        src="assets/img/newEmail/tabbar_trash_selected.png">
+                                </div>
+                            </div>
+                            <div class="spanB">Spam</div>
+                            <div class="spanC"></div>
+                        </li>
+                        <li>
+                            <div class="spanA">
+                                <div class="centerDiv"><img class="newTag"
+                                        src="assets/img/newEmail/tabbar_deleted_selected.png">
+                                </div>
+                            </div>
+                            <div class="spanB">Trash</div>
+                            <div class="spanC"></div>
+                        </li>
+
+                    </ul>
+                </footer>
+            </div>
+            <div class="content"></div>
+            <!-- end C -->
+        </div>
+
+
 
 
 </body>
@@ -99,17 +225,16 @@
 <script src='assets/js/utils/base.js'></script>
 <script src='assets/js/section/mailos.js'></script>
 <script src='assets/js/section/index.js'></script>
-
 <script src='assets/js/section/email.js'></script>
 <script>
     const { remote } = require('electron');
     const remoteObj = remote.app.getRemoteObject();
-   
+
     console.log(remoteObj)
-    $("#logBox").click(function(){
+    $("#logBox").click(function () {
         console.log(remote.app.getRemoteObject())
     })
-    
+
 </script>
 
 </html>

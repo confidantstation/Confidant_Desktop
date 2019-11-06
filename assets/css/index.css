@@ -1,22 +1,26 @@
 /*
 控制邮件显示的样式
 */
-#inbox-emall .inbox-content div{
+#inbox-emall .email-uid  div{
     max-width: 380px;
 }
-#inbox-emall .inbox-content tr{
+#inbox-emall .email-uid  tr{
     max-width: 380px;
 }
-#inbox-emall .inbox-content img{
+#inbox-emall .email-uid  img{
     max-width: 380px;
 }
 .email-uid {
     width: 100%;
+    min-height: 502px;
     display: none;
     word-break:break-all;
     word-wrap: break-word;
-    
+    background: #fff;
+    padding:5px 5px 5px 5px;
+    box-sizing: border-box;
 }
+
 
 .fromImg {
     width: 44px;
@@ -327,7 +331,9 @@
     overflow-x: hidden;
     overflow-y: auto;
     box-sizing: border-box;
-    padding:5px 5px 5px 5px;
+   
+    background: url('../img/emailLogo.png') center center no-repeat;
+    
 }
 
 .inboxBtn {
@@ -547,4 +553,44 @@ footer .emall-card .newTag {
     height: 44px;
     background: rgba(102, 70, 247, 1);
     border-radius: 7px;
+}
+
+/* 美化滚动条 */
+.section-scroll{
+    width:100%;
+    height: 552px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+.nui-scroll::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+}
+/*正常情况下滑块的样式*/
+.nui-scroll::-webkit-scrollbar-thumb {
+    background-color: rgba(0,0,0,.05);
+    border-radius: 5px;
+    -webkit-box-shadow: inset 1px 1px 0 rgba(0,0,0,.1);
+}
+/*鼠标悬浮在该类指向的控件上时滑块的样式*/
+.nui-scroll:hover::-webkit-scrollbar-thumb {
+    background-color: rgba(0,0,0,.2);
+    border-radius: 5px;
+    -webkit-box-shadow: inset 1px 1px 0 rgba(0,0,0,.1);
+}
+/*鼠标悬浮在滑块上时滑块的样式*/
+.nui-scroll::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0,0,0,.4);
+    -webkit-box-shadow: inset 1px 1px 0 rgba(0,0,0,.1);
+}
+/*正常时候的主干部分*/
+.nui-scroll::-webkit-scrollbar-track {
+    border-radius: 5px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0);
+    background-color: white;
+}
+/*鼠标悬浮在滚动条上的主干部分*/
+.nui-scroll::-webkit-scrollbar-track:hover {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.4);
+    background-color: rgba(0,0,0,.01);
 }

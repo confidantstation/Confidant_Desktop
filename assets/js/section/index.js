@@ -234,6 +234,12 @@ $(function () {
         remote
     } = require('electron');
     $('.ImportBtnLogin').click(function () {
+        /* 邮件配置测试*/
+        let setMail = 0;
+        if($(this).attr('rel')){
+           
+            setMail =$(this).attr('rel')
+        }
         //选择圈子登录
         let app = settings.get('login')
         let privateKey = toPrivateKey(QRcode[1])
@@ -267,14 +273,21 @@ $(function () {
             console.log('data', data)
             if (data.retcode == 225) {
                 $('#logBoxB').hide();
-                $('#logBoxC').show()
+                if(setMail==='setEmail'){
+                    $('#logBoxC').show()
+                    settings.set('status', 'setEmail');
+                }else{
+                    $('#logBoxC').show()
+                    settings.set('status', 'login');
+                }
+               
                 remote.getCurrentWindow().setSize(1032, 600)
                 //remote.getCurrentWindow().maximize()
                 remote.getCurrentWindow().center()
 
-                settings.set('status', 'login');
+               
                 require('./assets/js/section/email.js');
-
+                ws.close();
             } 
             if(data.params){
                 let params = data.params
@@ -292,3 +305,4 @@ $(function () {
     })
 
 })
+

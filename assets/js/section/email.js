@@ -2,10 +2,10 @@
 $(function () {
     let status = settings.get('status')
     if (status === 'login') {
-
         getMail();
+    }else if(status === 'setEmail'){
 
-    };
+    }
 
 
     $(document).on('click', '.list-emallDiv', function () {

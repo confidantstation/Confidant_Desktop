@@ -99,7 +99,7 @@
 .footerImpor {
     float: right;
     margin-right: 30px;
-    display: none;
+    /* display: none; */
 }
 
 .helloP {
