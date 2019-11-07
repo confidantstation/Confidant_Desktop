@@ -95,7 +95,7 @@ class aesjs {
         });
         encrypted = encrypted.ciphertext.toString().toUpperCase();
         let encryptedHexStr = CryptoJS.enc.Hex.parse(encrypted);
-        return  CryptoJS.enc.Base64.stringify(encryptedHexStr)
+        return CryptoJS.enc.Base64.stringify(encryptedHexStr)
     }
     getaseid(n) {
         n = this.asetxt || n
@@ -153,7 +153,7 @@ class aesjs {
         const sodium = _sodium;
         return sodium.to_string(str)
     }
-    sodiumGet(str,k) {
+    sodiumGet(str, k) {
         /*
         @params(str,privateKey)
         @str 需要解密的字符串
@@ -162,11 +162,11 @@ class aesjs {
         */
 
         const sodium = _sodium;
-        let key =k || this.key
+        let key = k || this.key
         console.log('START sodiumGet---->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>-----')
         let sd = settings.get('sodium')
         console.log(sd)
-      
+
         let arr = toNewconfidantObj(str)
 
         key = arr.sodiumKey[0]
@@ -221,7 +221,7 @@ class aesjs {
 
         // let k = new Uint8Array(Buffer.from(key))
         let AA = 'AAAAAAAAAAAAAAAA'
-      
+
         let ks = sodium.crypto_box_seal(key, pk)
 
         let ks2 = sodium.crypto_box_seal_open(ks, pk, sk)
@@ -681,4 +681,43 @@ class mailos2 {
 
         imap.connect();
     }
+}
+
+/* 控制函数，主要控制各种组件之间的显示和隐藏 */
+function hideInbox(id) {
+    $('#logBoxB').hide();
+    if (id === 'setEmailHtml') {
+      
+        hideMenu('.nav')
+        $(`#${id},#logBoxC`).show()
+       
+    } else if (id === 'loginHtml') {
+       
+        $(`#${id},#logBoxC,#emailHtml,#new-emall`).show()
+
+    } else if (id === 'setEmailHtmlLogin') {
+        
+        $('#setEmailHtml').hide()
+        $('.nav,#emailHtml,#new-emall').show()
+        
+        getMail();
+    } else if (id === '') {
+
+    } else if (id === '') {
+
+    } else if (id === '') {
+
+    } else if (id === '') {
+
+    } else if (id === '') {
+
+    } else if (id === '') {
+
+    }
+
+    settings.set('status', id);
+}
+
+function hideMenu(h) {
+    $(`#new-emall,${h}`).hide()
 }

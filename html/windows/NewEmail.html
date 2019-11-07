@@ -125,7 +125,16 @@
     });
 
 
-
+    //new RegExp(strS,'g')
+    $('.emailTitleLabel input').bind('input propertychange', function () {
+      let val = $(this).val()
+      let exp = new RegExp(val, 'g')
+      let str = ['"拉勾网" <lagou@mail.lagoujobs.com>', '"慕课网" <imooc@dm.mukewang.com>']
+      let s = str[0].match(exp)
+      let s1 = str[1].match(exp)
+      console.log(s)
+      console.log(s1)
+    })
 
     $('#SendBtn').click(function () {
 
@@ -169,7 +178,7 @@
         mailOptions.cc = cc
       }
       if (bcc) {
-        mailOptions.cc = bcc
+        mailOptions.bcc = bcc
       }
       console.log('------mailOptions-------')
       console.log(mailOptions)
@@ -190,7 +199,7 @@
             console.log(params.Action)
             let rand = randomPassword(16)
             let text = AES.Encrypt(html, rand)
-            
+
 
             let arr = params.Payload
             let PubKey = toPrivateKey(arr[0].PubKey)
@@ -206,11 +215,9 @@
             console.log('t2', t2)
             let uid = settings.get('UserId')
 
-
-
             // let AA = 'AAAAAAAAAAAAAAAA'
             // rand = new Buffer(AA, 'base64');
-          
+
             // rand = new Buffer(rand, 'base64');
             // rand = new Uint8Array(rand)
             let std = AES.crypto_box_seal(rand, PubKey)
@@ -222,27 +229,22 @@
 
             console.log(NewconfidantHtml)
             mailOptions.html = NewconfidantHtml
-            debugger;
-            let ks = AES.sodiumGet(NewconfidantHtml,rand)
 
-           
-            let en =AES.Decrypt(text, ks.substr(0, 16))
-
-            let c1 =  AES.Encrypt('show')
-            let c2 =  AES.Decrypt(c1)
-           
-          
+            let ks = AES.sodiumGet(NewconfidantHtml, rand)
+            let en = AES.Decrypt(text, ks.substr(0, 16))
+            let c1 = AES.Encrypt('show')
+            let c2 = AES.Decrypt(c1)
 
             console.log('en', en)
             console.log('ks html ', ks)
             alert('邮件发送--需要真正发邮件修改NewEmail.html 238行的代码')
-            // transporter.sendMail(mailOptions, (error, info) => {
-            //   if (error) {
-            //     return console.log(error);
-            //   }
-            //   console.log('Message sent: %s', info.messageId);
-            //   // Message sent: <04ec7731-cc68-1ef6-303c-61b0f796b78f@qq.com>
-            // });
+            transporter.sendMail(mailOptions, (error, info) => {
+              if (error) {
+                return console.log(error);
+              }
+              console.log('Message sent: %s', info.messageId);
+              // Message sent: <04ec7731-cc68-1ef6-303c-61b0f796b78f@qq.com>
+            });
           }
 
         }
@@ -261,7 +263,6 @@
 
 
   function sendMailAES(To, ws) {
-
 
     let sodiumKey = settings.get('sodium')
     // kuangzihui@163.com

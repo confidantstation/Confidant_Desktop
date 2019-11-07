@@ -55,9 +55,6 @@ class mailos {
                             attrs['seqno'] = prefix
                             mlist[key] = attrs
                         });
-
-
-
                         msg.once('end', function () {
                             console.log(seqno + '完成');
                             //console.log(mlist)
@@ -85,7 +82,7 @@ class mailos {
         });
 
         imap.once('end', function () {
-           
+
             console.log('关闭邮箱');
         });
 
@@ -105,11 +102,17 @@ function getMail(user, password) {
     //let fs = require("fs")
     let inspect = require('util').inspect;
     const settings = require('electron-settings');
+    const setIMAP = {
+        Email,
+        Password,
+        host
+    } = settings.get('IMAP')
+    debugger
 
     let imap = new Imap({
-        user: '345632828@qq.com', //你的邮箱账号
-        password: 'cjdfhabfwwaicbbd', //你的邮箱密码
-        host: 'imap.qq.com', //邮箱服务器的主机地址
+        user: Email || '345632828@qq.com', 
+        password: Password || 'cjdfhabfwwaicbbd', 
+        host: host || 'imap.qq.com',
         port: 993, //邮箱服务器的端口地址
         tls: true, //使用安全传输协议
         tlsOptions: {
@@ -135,7 +138,7 @@ function getMail(user, password) {
             //      settings.set('messagesTotal',seq)
             // }
             seq = box.messages.total - 7
-            
+
 
             let seq1 = [`${seq}:*`]
             let f = imap.seq.fetch(seq1, {
@@ -147,14 +150,13 @@ function getMail(user, password) {
                 console.log('Message #%d', seqno);
                 let prefix = '(#' + seqno + ') ';
 
-
                 msg.on('body', function (stream, info) {
                     let buffer = '';
                     stream.on('data', function (chunk) {
                         buffer += chunk.toString('utf8');
                     });
                     stream.once('end', function () {
-                       // console.log(prefix + 'Parsed header: %s', inspect(Imap.parseHeader(buffer)));
+                        // console.log(prefix + 'Parsed header: %s', inspect(Imap.parseHeader(buffer)));
                     });
 
                 });
@@ -162,10 +164,10 @@ function getMail(user, password) {
                     let attr = inspect(attrs, false, 8)
                     // console.log(prefix + 'Attributes: %s', attr);
                     // console.log(attrs.uid)
-                    getMailUid(attrs.uid)
+                    getMailUid(attrs.uid, setIMAP)
                 });
                 msg.once('end', function () {
-                   // console.log(prefix + 'Finished');
+                    // console.log(prefix + 'Finished');
                 });
             });
             f.once('error', function (err) {
@@ -191,17 +193,22 @@ function getMail(user, password) {
     // end getMail
 }
 
-function getMailUid(uid) {
+function getMailUid(uid, setIMAP) {
     // 获取最新十封邮件
     let Imap = require('imap')
     let MailParser = require("mailparser").MailParser
     let fs = require("fs")
+    let {
+        Email,
+        Password,
+        host
+    } = setIMAP
 
     let imap = new Imap({
-        user: '345632828@qq.com', //你的邮箱账号
-        password: 'cjdfhabfwwaicbbd', //你的邮箱密码
-        host: 'imap.qq.com', //邮箱服务器的主机地址
-        port: 993, //邮箱服务器的端口地址
+        user: Email || '345632828@qq.com', 
+        password: Password || 'cjdfhabfwwaicbbd', 
+        host: host || 'imap.qq.com', 
+        port: 993, 
         tls: true, //使用安全传输协议
         tlsOptions: {
             rejectUnauthorized: false
@@ -309,7 +316,7 @@ function getMailUid(uid) {
 
 //控制邮箱如果显示，及以取内容前32个字符
 function getHtmlText(str, uid) {
-    
+
     let html
     if (str.html && str.html.indexOf('newconfidant') > 0) {
         html = str.html
@@ -318,14 +325,14 @@ function getHtmlText(str, uid) {
         console.log(html)
         let n = html.indexOf('<span')
         let strAes = html.substr(0, n)
-        console.log('strAes',strAes)
+        console.log('strAes', strAes)
         let ks = WinAES.sodiumGet(html)
-        let ka = strAes||'4x2fHgATrmWCiL9soNsJ9XnsGwEkfA5DKzHIwBU3d6HkbDgCQSpnaOIYILMAhwZU8Ex620Wr/6GyWudTaXwKmg=='
+        let ka = strAes || '4x2fHgATrmWCiL9soNsJ9XnsGwEkfA5DKzHIwBU3d6HkbDgCQSpnaOIYILMAhwZU8Ex620Wr/6GyWudTaXwKmg=='
         let en = WinAES.Decrypt(ka, ks.substr(0, 16))
-       
+
         str = en || str
 
-        console.log('str',str)
+        console.log('str', str)
         console.log('END sodiumGet---->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>-----')
     } else {
         if (str.html) {
@@ -337,11 +344,11 @@ function getHtmlText(str, uid) {
         };
 
     }
-    let $inboxContent= $('.inbox-content')
-   
-        $inboxContent.append(`<div class="email-uid emHtml${uid}" uid="${uid}">${str}</div>`);
-   
-  
+    let $inboxContent = $('.inbox-content')
+
+    $inboxContent.append(`<div class="email-uid emHtml${uid}" uid="${uid}">${str}</div>`);
+
+
 
     html = html.replace(/\s+/g, ' ');
     if (html[0] == " ") {
@@ -385,7 +392,7 @@ function setMailBody(uid, text, file) {
 
 function setMailHeader(uid, headers) {
 
-   
+
     console.log(`setMailHeader-----------`)
     console.log("邮件主题: " + headers.get('subject'));
     console.log("发件人: " + headers.get('from').text);
@@ -417,7 +424,7 @@ function setMailHeader(uid, headers) {
         </div>
     </div>`
     $('#list-emall section').prepend(html)
-   
+
 }
 
 function getGBK32(str) {
@@ -449,6 +456,3 @@ function getBLen(str) {
     }
     return len;
 }
-
-
-

@@ -1,6 +1,6 @@
 <template class="task-template">
     <div id='setEmailHtml' class="html">
-        <div id='inbox-emall' class="jusCenter" style="width:900px;">
+        <div class="jusCenter inbox-emall" style="width:960px;">
             <div>
                 <p>
                     <img class="newAccountBtnImg" src="./assets/img/emailLogo.png">
@@ -9,67 +9,70 @@
                 <p class="jusCenter"><button class="newAccountBtn">New Account</button></p>
             </div>
         </div>
+        <!--modal-->
+        <div class="newAccountDiv" style="display: none;">
+            <div class="newAccountHead">New Account</div>
+            <section>
+                <div class="newAccount">
+                    <div class="newAccountList">
+                        <i class="ia"><img rel='QQMailbox' src="./assets/img/mails/email_icon_qqmailbox.png"></i>
+                        <i class="ib">QQMailbox</i>
+                    </div>
+                    <div class="newAccountList">
+                        <i class="ia"><img rel='QQMail' src="./assets/img/mails/email_icon_qq.png"></i>
+                        <i class="ib">QQMail</i>
+                    </div>
+                    <div class="newAccountList">
+                        <i class="ia"><img rel='163Mail' src="./assets/img/mails/email_icon_163.png"></i>
+                        <i class="ib">163Mail</i>
+                    </div>
+                    <div class="newAccountList">
+                        <i class="ia"><img rel='Gmail' src="./assets/img/mails/email_icon_google.png"></i>
+                        <i class="ib">Gmail</i>
+                    </div>
+                    <div class="newAccountList">
+                        <i class="ia"><img rel='Outlook' src="./assets/img/mails/email_icon_outlook.png"></i>
+                        <i class="ib">Outlook, Hotmail, live</i>
+                    </div>
+                    <div class="newAccountList">
+                        <i class="ia"><img rel='iCloud' src="./assets/img/mails/email_icon_icloud.png"></i>
+                        <i class="ib">iCloud</i>
+                    </div>
+                    <div class="newAccountList">
+                        <i class="ia"><img rel='Other' src="./assets/img/mails/email_icon_other.png"></i>
+                        <i class="ib">Other (IMAP)</i>
+                    </div>
+                    <div class="newAccountFooter">
+                        <button class="newAccountCancel">Cancel</button>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <!--modal-->
+        <div class="mailLogin" style="display: none;margin-left:-110px;">
+            <header>
+                <img id='mailLoginImg' src="./assets/img/mails/email_icon_163_n.png">
+            </header>
+            <section>
+                <p class="mailLoginTitle">Email</p>
+                <p><input class="mailLoginInput" type="text" placeholder="example@gmail.com"></p>
+                <p class="mailLoginTitle">Password</p>
+                <p><input class="mailLoginInput" type="text" placeholder="Password/Authorization code"></p>
+            </section>
+            <footer>
+                <button class="mailLoginBtn">Login</button>
+            </footer>
+        </div>
     </div>
-    <!--modal-->
-    <div class="newAccountDiv" style="display: none;">
-        <div class="newAccountHead">New Account</div>
-        <section>
-            <div class="newAccount">
-                <div class="newAccountList">
-                    <i class="ia"><img src="./assets/img/mails/email_icon_qqmailbox.png"></i>
-                    <i class="ib">QQMailbox</i>
-                </div>
-                <div class="newAccountList">
-                    <i class="ia"><img src="./assets/img/mails/email_icon_google.png"></i>
-                    <i class="ib">QQMail</i>
-                </div>
-                <div class="newAccountList">
-                    <i class="ia"><img src="./assets/img/mails/email_icon_163.png"></i>
-                    <i class="ib">163Mail</i>
-                </div>
-                <div class="newAccountList">
-                    <i class="ia"><img src="./assets/img/mails/email_icon_google.png"></i>
-                    <i class="ib">Gmail</i>
-                </div>
-                <div class="newAccountList">
-                    <i class="ia"><img src="./assets/img/mails/email_icon_outlook.png"></i>
-                    <i class="ib">Outlook, Hotmail, live</i>
-                </div>
-                <div class="newAccountList">
-                    <i class="ia"><img src="./assets/img/mails/email_icon_icloud.png"></i>
-                    <i class="ib">iCloud</i>
-                </div>
-                <div class="newAccountList">
-                    <i class="ia"><img src="./assets/img/mails/email_icon_other.png"></i>
-                    <i class="ib">Other (IMAP)</i>
-                </div>
-                <div class="newAccountFooter">
-                    <button class="newAccountCancel">Cancel</button>
-                </div>
-            </div>
-        </section>
-    </div>
-    <!--modal-->
-    <div class="mailLogin" style="display: none;">
-        <header>
-            <img id='mailLoginImg' src="./assets/img/mails/email_icon_163_n.png">
-        </header>
-        <section>
-            <p class="mailLoginTitle">Email</p>
-            <p><input class="mailLoginInput" type="text" placeholder="example@gmail.com"></p>
-            <p class="mailLoginTitle">Password</p>
-            <p><input class="mailLoginInput" type="text" placeholder="Password/Authorization code"></p>
-        </section>
-        <footer>
-            <button class="mailLoginBtn">Login</button>
-        </footer>
-    </div>
+
 
 
     <script>
+
         $(function () {
+            const settings = require('electron-settings');
             $('.newAccountBtn,.newAccountBtnImg').click(function () {
-               
+
                 $('.newAccountDiv').show()
             })
             $('.newAccountCancel').click(function () {
@@ -80,16 +83,38 @@
             }, function () {
                 $(this).css({ 'background': "#fff", 'color': '#000' })
             })
-
+            let rel = ''
             $('.newAccountList').click(function () {
                 let _this = $(this)
                 let val = _this.find('.ib').text()
                 let img = _this.find('.ia img').attr('src')
                 img = img.replace('.png', '_n.png')
+                rel = _this.find('.ia img').attr('rel')
                 $('#mailLoginImg').attr('src', img)
                 $('.newAccountDiv').hide()
                 $('.mailLogin').show()
             })
+
+            $('.mailLoginBtn').click(function () {
+                let $mailLoginInput = $('.mailLoginInput')
+                let Email = $mailLoginInput.eq(0).val()
+                let Password = $mailLoginInput.eq(1).val()
+
+                settings.set('IMAP', { Email, Password, host:getHost(rel) })
+
+                hideInbox('setEmailHtmlLogin')
+
+            })
         })
+        function getHost(name) {
+            let mailName = ["QQMailbox", "QQMail", "163Mail", "Gmail", "Outlook, Hotmail, live", "iCloud", "Other (IMAP)"]
+            switch(name){
+                case 'QQMail':
+                    return 'imap.qq.com'
+                break;
+                default:
+                    return 0
+            }
+        }
     </script>
 </template>

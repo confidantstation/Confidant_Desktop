@@ -126,7 +126,7 @@ $(function () {
                         settings.set('sodium', {
                             privateKey,
                             publicKey: toPrivateKey(publicKey),
-                           
+
                         })
                         let str = {
                             "Action": "Recovery",
@@ -227,16 +227,16 @@ $(function () {
         });
 
     });
-    
 
-    
+
+
     const {
         remote
     } = require('electron');
     $('.ImportBtnLogin').click(function () {
         /* 邮件配置测试*/
-        let setMail = $(this).attr('rel')||'loginHtml';
-       
+        let setMail = $(this).attr('rel') || 'loginHtml';
+
         //选择圈子登录
         let app = settings.get('login')
         let privateKey = toPrivateKey(QRcode[1])
@@ -251,7 +251,7 @@ $(function () {
         //alert("登录...");
 
         let data = settings.get('wsdata') || 0
-        
+
         if (data) {
             ws = new WebSocket(`wss://${data.ServerHost}:${data.ServerPort}`, "lws-minimal");
         } else {
@@ -269,7 +269,7 @@ $(function () {
             let data = JSON.parse(evt.data)
             console.log('data', data)
             if (data.retcode == 225) {
-                
+
                 hideInbox(setMail)
                 // if(setMail==='setEmail'){
                 //     $('#logBoxC').show()
@@ -277,21 +277,21 @@ $(function () {
                 //     settings.set('status', 'setEmail');
                 // }else{
                 //     $('#logBoxC,#emailHtml').show()
-                    
+
                 //     settings.set('status', 'login');
                 // }
-               
+
                 remote.getCurrentWindow().setSize(1032, 600)
                 //remote.getCurrentWindow().maximize()
                 remote.getCurrentWindow().center()
 
-               
+
                 require('./assets/js/section/email.js');
-                
-            } 
-            if(data.params){
+
+            }
+            if (data.params) {
                 let params = data.params
-                if(params.Action ==="CheckmailUkey"){
+                if (params.Action === "CheckmailUkey") {
                     console.log('CheckmailUkey')
                 }
             }
@@ -305,38 +305,3 @@ $(function () {
     })
 
 })
-
-function hideInbox(id){
-    $('#logBoxB').hide();
-    debugger;
-    if(id ==='setEmailHtml'){
-        $('#list-emall,#inbox-emall,#new-emall,#menu').hide()
-        $('#setEmailHtml').show()
-    }
-    else if(id ==='loginHtml'){
-        $('#logBoxC,#emailHtml').show()
-    }
-    else if(id ===''){
-        
-    }
-    else if(id ===''){
-        
-    }
-    else if(id ===''){
-        
-    }
-    else if(id ===''){
-        
-    }
-    else if(id ===''){
-        
-    }
-    else if(id ===''){
-        
-    }
-    else if(id ===''){
-        
-    }
-
-    settings.set('status', id);
-}
