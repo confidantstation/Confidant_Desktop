@@ -60,12 +60,28 @@
     }
 
     function splitNewconfidant(str) {
-      let arr = str.split('&&')
-      let obj = {
-        emailName: arr[0].split('##'),
-        sodiumKey: arr[1].split('##')
+      let arr = str.split('##')
+      let arr2 = []
+      for(let i in arr){
+        let str = arr[i].split('&&')
+        arr2.push({
+          name:str[0],
+          key:str[1]
+        })
       }
-      return obj
+      return arr2
+    }
+    function toNewconfidantkeyString(arr){
+      let str = ''
+      return arr.map(function(x){
+        let s = `${x.name}&&${x.key}`
+        if(str===''){
+          str = str +s
+        }else{
+          str = str +'##'+s
+        }
+        return str
+      })
     }
 
     function toNewconfidantObj(str) {
@@ -79,13 +95,12 @@
       let newconfidantkey = getNewconfidantkeyid(id1)
       let newconfidantuserid = getNewconfidantkeyid(id2)
 
-      let { emailName, sodiumKey } = splitNewconfidant(newconfidantkey)
+      let splitNew= splitNewconfidant(newconfidantkey)
 
       return {
         newconfidantkey,
         newconfidantuserid,
-        emailName,
-        sodiumKey
+        emailName:splitNew
       }
     }
 
@@ -119,7 +134,9 @@
       console.log(obj)
       let arr = splitNewconfidant(obj.newconfidantkey)
       console.log(arr)
-      console.log(toNewconfidantObj(str))
+      console.log(toNewconfidantkeyString(str))
+
+
     })
 
     $('#SearchA').click(function () {
@@ -136,8 +153,7 @@
 
 
 
-      let n = randomPassword(16)
-      console.log('16位随机字符', n)
+     
     })
   });
 </script>

@@ -107,7 +107,7 @@ function getMail(user, password) {
         Password,
         host
     } = settings.get('IMAP')
-    debugger
+   
 
     let imap = new Imap({
         user: Email || '345632828@qq.com', 
@@ -314,7 +314,7 @@ function getMailUid(uid, setIMAP) {
     imap.connect();
 }
 
-//控制邮箱如果显示，及以取内容前32个字符
+//控制邮箱显示，及以取内容前32个字符
 function getHtmlText(str, uid) {
 
     let html

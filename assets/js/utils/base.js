@@ -174,11 +174,11 @@ class aesjs {
         let privateKey = getUnit8SKPK(sd.privateKey)
         let publicKey = getUnit8SKPK(sd.publicKey)
 
-
         console.log('privateKey', privateKey)
 
         let sk = sodium.crypto_sign_ed25519_sk_to_curve25519(privateKey);
         let pk = sodium.crypto_sign_ed25519_pk_to_curve25519(publicKey);
+        debugger;
 
         let k2 = toPrivateKey(key)
         console.log('k2', k2)
@@ -211,22 +211,21 @@ class aesjs {
         */
         const sodium = _sodium;
         let sd = settings.get('sodium')
-        let privateKey = getUnit8SKPK(sd.privateKey)
+        // let privateKey = getUnit8SKPK(sd.privateKey)
         let publicKey = getUnit8SKPK(sd.publicKey)
         if (Pubkey) {
             publicKey = Pubkey
         }
-        let sk = sodium.crypto_sign_ed25519_sk_to_curve25519(privateKey);
+        // let sk = sodium.crypto_sign_ed25519_sk_to_curve25519(privateKey);
         let pk = sodium.crypto_sign_ed25519_pk_to_curve25519(publicKey);
 
         // let k = new Uint8Array(Buffer.from(key))
-        let AA = 'AAAAAAAAAAAAAAAA'
-
+       
         let ks = sodium.crypto_box_seal(key, pk)
 
-        let ks2 = sodium.crypto_box_seal_open(ks, pk, sk)
-        let abc = sodium.to_string(ks2)
-        console.log('abc', abc)
+        // let ks2 = sodium.crypto_box_seal_open(ks, pk, sk)
+      
+      
 
         return ks
     }
@@ -238,8 +237,6 @@ class aesjs {
 
         let privateKey = getUnit8SKPK(sd.privateKey)
         let publicKey = getUnit8SKPK(sd.publicKey)
-
-
 
         let sk = sodium.crypto_sign_ed25519_sk_to_curve25519(privateKey);
         let pk = sodium.crypto_sign_ed25519_pk_to_curve25519(publicKey);
