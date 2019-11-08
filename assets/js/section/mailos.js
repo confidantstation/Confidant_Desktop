@@ -139,7 +139,7 @@ function getMail(tag,user, password) {
             //      settings.set('messagesTotal',seq)
             // }
             // -10 有错误，下周排除
-            seq = box.messages.total - 9
+            seq = box.messages.total - 2
 
 
             let seq1 = [`${seq}:*`]
@@ -262,30 +262,30 @@ function getMailUid(uid, setIMAP) {
                     });
 
                     //邮件内容
-                    let file = 0
+                    let file = 0;
                     mailparser.on("data", function (data) {
 
-                        let text32 = getHtmlText(data, uid)
+                        let text32 = getHtmlText(data, uid);
                         console.log(uid + "-邮件data内容>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-                        console.log(data)
+                        console.log(data);
                         if (data.release) {
                             let rel = data.release()
                             console.table(rel)
-                        }
+                        };
                         if (data.type === 'text') { //邮件正文
                             console.log(uid + "-邮件text内容信息>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
                             //console.log(data);
                             //console.log("邮件内容: " + data.html);
                             console.log('html->', text32)
-                        }
+                        };
                         if (data.type === 'attachment') { //附件
                             console.log("邮件附件信息>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
                             console.log("附件名称:" + data.filename); //打印附件的名称
                             //data.content.pipe(fs.createWriteStream(data.filename));//保存附件到当前目录下
                             //data.release();
                             file++
-                        }
-                        setMailBody(uid, text32, file)
+                        };
+                        setMailBody(uid, text32, file);
 
                     });
 
@@ -336,7 +336,7 @@ function getHtmlText(str, uid) {
         let n = html.indexOf('<span')
         let strAes = html.substr(0, n)
         console.log('strAes', strAes)
-       
+       debugger;
         let ks = WinAES.sodiumGet(html)
         let ka = strAes || '4x2fHgATrmWCiL9soNsJ9XnsGwEkfA5DKzHIwBU3d6HkbDgCQSpnaOIYILMAhwZU8Ex620Wr/6GyWudTaXwKmg=='
         let en = WinAES.Decrypt(ka, ks.substr(0, 16))
@@ -354,17 +354,16 @@ function getHtmlText(str, uid) {
             html = $(str).text()
         };
 
-    }
-    let $inboxContent = $('.inbox-content')
-
-    $inboxContent.append(`<div class="email-uid emHtml${uid}" uid="${uid}">${str}</div>`);
+    };
+    // let $inboxContent = $('.inbox-content');
+    $('.inbox-content').append(`<div class="email-uid emHtml${uid}" uid="${uid}">${str}</div>`);
 
     html = html.replace(/\s+/g, ' ');
     if (html[0] == " ") {
         html = html.substr(1, 33)
     } else {
         html = html.substr(0, 32)
-    }
+    };
 
     return html
 }

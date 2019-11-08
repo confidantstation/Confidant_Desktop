@@ -184,8 +184,14 @@ class aesjs {
         console.log('k2', k2)
         console.log('解密私钥sk1', sk)
 
-
-        let ks = sodium.crypto_box_seal_open(k2, pk, sk)
+        let ks = ""
+        try {
+            ks = sodium.crypto_box_seal_open(k2, pk, sk)
+        }
+        catch(err) {
+           console.log(err)
+        }
+       
         // console.log('ks', ks)
         // console.log('string', dataToString(ks))
         // console.log('from_string', sodium.from_string(ks))

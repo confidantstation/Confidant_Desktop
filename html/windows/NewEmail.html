@@ -205,7 +205,7 @@
 
             mailOptions.html = sendMailEncrypt(arr, html)
 
-            //alert('邮件发送--需要真正发邮件修改NewEmail.html 238行的代码')
+            alert('邮件发送--需要真正发邮件修改NewEmail.html 238行的代码')
             transporter.sendMail(mailOptions, (error, info) => {
               if (error) {
                 return console.log(error);
@@ -285,20 +285,20 @@
     let keys = toNewconfidantkeyString(key)
 
 
-    let html = `${text}<span style='display:none' id='newconfidantkey${keys}'></span><span style='display:none' id='newconfidantuserid${uid}'></span><div myconfidantbegin=''><br /><br /><br /><span>Sent from MyConfidant, the app for encrypted email.</span></div>`
+    let html = `${text}<span style='display:none' id='newconfidantkey${keys}'></span><span style='display:none' id='newconfidantuserid${uid}'></span><div newmyconfidantbegin=''><br /><br /><br /><span>Sent from MyConfidant, the app for encrypted email.</span></div>`
     return html
   }
 
   //加密邮件 主函数
   function sendMailEncrypt(arr, html) {
-    let rand = randomPassword(16)
-    let text = AES.Encrypt(html, rand)
+    let rand = randomPassword(32)
+    let text = AES.Encrypt(html, rand.substr(0,16))
     let PubKey = toPrivateKey(arr[0].PubKey)
-
+    // rand =''
     let uid = settings.get('UserId')
     let std = AES.crypto_box_seal(rand, PubKey)
     std = tobase64(std)
-
+    debugger;
     let keyArr = arr.map((x) => {
       let key = AES.crypto_box_seal(rand, toPrivateKey(x.PubKey))
       console.log(key)
@@ -308,6 +308,7 @@
       return { name, key }
 
     })
+    console.log(keyArr)
     // let keys = toNewconfidantkeyString(keyArr)
 
 
