@@ -316,9 +316,16 @@ function getMailUid(uid, setIMAP) {
 
 //控制邮箱显示，及以取内容前32个字符
 function getHtmlText(str, uid) {
-
+    debugger;
+    if(Object.prototype.toString.call(str.html) !=='[object String]'){
+        console.log('getHtmlText(str,uid) str.html 不是字符串')
+        return 'str.html 不是字符串'
+    }
     let html
-    if ( Object.prototype.toString.call(str.html)==='[object String]'  && str.html.indexOf('newconfidant') > 0 && str.html.indexOf('newconfidantcontent') < 0) {
+    if(str.html.indexOf('newconfidantcontent')>0){
+        str.html =  $(str.html).attr('id')
+    }
+    if ( str.html.indexOf('newconfidant') > 0 && str.html.indexOf('newconfidantcontent') < 0) {
         
 
         html = str.html

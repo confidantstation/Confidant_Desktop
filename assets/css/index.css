@@ -3,7 +3,7 @@
 */
 body div:last-child {
     padding-left: 0;
-    font-size: 0;
+    font-size: inherit;
 }
 #logBoxC .inbox-emall .email-uid div {
     max-width: 380px;

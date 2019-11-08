@@ -51,7 +51,7 @@
   }
 
   #emailSendPage section p {
-    padding: 0 10px;
+    height: 40px;
   }
 
   #emailSendPage article {}
@@ -118,6 +118,9 @@
   const settings = require('electron-settings');
   let AES = new aesjs()
   $(function () {
+
+    let ck = "t+INmZg96TCvt7w1Rt9Q+iToWFwdT2hCq6ck1sUwxR4="
+
 
     ipcRenderer.on('NewEmail', function (event, message) { // 监听父页面定义的端口
 
@@ -203,13 +206,13 @@
             mailOptions.html = sendMailEncrypt(arr, html)
 
             alert('邮件发送--需要真正发邮件修改NewEmail.html 238行的代码')
-            transporter.sendMail(mailOptions, (error, info) => {
-              if (error) {
-                return console.log(error);
-              }
-              console.log('Message sent: %s', info.messageId);
-              // Message sent: <04ec7731-cc68-1ef6-303c-61b0f796b78f@qq.com>
-            });
+            // transporter.sendMail(mailOptions, (error, info) => {
+            //   if (error) {
+            //     return console.log(error);
+            //   }
+            //   console.log('Message sent: %s', info.messageId);
+            //   // Message sent: <04ec7731-cc68-1ef6-303c-61b0f796b78f@qq.com>
+            // });
           }
         }
 
@@ -280,8 +283,8 @@
      * @return {html}           
      */
     let keys = toNewconfidantkeyString(key)
-   
-    
+
+
     let html = `${text}<span style='display:none' id='newconfidantkey${keys}'></span><span style='display:none' id='newconfidantuserid${uid}'></span><div myconfidantbegin=''><br /><br /><br /><span>Sent from MyConfidant, the app for encrypted email.</span></div>`
     return html
   }
@@ -295,7 +298,7 @@
     let uid = settings.get('UserId')
     let std = AES.crypto_box_seal(rand, PubKey)
     std = tobase64(std)
-    
+
     let keyArr = arr.map((x) => {
       let key = AES.crypto_box_seal(rand, toPrivateKey(x.PubKey))
       key = tobase64(key)
@@ -317,7 +320,7 @@
   //加密邮件 字符拼接函数二
   function toNewconfidantkeyString(arr) {
     let str = ''
-    for(let i in arr){
+    for (let i in arr) {
       let s = `${arr[i].name}&&${arr[i].key}`
       if (str === '') {
         str = str + s

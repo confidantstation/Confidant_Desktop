@@ -154,7 +154,6 @@ class aesjs {
         return sodium.to_string(str)
     }
     sodiumGet(str, k) {
-        
         /*
         @params(str,privateKey)
         @str 需要解密的字符串
@@ -179,7 +178,7 @@ class aesjs {
 
         let sk = sodium.crypto_sign_ed25519_sk_to_curve25519(privateKey);
         let pk = sodium.crypto_sign_ed25519_pk_to_curve25519(publicKey);
-      
+
 
         let k2 = toPrivateKey(key)
         console.log('k2', k2)
@@ -210,6 +209,7 @@ class aesjs {
            @params(key, Pubkey)
            @key {string | Unit8Array}
         */
+        debugger;
         const sodium = _sodium;
         let sd = settings.get('sodium')
         // let privateKey = getUnit8SKPK(sd.privateKey)
@@ -218,15 +218,18 @@ class aesjs {
             publicKey = Pubkey
         }
         // let sk = sodium.crypto_sign_ed25519_sk_to_curve25519(privateKey);
+        if (Object.prototype.toString.call(publicKey) === '[object String]') {
+            publicKey = getUnit8SKPK(publicKey)
+        }
         let pk = sodium.crypto_sign_ed25519_pk_to_curve25519(publicKey);
 
         // let k = new Uint8Array(Buffer.from(key))
-       
+
         let ks = sodium.crypto_box_seal(key, pk)
 
         // let ks2 = sodium.crypto_box_seal_open(ks, pk, sk)
-      
-      
+
+
 
         return ks
     }
@@ -258,8 +261,8 @@ class aesjs {
 
 
 function getNewconfidantkeyid(str) {
-   
-    if(Object.prototype.toString.call(str)!=='[object String]') return false
+
+    if (Object.prototype.toString.call(str) !== '[object String]') return false
     let len
     if (str.indexOf('newconfidantkey') === 0) {
         len = 'newconfidantkey'.length
@@ -272,15 +275,15 @@ function getNewconfidantkeyid(str) {
 function splitNewconfidant(str) {
     let arr = str.split('##')
     let arr2 = []
-    for(let i in arr){
-      let str = arr[i].split('&&')
-      arr2.push({
-        name:str[0],
-        key:str[1]
-      })
+    for (let i in arr) {
+        let str = arr[i].split('&&')
+        arr2.push({
+            name: str[0],
+            key: str[1]
+        })
     }
     return arr2
-  }
+}
 
 function toNewconfidantObj(str) {
 
@@ -293,14 +296,14 @@ function toNewconfidantObj(str) {
     let newconfidantkey = getNewconfidantkeyid(id1)
     let newconfidantuserid = getNewconfidantkeyid(id2)
 
-    let splitNew= splitNewconfidant(newconfidantkey)
+    let splitNew = splitNewconfidant(newconfidantkey)
 
     return {
-      newconfidantkey,
-      newconfidantuserid,
-      emailName:splitNew
+        newconfidantkey,
+        newconfidantuserid,
+        emailName: splitNew
     }
-  }
+}
 
 function toNewconfidantHtml(text, key, uid) {
     /* 返回加密后的html
@@ -371,10 +374,19 @@ function tobase64(d, k) {
         return arr
     }
     if (k == 'reset') {
-        let bf = Buffer.from(d, 'base64');
-        console.log('bfbfbf', bf)
-        //arr = new Int8Array(bf)
-        return toPrivateKey(d)
+        let arr = new Uint8Array(Buffer.from(d, 'base64'))
+        let arr2 = []
+        console.log('tobase64 reset', arr)
+        for (let i in arr) {
+            if (arr[i] > 128) {
+               arr2.push(arr[i] -256)
+            } else {
+                arr2.push(arr[i])
+            }
+        }
+        console.log('tobase64 reset', arr2)
+
+        return arr2
     }
 
     arr = Buffer.from(d, 'hex').toString("base64");
@@ -678,19 +690,19 @@ class mailos2 {
 function hideInbox(id) {
     $('#logBoxB').hide();
     if (id === 'setEmailHtml') {
-      
+
         hideMenu('.nav')
         $(`#${id},#logBoxC`).show()
-       
+
     } else if (id === 'loginHtml') {
-       
+
         $(`#${id},#logBoxC,#emailHtml,#new-emall`).show()
 
     } else if (id === 'setEmailHtmlLogin') {
-        
+
         $('#setEmailHtml').hide()
         $('.nav,#emailHtml,#new-emall').show()
-        
+
         getMail();
     } else if (id === '') {
 

@@ -117,6 +117,19 @@ $(function () {
                         ASE.getserverip()
                         let privateKey = toPrivateKey(QRcode[1])
                         let publicKey = privateKey.slice(-32);
+
+                        let ts1 = [-64, 18, 65, -98, 95, 105, 80, 8, 106, 78, -81, 94, -56, -115, 27, -108, 67, 3, 57, 97, 72, -78, 90, 19, -79, -55, 26, -93, -109, -104, 16, -96]
+                        let ts2 = [192, 18, 65, 158, 95, 105, 80, 8, 106, 78, 175, 94, 200, 141, 27, 148, 67, 3, 57, 97, 72, 178, 90, 19, 177, 201, 26, 163, 147, 152, 16, 160]
+
+                        let ts3 = tobase64('wBJBnl9pUAhqTq9eyI0blEMDOWFIsloTsckao5OYEKA=', 'reset')
+
+                        //let ts5 = tobase64(ts2, 'reset')
+                        console.log(ts3)
+
+                        let ts6 = ASE.from_string(ts2)
+                        
+                        //let ts3 = ASE.crypto_box_seal('aaa',ts2)
+
                         publicKey = tobase64(publicKey)
                         console.log('CircleQRcode ', CircleQRcode)
                         console.log('toPrivateKey ', QRcode)
@@ -153,7 +166,7 @@ $(function () {
                         settings.set('app', app);
 
                         let data = settings.get('wsdata') || 0
-                      
+
                         if (data) {
                             ws = new WebSocket(`wss://${data.ServerHost}:${data.ServerPort}`, "lws-minimal");
                         } else {
