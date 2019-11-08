@@ -209,7 +209,7 @@ class aesjs {
            @params(key, Pubkey)
            @key {string | Unit8Array}
         */
-        debugger;
+       
         const sodium = _sodium;
         let sd = settings.get('sodium')
         // let privateKey = getUnit8SKPK(sd.privateKey)
@@ -228,8 +228,6 @@ class aesjs {
         let ks = sodium.crypto_box_seal(key, pk)
 
         // let ks2 = sodium.crypto_box_seal_open(ks, pk, sk)
-
-
 
         return ks
     }
@@ -374,7 +372,7 @@ function tobase64(d, k) {
         return arr
     }
     if (k == 'reset') {
-        let arr = new Uint8Array(Buffer.from(d, 'base64'))
+          
         let arr2 = []
         console.log('tobase64 reset', arr)
         for (let i in arr) {

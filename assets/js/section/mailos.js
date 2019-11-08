@@ -95,7 +95,8 @@ class mailos {
 
 
 
-function getMail(user, password) {
+function getMail(tag,user, password) {
+    // tag 默认值为Inbox  取值范围 = 'Inbox Node Starred Drafts Sent Spam Trash'
     // 获取最新十封邮件
     let Imap = require('imap')
     //let MailParser = require("mailparser").MailParser
@@ -137,7 +138,8 @@ function getMail(user, password) {
             //      seq = box.messages.total - 3
             //      settings.set('messagesTotal',seq)
             // }
-            seq = box.messages.total - 7
+            // -10 有错误，下周排除
+            seq = box.messages.total - 9
 
 
             let seq1 = [`${seq}:*`]
@@ -316,17 +318,16 @@ function getMailUid(uid, setIMAP) {
 
 //控制邮箱显示，及以取内容前32个字符
 function getHtmlText(str, uid) {
-    debugger;
+    
     if(Object.prototype.toString.call(str.html) !=='[object String]'){
-        console.log('getHtmlText(str,uid) str.html 不是字符串')
-        return 'str.html 不是字符串'
+        console.log('getHtmlText(str, uid) 第一个参数不是字符串')
+        return 'getHtmlText(str, uid) 第一个参数不是字符串'
     }
     let html
     if(str.html.indexOf('newconfidantcontent')>0){
         str.html =  $(str.html).attr('id')
     }
     if ( str.html.indexOf('newconfidant') > 0 && str.html.indexOf('newconfidantcontent') < 0) {
-        
 
         html = str.html
         str = str.html
@@ -358,16 +359,12 @@ function getHtmlText(str, uid) {
 
     $inboxContent.append(`<div class="email-uid emHtml${uid}" uid="${uid}">${str}</div>`);
 
-
-
     html = html.replace(/\s+/g, ' ');
     if (html[0] == " ") {
         html = html.substr(1, 33)
     } else {
         html = html.substr(0, 32)
     }
-
-
 
     return html
 }
@@ -390,19 +387,12 @@ function setMailBody(uid, text, file) {
         if (id == uid) {
             //console.log('each uid', uid)
             _this.find('.emallDivB').append(str)
-
-
         }
     })
 }
 
-
 // 设置邮箱列表（导航)
-
-
 function setMailHeader(uid, headers) {
-
-
     console.log(`setMailHeader-----------`)
     console.log("邮件主题: " + headers.get('subject'));
     console.log("发件人: " + headers.get('from').text);
@@ -419,9 +409,6 @@ function setMailHeader(uid, headers) {
     let from = headers.get('from').text
     let fromImg = from.substr(0, 1)
     let subject = headers.get('subject')
-
-
-
     subject = getGBK32(subject)
 
     let html = `<div class="list-emallDiv emuid${uid}" uid="${uid}">

@@ -119,7 +119,7 @@
   const nodemailer = require('nodemailer')
 
   ipcRenderer.on('Reply', function (event, message) { // 监听父页面定义的端口
-    debugger;
+    
     let d = JSON.parse(message)
     $('#To').val(d.to)
     $('#Subject').val(d.subject)

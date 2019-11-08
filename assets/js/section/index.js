@@ -122,8 +122,7 @@ $(function () {
                         let ts2 = [192, 18, 65, 158, 95, 105, 80, 8, 106, 78, 175, 94, 200, 141, 27, 148, 67, 3, 57, 97, 72, 178, 90, 19, 177, 201, 26, 163, 147, 152, 16, 160]
 
                         let ts3 = tobase64('wBJBnl9pUAhqTq9eyI0blEMDOWFIsloTsckao5OYEKA=', 'reset')
-
-                        //let ts5 = tobase64(ts2, 'reset')
+                        
                         console.log(ts3)
 
                         let ts6 = ASE.from_string(ts2)
@@ -141,6 +140,7 @@ $(function () {
                             publicKey: toPrivateKey(publicKey),
 
                         })
+                        
                         let str = {
                             "Action": "Recovery",
                             "RouteId": rd.RID,

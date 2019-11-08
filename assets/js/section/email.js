@@ -7,7 +7,7 @@ $(function () {
 
     }
 
-
+    //查看邮件
     $(document).on('click', '.list-emallDiv', function () {
 
         let data = settings.get('wsdata') || 0
@@ -59,7 +59,15 @@ $(function () {
     });
     $('.list-search').click(function () {
         getMail()
+    });
+
+    $('.emall-card li').click(function(){
+        let tag = $(this).attr('rel')
+        console.log(tag)
+
     })
+
+
 })
 
 function sendMailAES(To,ws){

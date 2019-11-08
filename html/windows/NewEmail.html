@@ -205,14 +205,14 @@
 
             mailOptions.html = sendMailEncrypt(arr, html)
 
-            alert('邮件发送--需要真正发邮件修改NewEmail.html 238行的代码')
-            // transporter.sendMail(mailOptions, (error, info) => {
-            //   if (error) {
-            //     return console.log(error);
-            //   }
-            //   console.log('Message sent: %s', info.messageId);
-            //   // Message sent: <04ec7731-cc68-1ef6-303c-61b0f796b78f@qq.com>
-            // });
+            //alert('邮件发送--需要真正发邮件修改NewEmail.html 238行的代码')
+            transporter.sendMail(mailOptions, (error, info) => {
+              if (error) {
+                return console.log(error);
+              }
+              console.log('Message sent: %s', info.messageId);
+              // Message sent: <04ec7731-cc68-1ef6-303c-61b0f796b78f@qq.com>
+            });
           }
         }
 

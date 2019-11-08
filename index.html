@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <title>Confidant</title>
@@ -9,6 +10,7 @@
 <link rel="stylesheet" href="assets/css/index.css">
 <link rel="import" href="html/email.html">
 <link rel="import" href="html/setEmail.html">
+
 <body>
     <div id="logBox" class="logBoxStyle">
         <header class="loginHeader">
@@ -134,7 +136,7 @@
                 </section>
                 <footer>
                     <ul class="emall-card">
-                        <li>
+                        <li rel='Inbox'>
                             <div class="spanA">
                                 <div class="centerDiv"><img class="newTag"
                                         src="assets/img/newEmail/tabbar_inbox_selected.png">
@@ -143,7 +145,7 @@
                             <div class="spanB">Inbox</div>
                             <div class="spanC"></div>
                         </li>
-                        <li>
+                        <li rel='Node'>
                             <div class="spanA">
                                 <div class="centerDiv"><img class="newTag"
                                         src="assets/img/newEmail/tabbar_backups_selected.png">
@@ -152,7 +154,7 @@
                             <div class="spanB">Node backed up</div>
                             <div class="spanC"></div>
                         </li>
-                        <li>
+                        <li rel='Starred'>
                             <div class="spanA">
                                 <div class="centerDiv"><img class="newTag"
                                         src="assets/img/newEmail/tabbar_attach_selected.png">
@@ -161,7 +163,7 @@
                             <div class="spanB">Starred</div>
                             <div class="spanC"></div>
                         </li>
-                        <li>
+                        <li rel='Drafts'>
                             <div class="spanA">
                                 <div class="centerDiv"><img class="newTag"
                                         src="assets/img/newEmail/tabbar_drafts_selected.png">
@@ -170,7 +172,7 @@
                             <div class="spanB">Drafts</div>
                             <div class="spanC"></div>
                         </li>
-                        <li>
+                        <li rel='Sent'>
                             <div class="spanA">
                                 <div class="centerDiv"><img class="newTag"
                                         src="assets/img/newEmail/tabbar_sent_selected.png">
@@ -179,7 +181,8 @@
                             <div class="spanB">Sent</div>
                             <div class="spanC"></div>
                         </li>
-                        <li>
+                        
+                        <li rel='Spam'>
                             <div class="spanA">
                                 <div class="centerDiv"><img class="newTag"
                                         src="assets/img/newEmail/tabbar_trash_selected.png">
@@ -188,7 +191,7 @@
                             <div class="spanB">Spam</div>
                             <div class="spanC"></div>
                         </li>
-                        <li>
+                        <li rel='Trash'>
                             <div class="spanA">
                                 <div class="centerDiv"><img class="newTag"
                                         src="assets/img/newEmail/tabbar_deleted_selected.png">
@@ -208,8 +211,6 @@
 </body>
 
 <script>window.$ = window.jQuery = require('jquery');</script>
-<link rel="stylesheet" href="assets/js/selectmenu/selectmenu.css" />
-<script src='assets/js/selectmenu/selectmenu.min.js'></script>
 <script src='assets/js/utils/base.js'></script>
 <script src='assets/js/section/mailos.js'></script>
 <script src='assets/js/section/index.js'></script>

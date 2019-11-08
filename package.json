@@ -20,6 +20,7 @@
   },
   "scripts": {
     "start": "electron .",
+    "build": "electron-builder --win --x64",
     "towin": "electron-builder --win --x64",
     "tomac":"electron-builder --mac --x64",
     "tolinux":"electron-builder --linux --x64"
