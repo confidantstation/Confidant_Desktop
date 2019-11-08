@@ -95,7 +95,7 @@ class mailos {
 
 
 
-function getMail(tag,user, password) {
+function getMail(tag, user, password) {
     // tag 默认值为Inbox  取值范围 = 'Inbox Node Starred Drafts Sent Spam Trash'
     // 获取最新十封邮件
     let Imap = require('imap')
@@ -108,11 +108,11 @@ function getMail(tag,user, password) {
         Password,
         host
     } = settings.get('IMAP')
-   
+
 
     let imap = new Imap({
-        user: Email || '345632828@qq.com', 
-        password: Password || 'cjdfhabfwwaicbbd', 
+        user: Email || '345632828@qq.com',
+        password: Password || 'cjdfhabfwwaicbbd',
         host: host || 'imap.qq.com',
         port: 993, //邮箱服务器的端口地址
         tls: true, //使用安全传输协议
@@ -139,7 +139,7 @@ function getMail(tag,user, password) {
             //      settings.set('messagesTotal',seq)
             // }
             // -10 有错误，下周排除
-            seq = box.messages.total - 9
+            seq = box.messages.total - 3
 
 
             let seq1 = [`${seq}:*`]
@@ -207,10 +207,10 @@ function getMailUid(uid, setIMAP) {
     } = setIMAP
 
     let imap = new Imap({
-        user: Email || '345632828@qq.com', 
-        password: Password || 'cjdfhabfwwaicbbd', 
-        host: host || 'imap.qq.com', 
-        port: 993, 
+        user: Email || '345632828@qq.com',
+        password: Password || 'cjdfhabfwwaicbbd',
+        host: host || 'imap.qq.com',
+        port: 993,
         tls: true, //使用安全传输协议
         tlsOptions: {
             rejectUnauthorized: false
@@ -318,16 +318,16 @@ function getMailUid(uid, setIMAP) {
 
 //控制邮箱显示，及以取内容前32个字符
 function getHtmlText(str, uid) {
-    
-    if(Object.prototype.toString.call(str.html) !=='[object String]'){
+
+    if (Object.prototype.toString.call(str.html) !== '[object String]') {
         console.log('getHtmlText(str, uid) 第一个参数不是字符串')
         return 'getHtmlText(str, uid) 第一个参数不是字符串'
     }
     let html
-    if(str.html.indexOf('newconfidantcontent')>0){
-        str.html =  $(str.html).attr('id')
+    if (str.html.indexOf('newconfidantcontent') > 0) {
+        str.html = $(str.html).attr('id')
     }
-    if ( str.html.indexOf('newconfidant') > 0 && str.html.indexOf('newconfidantcontent') < 0) {
+    if (str.html.indexOf('newconfidant') > 0 && str.html.indexOf('newconfidantcontent') < 0) {
 
         html = str.html
         str = str.html
@@ -336,7 +336,7 @@ function getHtmlText(str, uid) {
         let n = html.indexOf('<span')
         let strAes = html.substr(0, n)
         console.log('strAes', strAes)
-       
+
         let ks = WinAES.sodiumGet(html)
         let ka = strAes || '4x2fHgATrmWCiL9soNsJ9XnsGwEkfA5DKzHIwBU3d6HkbDgCQSpnaOIYILMAhwZU8Ex620Wr/6GyWudTaXwKmg=='
         let en = WinAES.Decrypt(ka, ks.substr(0, 16))
@@ -356,7 +356,18 @@ function getHtmlText(str, uid) {
 
     }
     let $inboxContent = $('.inbox-content')
-
+    debugger;
+    // if ($inboxContent.find('.email-uid').length>1) {
+       
+    //     // $inboxContent.find('.email-uid').each(function () {
+    //     //     let cuid = $(this).attr('uid')
+    //     //     if (cuid == uid) {
+    //     //         $(this).html(str)
+    //     //     }
+    //     // });
+    // } else {
+    //     $inboxContent.append(`<div class="email-uid emHtml${uid}" uid="${uid}">${str}</div>`);
+    // }
     $inboxContent.append(`<div class="email-uid emHtml${uid}" uid="${uid}">${str}</div>`);
 
     html = html.replace(/\s+/g, ' ');

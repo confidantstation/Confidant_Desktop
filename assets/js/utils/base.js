@@ -209,7 +209,7 @@ class aesjs {
            @params(key, Pubkey)
            @key {string | Unit8Array}
         */
-       
+       debugger;
         const sodium = _sodium;
         let sd = settings.get('sodium')
         // let privateKey = getUnit8SKPK(sd.privateKey)
@@ -221,6 +221,7 @@ class aesjs {
         if (Object.prototype.toString.call(publicKey) === '[object String]') {
             publicKey = getUnit8SKPK(publicKey)
         }
+        
         let pk = sodium.crypto_sign_ed25519_pk_to_curve25519(publicKey);
 
         // let k = new Uint8Array(Buffer.from(key))
@@ -232,28 +233,28 @@ class aesjs {
         return ks
     }
     crypto_box_seal_open() {
-        const sodium = _sodium;
-        let key = "jPWhxw36S+W425TgadLMnQDTiOmNOgwY4mxPZD5Mk7U="
-        console.log('START sodiumGet---->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>-----')
-        let sd = settings.get('sodium')
+        // const sodium = _sodium;
+        // let key = "jPWhxw36S+W425TgadLMnQDTiOmNOgwY4mxPZD5Mk7U="
+        // console.log('START sodiumGet---->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>-----')
+        // let sd = settings.get('sodium')
 
-        let privateKey = getUnit8SKPK(sd.privateKey)
-        let publicKey = getUnit8SKPK(sd.publicKey)
+        // let privateKey = getUnit8SKPK(sd.privateKey)
+        // let publicKey = getUnit8SKPK(sd.publicKey)
 
-        let sk = sodium.crypto_sign_ed25519_sk_to_curve25519(privateKey);
-        let pk = sodium.crypto_sign_ed25519_pk_to_curve25519(publicKey);
+        // let sk = sodium.crypto_sign_ed25519_sk_to_curve25519(privateKey);
+        // let pk = sodium.crypto_sign_ed25519_pk_to_curve25519(publicKey);
 
-        let k2 = toPrivateKey(key)
-        console.log('k2', k2)
-        console.log('sk', sk)
+        // let k2 = toPrivateKey(key)
+        // console.log('k2', k2)
+        // console.log('sk', sk)
 
 
-        let ks = sodium.crypto_box_seal_open(k2, pk, sk)
-        console.log('ks', ks)
-        console.log('string', dataToString(ks))
-        ks = dataToString(ks)
-        console.log('END sodiumGet---->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>-----')
-        return ks
+        // let ks = sodium.crypto_box_seal_open(k2, pk, sk)
+        // console.log('ks', ks)
+        // console.log('string', dataToString(ks))
+        // ks = dataToString(ks)
+        // console.log('END sodiumGet---->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>-----')
+        // return ks
     }
 }
 
