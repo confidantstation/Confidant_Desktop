@@ -11,7 +11,7 @@ app.commandLine.appendSwitch('ignore-certificate-errors')
 let win, debug
 
 debug = {
-    log: 1,
+    log: 0,
     width: 1300,
     height: 800,
 }

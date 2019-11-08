@@ -215,7 +215,7 @@ class aesjs {
            @params(key, Pubkey)
            @key {string | Unit8Array}
         */
-        debugger;
+        
 
        
         const sodium = _sodium;

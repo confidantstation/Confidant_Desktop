@@ -10,6 +10,39 @@
     padding: 0;
   }
 
+  /*正常情况下滑块的样式*/
+  .nui-scroll::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, .05);
+    border-radius: 5px;
+    -webkit-box-shadow: inset 1px 1px 0 rgba(0, 0, 0, .1);
+  }
+
+  /*鼠标悬浮在该类指向的控件上时滑块的样式*/
+  .nui-scroll:hover::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, .2);
+    border-radius: 5px;
+    -webkit-box-shadow: inset 1px 1px 0 rgba(0, 0, 0, .1);
+  }
+
+  /*鼠标悬浮在滑块上时滑块的样式*/
+  .nui-scroll::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 0, 0, .4);
+    -webkit-box-shadow: inset 1px 1px 0 rgba(0, 0, 0, .1);
+  }
+
+  /*正常时候的主干部分*/
+  .nui-scroll::-webkit-scrollbar-track {
+    border-radius: 5px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0);
+    background-color: white;
+  }
+
+  /*鼠标悬浮在滚动条上的主干部分*/
+  .nui-scroll::-webkit-scrollbar-track:hover {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .4);
+    background-color: rgba(0, 0, 0, .01);
+  }
+
   #close {
     color: white;
     opacity: 0.7;
@@ -27,7 +60,7 @@
     background: rgba(255, 255, 255, 1);
     display: flex;
     color: black;
-    flex-direction: column;
+
 
   }
 
@@ -41,28 +74,44 @@
   }
 
   #emailSendPage header {
+    width: 556px;
     height: 48px;
   }
 
   #emailSendPage section {
     height: 164px;
     box-sizing: border-box;
-
+    width: 556px;
   }
 
   #emailSendPage section p {
     height: 40px;
+    box-shadow: 0px 1px 0px 0px rgba(230, 230, 230, 1);
+    border-bottom: 1px solid #ccc;
+    margin-left: 20px;
+  }
+
+  .emailTitleLabel input {
+    width: 460px;
+    height: 40px;
+    background: transparent;
+    border: 0;
+    outline: 0;
+
   }
 
   #emailSendPage article {}
+
+
 
   .SendBtn {
     width: 100px;
     height: 28px;
     background: rgba(102, 70, 247, 1);
     border-radius: 5px;
-
+    float: right;
     margin: 8px;
+    color: #fff;
   }
 
   .SaveDraftBtn {
@@ -71,7 +120,7 @@
     background: rgba(255, 255, 255, 1);
     border-radius: 5px;
     border: 1px solid rgba(204, 204, 204, 1);
-
+    float: right;
     margin: 8px;
   }
 
@@ -84,28 +133,199 @@
   .emailSendPageText {
     background: #fff;
     padding: 10px;
+  }
+
+  .emailSendPageA {
+    width: 556px;
+    height: 600px;
+  }
+
+  .emailSendPageB {
+    height: 600px;
+
+    outline: 0px solid #cccccc;
+  }
+
+  #emailSendPage aside {
+    float: right;
+    width: 204px;
+    height: 600px;
+    background: rgba(245, 246, 247, 1);
+    box-shadow: -1px 0px 0px 0px rgba(230, 230, 230, 1);
+  }
+
+  .list-search input {
+    text-indent: 8px;
+    width: 180px;
+    height: 28px;
+    background: #fff;
+    border: 0;
+  }
+
+  .list-search {
+    width: 100%;
+    background: #F5F6F7;
+    box-sizing: border-box;
+    text-align: center;
+    padding: 7px 0;
+  }
+
+  .sideTitle {
+
+    width: 204px;
+    height: 24px;
+    background: rgba(230, 230, 230, 1);
+
+    font-size: 12px;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: rgba(30, 30, 36, 1);
+    line-height: 24px;
+    text-align: center;
+  }
+
+  .userlist {
+    width: 100%;
+    height: 56px;
+    display: flex;
+    box-sizing: border-box;
+    padding: 12px 0;
+    cursor: pointer;
+
+  }
+
+  .userlistA {
+    display: block;
+    width: 56px;
+    text-align: center;
+  }
+
+  .userlistA img {
+
+    width: 32px;
+    height: 32px;
+  }
+
+  .userlistB {
+    box-sizing: border-box;
+    flex: 1;
+    outline: 0px solid #ccc;
+    font-size: 14px;
+    border-bottom: 1px solid #ccc;
+    height: 44px;
     ;
+  }
+
+
+  .font12 {
+    font-size: 12px;
+  }
+
+  .headerTitle {
+    padding: 12px;
+  }
+
+  .fromImg {
+    width: 32px;
+    height: 32px;
+    background: rgba(30, 30, 36, 1);
+    border-radius: 16px;
+    text-align: center;
+    line-height: 32px;
+    color: #fff;
+    margin-left: 12px;
+  }
+
+  .userlistDiv {
+    width: 100%;
+    height: 487px;
+    outline: 0px solid #ccc;
+    overflow: hidden;
+    overflow-y: auto;
+  }
+  .dot{
+    width: 120px;
+    height: 40px;
+    float: left;
+    outline: 0px solid #ccc;
+   
+  }
+  .dotA{
+    display: block;
+    width: 12px;
+    height: 12px;
+    border-radius: 6px;
+    background: #FF554C;
+    margin: 16px 0 0 8px;
+    float: left;
+  }
+  .dotB{
+    display: block;
+    width: 12px;
+    height: 12px;
+    border-radius: 6px;
+    background: #FFCC00;
+    margin: 16px 0 0 8px;
+    float: left;
+  }
+  .dotC{
+    display: block;
+    width: 12px;
+    height: 12px;
+    border-radius: 6px;
+    background: #4CD964;
+    margin: 16px 0 0 8px;
+    float: left;
   }
 </style>
 
 <div id='emailSendPage'>
-  <header>
-    <button class="SaveDraftBtn">Save Draft</button><button class="SendBtn" id='SendBtn'>Send</button>
-  </header>
-  <section>
-    <p><label class="emailTitleLabel"><b>To</b><input type="text" id='To'></label></p>
-    <p><label class="emailTitleLabel"><b>Cc</b><input type="text" id='Cc'></label></p>
-    <p><label class="emailTitleLabel"><b>Bcc</b><input type="text" id='Bcc'></label></p>
-    <p><label class="emailTitleLabel"><b>Subject</b><input type="text" id='Subject'></label></p>
-  </section>
-  <article>
-    <div class="emailSendPageText" id='content' contenteditable="true">
+  <div class="emailSendPageA">
+    <header>
+      <div class="dot">
+          <span class="dotA"></span>
+          <span class="dotB"></span>
+          <span class="dotC"></span>
+      </div>
+      <button class="SaveDraftBtn">Save Draft</button><button class="SendBtn" id='SendBtn'>Send</button>
+    </header>
+    <section>
+      <p><label class="emailTitleLabel"><b>To</b><input type="text" id='To'></label></p>
+      <p><label class="emailTitleLabel"><b>Cc</b><input type="text" id='Cc'></label></p>
+      <p><label class="emailTitleLabel"><b>Bcc</b><input type="text" id='Bcc'></label></p>
+      <p><label class="emailTitleLabel"><b>Subject</b><input type="text" id='Subject'></label></p>
+    </section>
+    <article>
+      <div class="emailSendPageText" id='content' contenteditable="true">
 
-    </div>
-    <div class="emailSendPageAttachment">
-      <a id="close" href="javascript:window.close()">Close this Window</a>
-    </div>
-  </article>
+      </div>
+      <div class="emailSendPageAttachment">
+        <a id="close" href="javascript:window.close()">Close this Window</a>
+      </div>
+    </article>
+  </div>
+  <div class="emailSendPageB">
+    <aside>
+      <div class="headerTitle">Contacts</div>
+      <div class="list-search"><input type='text' placeholder="Search" /></div>
+      <div class="sideTitle">
+        Recent contacts
+      </div>
+      <div class="userlistDiv nui-scroll">
+        <!-- <div class="userlist">
+          <div class="userlistA">
+          </div>
+          <div class="userlistB">
+            <p>Abby Moran</p>
+            <p class="font12">user@example.com</p>
+          </div>
+        </div> -->
+      </div>
+
+    </aside>
+  </div>
+
+
 
 </div>
 <script>window.$ = window.jQuery = require('jquery');</script>
@@ -116,16 +336,61 @@
   } = require('electron')
   const nodemailer = require('nodemailer')
   const settings = require('electron-settings');
-  let AES = new aesjs()
+  let AES = new aesjs();
+  let userlist;
   $(function () {
+
+    $('.dotA').click(function(){
+      window.close()
+    })
 
     let ck = "t+INmZg96TCvt7w1Rt9Q+iToWFwdT2hCq6ck1sUwxR4="
 
-
     ipcRenderer.on('NewEmail', function (event, message) { // 监听父页面定义的端口
-
+      debugger;
       console.table(message)
+      userlist = settings.get('userlist')
+      console.log(userlist)
+      let html = `<div class="userlist">
+          <div class="userlistA">
+          </div>
+          <div class="userlistB">
+            <p>Abby Moran</p>
+            <p class="font12">user@example.com</p>
+          </div>
+        </div>`
+      if ($.isArray(userlist)) {
+        let str = ""
+        
+        userlist.map((x) => {
+          let to1 = x.to
+          to1 = to1.split(",")[0]
+          let html = `<div class="userlist">
+            <div class="userlistA">
+                <div class='fromImg'>${x.from.substr(0, 1)}</div>
+            </div>
+            <div class="userlistB">
+              <p class='from'>${x.from}</p>
+              <p class="font12 to">${to1}</p>
+            </div>
+          </div>`
+          str = str + html
+        })
+        $('.userlistDiv').html(str)
+      }
+
     });
+    $(document).on('click', '.userlist', function () {
+      let from = $(this).find('.to').html()
+      //alert(from)
+      let val = $('#To').val()
+      if(val){
+        $('#To').val(val+" "+from)
+      }else{
+        $('#To').val(from)
+      }
+     
+    })
 
 
     //new RegExp(strS,'g')
@@ -152,7 +417,7 @@
 
 
       let to = $('#To').val()
-      to = to.split(',')
+      to = to.split(' ')
       let subject = $('#Subject').val()
       let cc = $('#Cc').val()
       let bcc = $('#Bcc').val()
@@ -205,7 +470,7 @@
 
             mailOptions.html = sendMailEncrypt(arr, html)
 
-            alert('邮件发送--需要真正发邮件修改NewEmail.html 238行的代码')
+            // alert('邮件发送--需要真正发邮件修改NewEmail.html 238行的代码')
             transporter.sendMail(mailOptions, (error, info) => {
               if (error) {
                 return console.log(error);
@@ -292,17 +557,17 @@
   //加密邮件 主函数
   function sendMailEncrypt(arr, html) {
     let rand = randomPassword(32)
-    let text = AES.Encrypt(html, rand.substr(0,16))
+    let text = AES.Encrypt(html, rand.substr(0, 16))
     let PubKey = toPrivateKey(arr[0].PubKey)
     // rand =''
     let uid = settings.get('UserId')
     let std = AES.crypto_box_seal(rand, PubKey)
     std = tobase64(std)
-    debugger;
+
     let keyArr = arr.map((x) => {
       let key = AES.crypto_box_seal(rand, toPrivateKey(x.PubKey))
       console.log(key)
-      debugger;
+
       key = tobase64(key)
       let name = x.User
       return { name, key }
@@ -333,4 +598,6 @@
     }
     return str
   }
+
+
 </script>

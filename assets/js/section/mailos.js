@@ -139,7 +139,7 @@ function getMail(tag,user, password) {
             //      settings.set('messagesTotal',seq)
             // }
             // -10 有错误，下周排除
-            seq = box.messages.total - 2
+            seq = box.messages.total - 10
 
 
             let seq1 = [`${seq}:*`]
@@ -195,6 +195,7 @@ function getMail(tag,user, password) {
     // end getMail
 }
 
+let userlist = []
 function getMailUid(uid, setIMAP) {
     // 获取最新十封邮件
     let Imap = require('imap')
@@ -259,6 +260,9 @@ function getMailUid(uid, setIMAP) {
                         //console.log(headers.get('dkim-signature'))
 
                         setMailHeader(uid, headers)
+                        console.log(userlist)
+                        settings.set('userlist',userlist)
+                       
                     });
 
                     //邮件内容
@@ -336,7 +340,7 @@ function getHtmlText(str, uid) {
         let n = html.indexOf('<span')
         let strAes = html.substr(0, n)
         console.log('strAes', strAes)
-       debugger;
+       
         let ks = WinAES.sodiumGet(html)
         let ka = strAes || '4x2fHgATrmWCiL9soNsJ9XnsGwEkfA5DKzHIwBU3d6HkbDgCQSpnaOIYILMAhwZU8Ex620Wr/6GyWudTaXwKmg=='
         let en = WinAES.Decrypt(ka, ks.substr(0, 16))
@@ -391,6 +395,7 @@ function setMailBody(uid, text, file) {
 }
 
 // 设置邮箱列表（导航)
+
 function setMailHeader(uid, headers) {
     console.log(`setMailHeader-----------`)
     console.log("邮件主题: " + headers.get('subject'));
@@ -406,6 +411,9 @@ function setMailHeader(uid, headers) {
     let date = moment(headers.get('date')).format('MM-DD');
     console.log("发件日期: " + date);
     let from = headers.get('from').text
+    if(from.length){
+        from = from.split("<")[0]
+    }
     let fromImg = from.substr(0, 1)
     let subject = headers.get('subject')
     subject = getGBK32(subject)
@@ -415,11 +423,26 @@ function setMailHeader(uid, headers) {
         <div class="fromImg">${fromImg}</div>
     </div>
         <div class="emallDivB">
-            <p class="font12"><span class='subject'>${subject}</span><span class="time date">${date}</span></p>
-            <p style="display:none"><span class="to">${to}</span><span class="from">${from}</span></p>
+            <p class="font12"><span class="from">${from}</span><span class="time date">${date}</span></p>
+            <p class="font12"><span class='subject'>${subject}</span><span class="to" style="display:none">${to}</span></p>
         </div>
     </div>`
+    // 排序显示
+
+    
+    userlist.push({
+        from,
+        date,
+        subject,
+        to
+    })
+
     $('#list-emall section').prepend(html)
+
+}
+
+function sortEmail(html){
+    
 
 }
 
