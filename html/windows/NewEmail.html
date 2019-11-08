@@ -283,32 +283,33 @@
      * @return {html}           
      */
     let keys = toNewconfidantkeyString(key)
-    let html = `${text}<span style='display:none' id='newconfidantkey${keys}'></span><span style='display:none' id='newconfidantuserid${uid}'></span><div newmyconfidantbegin=''><br /><br /><br /><span>Sent from MyConfidant, the app for encrypted email.</span></div>`
+
+
+    let html = `${text}<span style='display:none' id='newconfidantkey${keys}'></span><span style='display:none' id='newconfidantuserid${uid}'></span><div myconfidantbegin=''><br /><br /><br /><span>Sent from MyConfidant, the app for encrypted email.</span></div>`
     return html
   }
 
   //加密邮件 主函数
   function sendMailEncrypt(arr, html) {
     let rand = randomPassword(16)
-    rand = 'AAAAAAAAAAAAAAAA'
     let text = AES.Encrypt(html, rand)
     let PubKey = toPrivateKey(arr[0].PubKey)
 
     let uid = settings.get('UserId')
-    // let std = AES.crypto_box_seal(rand, toPrivateKey("t+INmZg96TCvt7w1Rt9Q+iToWFwdT2hCq6ck1sUwxR4="))
-    // let stds = tobase64(std)
-    debugger;
+    let std = AES.crypto_box_seal(rand, PubKey)
+    std = tobase64(std)
 
     let keyArr = arr.map((x) => {
       let key = AES.crypto_box_seal(rand, toPrivateKey(x.PubKey))
+      console.log(key)
+      debugger;
       key = tobase64(key)
       let name = x.User
       return { name, key }
 
     })
     // let keys = toNewconfidantkeyString(keyArr)
-    console.log(keyArr)
-   
+
 
     let NewconfidantHtml = toNewconfidantHtml(text, keyArr, uid);
 
