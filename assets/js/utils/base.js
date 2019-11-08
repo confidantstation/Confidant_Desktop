@@ -154,6 +154,7 @@ class aesjs {
         return sodium.to_string(str)
     }
     sodiumGet(str, k) {
+        
         /*
         @params(str,privateKey)
         @str 需要解密的字符串
@@ -169,7 +170,7 @@ class aesjs {
 
         let arr = toNewconfidantObj(str)
 
-        key = arr.sodiumKey[0]
+        key = arr.emailName[0]['key']
 
         let privateKey = getUnit8SKPK(sd.privateKey)
         let publicKey = getUnit8SKPK(sd.publicKey)
@@ -178,7 +179,7 @@ class aesjs {
 
         let sk = sodium.crypto_sign_ed25519_sk_to_curve25519(privateKey);
         let pk = sodium.crypto_sign_ed25519_pk_to_curve25519(publicKey);
-        debugger;
+      
 
         let k2 = toPrivateKey(key)
         console.log('k2', k2)
@@ -186,10 +187,10 @@ class aesjs {
 
 
         let ks = sodium.crypto_box_seal_open(k2, pk, sk)
-        console.log('ks', ks)
-        console.log('string', dataToString(ks))
-        console.log('from_string', sodium.from_string(ks))
-        console.log('to_string', sodium.to_string(ks))
+        // console.log('ks', ks)
+        // console.log('string', dataToString(ks))
+        // console.log('from_string', sodium.from_string(ks))
+        // console.log('to_string', sodium.to_string(ks))
         ks = dataToString(ks)
         console.log('END sodiumGet---->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>-----')
         return ks
@@ -257,6 +258,8 @@ class aesjs {
 
 
 function getNewconfidantkeyid(str) {
+   
+    if(Object.prototype.toString.call(str)!=='[object String]') return false
     let len
     if (str.indexOf('newconfidantkey') === 0) {
         len = 'newconfidantkey'.length
@@ -267,22 +270,17 @@ function getNewconfidantkeyid(str) {
 }
 
 function splitNewconfidant(str) {
-    let arr = str.split('&&')
-
-    let obj
-    if (arr[1]) {
-        obj = {
-            emailName: arr[0].split('##'),
-            sodiumKey: arr[1].split('##')
-        }
-    } else {
-        obj = {
-            emailName: arr,
-            sodiumKey: arr
-        }
+    let arr = str.split('##')
+    let arr2 = []
+    for(let i in arr){
+      let str = arr[i].split('&&')
+      arr2.push({
+        name:str[0],
+        key:str[1]
+      })
     }
-    return obj
-}
+    return arr2
+  }
 
 function toNewconfidantObj(str) {
 
@@ -295,18 +293,14 @@ function toNewconfidantObj(str) {
     let newconfidantkey = getNewconfidantkeyid(id1)
     let newconfidantuserid = getNewconfidantkeyid(id2)
 
-    let {
-        emailName,
-        sodiumKey
-    } = splitNewconfidant(newconfidantkey)
+    let splitNew= splitNewconfidant(newconfidantkey)
 
     return {
-        newconfidantkey,
-        newconfidantuserid,
-        emailName,
-        sodiumKey
+      newconfidantkey,
+      newconfidantuserid,
+      emailName:splitNew
     }
-}
+  }
 
 function toNewconfidantHtml(text, key, uid) {
     /* 返回加密后的html

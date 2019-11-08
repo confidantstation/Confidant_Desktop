@@ -318,7 +318,9 @@ function getMailUid(uid, setIMAP) {
 function getHtmlText(str, uid) {
 
     let html
-    if (str.html && str.html.indexOf('newconfidant') > 0) {
+    if ( Object.prototype.toString.call(str.html)==='[object String]'  && str.html.indexOf('newconfidant') > 0 && str.html.indexOf('newconfidantcontent') < 0) {
+        
+
         html = str.html
         str = str.html
         console.log('html-=-=-=-==')
@@ -326,6 +328,7 @@ function getHtmlText(str, uid) {
         let n = html.indexOf('<span')
         let strAes = html.substr(0, n)
         console.log('strAes', strAes)
+       
         let ks = WinAES.sodiumGet(html)
         let ka = strAes || '4x2fHgATrmWCiL9soNsJ9XnsGwEkfA5DKzHIwBU3d6HkbDgCQSpnaOIYILMAhwZU8Ex620Wr/6GyWudTaXwKmg=='
         let en = WinAES.Decrypt(ka, ks.substr(0, 16))

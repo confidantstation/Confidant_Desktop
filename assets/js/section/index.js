@@ -153,7 +153,7 @@ $(function () {
                         settings.set('app', app);
 
                         let data = settings.get('wsdata') || 0
-
+                      
                         if (data) {
                             ws = new WebSocket(`wss://${data.ServerHost}:${data.ServerPort}`, "lws-minimal");
                         } else {
