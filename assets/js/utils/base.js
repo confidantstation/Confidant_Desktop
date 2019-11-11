@@ -1,5 +1,6 @@
 const moment = require('moment');
 
+
 function getObjectURL(file) {
     let url = window.webkitURL.createObjectURL(file)
     return url;
@@ -112,12 +113,43 @@ class aesjs {
         console.log('ID USN', this.Decrypt(k))
         return this.getaseid(this.Decrypt(k)).RID
     }
-    getserverip() {
-        return request(`https://pprouter.online:9001/v1/pprmap/Check?rid=${this.getrid()}`)
+     getserverip() {
+
+
+         return request(`https://pprouter.online:9001/v1/pprmap/Check?rid=${this.getrid()}`)
             .then((req) => {
+               
                 console.log('getserverip---set wsdata', req)
-                settings.set('wsdata', req.data)
+                
+                return req.data
+
             })
+
+        // return new Promise(async function (resolve) {
+        //     request(`https://pprouter.online:9001/v1/pprmap/Check?rid=${this.getrid()}`)
+        //     .then((req) => {
+        //         console.log('getserverip---set wsdata', req)
+        //         settings.set('wsdata', req.data)
+        //         return req.data
+
+        //     }).then((req) => {
+        //         debugger
+        //         resolve(req)
+        //     })
+        // });
+
+
+
+        return res
+        // request(`https://pprouter.online:9001/v1/pprmap/Check?rid=${this.getrid()}`).then((req, rej) => {
+        //     console.log('getserverip---set wsdata', req)
+        //     settings.set('wsdata', req.data)
+
+
+        // })
+
+
+
     }
     getws() {
         let data = settings.get('wsdata') || 0
@@ -160,7 +192,7 @@ class aesjs {
         @publicKey 公钥
         @return 解密后的消息
         */
-
+       
         const sodium = _sodium;
         let key = k || this.key
         console.log('START sodiumGet---->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>-----')
@@ -187,11 +219,10 @@ class aesjs {
         let ks = ""
         try {
             ks = sodium.crypto_box_seal_open(k2, pk, sk)
+        } catch (err) {
+            console.log(err)
         }
-        catch(err) {
-           console.log(err)
-        }
-       
+
         // console.log('ks', ks)
         // console.log('string', dataToString(ks))
         // console.log('from_string', sodium.from_string(ks))
@@ -215,9 +246,7 @@ class aesjs {
            @params(key, Pubkey)
            @key {string | Unit8Array}
         */
-        
 
-       
         const sodium = _sodium;
         let sd = settings.get('sodium')
         // let privateKey = getUnit8SKPK(sd.privateKey)
@@ -234,13 +263,12 @@ class aesjs {
         // let k = new Uint8Array(Buffer.from(key))
         let ks = ""
         try {
-           ks =sodium.crypto_box_seal(key, pk)
-         }
-         catch(err){
-             console.log('<<<<<<<<<<<<<<<<<<<err>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
-             console.log(err)
-			 
-         }
+            ks = sodium.crypto_box_seal(key, pk)
+        } catch (err) {
+            console.log('<<<<<<<<<<<<<<<<<<<err>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+            console.log(err)
+
+        }
 
         // let ks2 = sodium.crypto_box_seal_open(ks, pk, sk)
 
@@ -275,7 +303,7 @@ class aesjs {
 
 function getNewconfidantkeyid(str) {
 
-    if (Object.prototype.toString.call(str) !== '[object String]') return false
+    if (Object.prototype.toString.call(str) !== '[object String]') return 'getNewconfidantkeyid err 参数类型错误'
     let len
     if (str.indexOf('newconfidantkey') === 0) {
         len = 'newconfidantkey'.length
@@ -286,6 +314,7 @@ function getNewconfidantkeyid(str) {
 }
 
 function splitNewconfidant(str) {
+    if(Object.prototype.toString.call(str)!=="[object String]") return ['splitNewconfidant err','参数类型错误']
     let arr = str.split('##')
     let arr2 = []
     for (let i in arr) {
@@ -340,13 +369,25 @@ function getUnit8SKPK(k) {
 
 function toPrivateKey(d) {
     //base64 解码再转化成 Uint8Array数组
-    let arr = new Uint8Array(Buffer.from(d, 'base64'))
+    let arr
+    try {
+       arr = new Uint8Array(Buffer.from(d, 'base64'))
+    } catch (error) {
+        console.log(error)
+        return []
+    }
     return arr
 }
 
 function dataToString(d) {
     // 等同于 Encrypt 方法最后二句的作用
-    return Buffer.from(d, 'hex').toString()
+    let re
+    try {
+        re = Buffer.from(d, 'hex').toString()
+    } catch (error) {
+        return ""
+    }
+    return re
 }
 
 function sendString(obj, ASE) {
@@ -387,12 +428,12 @@ function tobase64(d, k) {
         return arr
     }
     if (k == 'reset') {
-          
+
         let arr2 = []
         console.log('tobase64 reset', arr)
         for (let i in arr) {
             if (arr[i] > 128) {
-               arr2.push(arr[i] -256)
+                arr2.push(arr[i] - 256)
             } else {
                 arr2.push(arr[i])
             }

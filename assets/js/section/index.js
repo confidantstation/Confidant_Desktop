@@ -20,6 +20,15 @@ window.winWS = ""
 let QRcode, CircleQRcode, WinAES
 //设置登录状态，方便之后的email.js 模块启动
 settings.set('status', 0);
+settings.set('wsdata', 0)
+let testdata = settings.get('wsdata');
+console.log(testdata)
+settings.set('IMAP', {
+    Email: "",
+    Password: "",
+    host: ""
+})
+
 
 
 
@@ -55,6 +64,9 @@ $(function () {
                     if (QRcode[0] == 'type_3') {
                         $('#logBox').hide();
                         $('#logBoxA').show();
+                        let username = window.atob(QRcode[3])
+                        settings.set('username', username)
+                        $('.usernameSpan').text(username)
                     } else {
                         alert('请导入你的私钥')
                     }
@@ -81,6 +93,10 @@ $(function () {
         let ctx = canvas.getContext("2d")
         $("#uploadA").click(); //隐藏了input:file样式后，点击头像就可以本地上传
         $("#uploadA").on("change", function () {
+
+
+
+
             let objUrl = getObjectURL(this.files[0]); //获取图片的路径，该路径不是图片在本地的路径
             if (objUrl) {
                 _this.attr("src", objUrl); //将图片路径存入src中，显示出图片
@@ -114,117 +130,132 @@ $(function () {
                         console.log('USN', rd.USN)
                         console.log('USN', rd.USN.length)
 
-                        ASE.getserverip()
-                        let privateKey = toPrivateKey(QRcode[1])
-                        let publicKey = privateKey.slice(-32);
-
-                        let ts1 = [-64, 18, 65, -98, 95, 105, 80, 8, 106, 78, -81, 94, -56, -115, 27, -108, 67, 3, 57, 97, 72, -78, 90, 19, -79, -55, 26, -93, -109, -104, 16, -96]
-                        let ts2 = [192, 18, 65, 158, 95, 105, 80, 8, 106, 78, 175, 94, 200, 141, 27, 148, 67, 3, 57, 97, 72, 178, 90, 19, 177, 201, 26, 163, 147, 152, 16, 160]
-
-                        let ts3 = tobase64('wBJBnl9pUAhqTq9eyI0blEMDOWFIsloTsckao5OYEKA=', 'reset')
-                        
-                        console.log(ts3)
-
-                        let ts6 = ASE.from_string(ts2)
-                        
-                        //let ts3 = ASE.crypto_box_seal('aaa',ts2)
-
-                        publicKey = tobase64(publicKey)
-                        console.log('CircleQRcode ', CircleQRcode)
-                        console.log('toPrivateKey ', QRcode)
-                        console.log('privateKey', privateKey)
-                        console.log('publicKey', publicKey)
-                        //设置密钥
-                        settings.set('sodium', {
-                            privateKey,
-                            publicKey: toPrivateKey(publicKey),
-
-                        })
-                        
-                        let str = {
-                            "Action": "Recovery",
-                            "RouteId": rd.RID,
-                            "UserSn": rd.USN,
-                            "Pubkey": publicKey,
-                        }
-
-                        let app = {
-                            appid: 'MIFI',
-                            timestamp: new Date().getTime(),
-                            apiversion: 6,
-                            msgid: settings.get('msgid') + 1,
-                            offset: 0,
-                            more: 0
-                        }
+                        let data // set wsdata
+                        data = ASE.getserverip()
+                        // debugger
+                        data.then((req) => {
+                            return req
 
 
-                        let tp = ASE.sodium(app.timestamp, privateKey)
+                        }).then((req) => {
+                            // debugger
+                            settings.set('wsdata', req)
+                            let wsdata = req
+                            let privateKey = toPrivateKey(QRcode[1])
+                            let publicKey = privateKey.slice(-32);
 
-                        app.Sign = tobase64(tp)
-                        app.params = str
-                        console.log('set app str')
-                        settings.set('app', app);
+                            let ts1 = [-64, 18, 65, -98, 95, 105, 80, 8, 106, 78, -81, 94, -56, -115, 27, -108, 67, 3, 57, 97, 72, -78, 90, 19, -79, -55, 26, -93, -109, -104, 16, -96]
+                            let ts2 = [192, 18, 65, 158, 95, 105, 80, 8, 106, 78, 175, 94, 200, 141, 27, 148, 67, 3, 57, 97, 72, 178, 90, 19, 177, 201, 26, 163, 147, 152, 16, 160]
 
-                        let data = settings.get('wsdata') || 0
+                            let ts3 = tobase64('wBJBnl9pUAhqTq9eyI0blEMDOWFIsloTsckao5OYEKA=', 'reset')
 
-                        if (data) {
-                            ws = new WebSocket(`wss://${data.ServerHost}:${data.ServerPort}`, "lws-minimal");
-                        } else {
-                            alert('wsdata 不存在！')
-                            ws = new WebSocket('wss://47.244.138.61:18006', "lws-minimal");
-                        }
-                        ws.onopen = function () {
-                            let str = settings.get('app')
-                            str.msgid = settings.get('msgid')
-                            str = JSON.stringify(str)
-                            console.log('send app ', str)
-                            ws.send(str);
-                            //alert("数据发送中...");
+                            console.log(ts3)
 
-                        };
+                            let ts6 = ASE.from_string(ts2)
+
+                            //let ts3 = ASE.crypto_box_seal('aaa',ts2)
+
+                            publicKey = tobase64(publicKey)
+                            console.log('CircleQRcode ', CircleQRcode)
+                            console.log('toPrivateKey ', QRcode)
+                            console.log('privateKey', privateKey)
+                            console.log('publicKey', publicKey)
+                            //设置密钥
+                            settings.set('sodium', {
+                                privateKey,
+                                publicKey: toPrivateKey(publicKey),
+
+                            })
+
+                            let str = {
+                                "Action": "Recovery",
+                                "RouteId": rd.RID,
+                                "UserSn": rd.USN,
+                                "Pubkey": publicKey,
+                            }
+
+                            let app = {
+                                appid: 'MIFI',
+                                timestamp: new Date().getTime(),
+                                apiversion: 6,
+                                msgid: settings.get('msgid') + 1,
+                                offset: 0,
+                                more: 0
+                            }
 
 
-                        ws.onmessage = function (evt) {
-                            //alert('接收消息成功...')
-                            console.log('接收消息成功...', evt)
-                            console.log('data...', evt.data)
-                            let data = JSON.parse(evt.data)
-                            console.log('data', data)
-                            if (data.params.RetCode === 0) {
-                                let datas = data.params
-                                let str1 = {
-                                    Action: "Login",
-                                    RouteId: datas.RouteId,
-                                    UserSn: datas.UserSn,
-                                    UserId: datas.UserId,
-                                    Sign: 1,
-                                    DataFileVersion: 6,
-                                    NickName: datas.NickName
-                                }
-                                let app1 = {
-                                    appid: 'MIFI',
-                                    timestamp: new Date().getTime(),
-                                    apiversion: 6,
-                                    msgid: settings.get('msgid') + 1,
-                                    offset: 0,
-                                    more: 0
-                                }
-                                app1.params = str1
-                                console.log('app1----------------------', app1)
-                                settings.set('login', app1)
-                                settings.set('UserId', str1.UserId)
-                                //ws.close();
+                            let tp = ASE.sodium(app.timestamp, privateKey)
+
+                            app.Sign = tobase64(tp)
+                            app.params = str
+                            console.log('set app str')
+                            settings.set('app', app);
+                            // debugger;
+                            //let data = settings.get('wsdata') || 0
+
+
+                            if (Object.prototype.toString.call(wsdata) === '[object Object]') {
+                                console.log(`wss://${wsdata.ServerHost}:${wsdata.ServerPort}`)
+                                ws = new WebSocket(`wss://${wsdata.ServerHost}:${wsdata.ServerPort}`, "lws-minimal");
+                                ws.onopen = function () {
+                                    let str = app || settings.get('app')
+                                    str.msgid = settings.get('msgid')
+                                    str = JSON.stringify(str)
+                                    console.log('send app ', str)
+                                    ws.send(str);
+                                    //alert("数据发送中...");
+
+                                };
+
+
+                                ws.onmessage = function (evt) {
+                                    //alert('接收消息成功...')
+                                    console.log('接收消息成功...', evt)
+                                    console.log('data...', evt.data)
+                                    let data = JSON.parse(evt.data)
+                                    console.log('data', data)
+                                    if (data.params.RetCode === 0) {
+                                        let datas = data.params
+                                        let str1 = {
+                                            Action: "Login",
+                                            RouteId: datas.RouteId,
+                                            UserSn: datas.UserSn,
+                                            UserId: datas.UserId,
+                                            Sign: 1,
+                                            DataFileVersion: 6,
+                                            NickName: datas.NickName
+                                        }
+                                        let app1 = {
+                                            appid: 'MIFI',
+                                            timestamp: new Date().getTime(),
+                                            apiversion: 6,
+                                            msgid: settings.get('msgid') + 1,
+                                            offset: 0,
+                                            more: 0
+                                        }
+                                        app1.params = str1
+                                        console.log('app1----------------------', app1)
+                                        settings.set('app', app1)
+                                        settings.set('UserId', str1.UserId)
+                                        //ws.close();
+                                        $('#logBoxA').hide();
+                                        $('#logBoxB').show();
+
+
+                                    }
+                                };
+
+                                ws.onclose = function () {
+                                    // 关闭 websocket
+                                    console.log('ws onclose')
+                                };
+                            } else {
+                                alert('wsdata 不存在！进入模拟测试环节')
                                 $('#logBoxA').hide();
                                 $('#logBoxB').show();
 
-
                             }
-                        };
-
-                        ws.onclose = function () {
-                            // 关闭 websocket
-                            console.log('ws onclose')
-                        };
+                        })
 
 
 
@@ -237,6 +268,9 @@ $(function () {
                 img.src = objUrl;
 
             }
+
+
+            // end click
         });
 
     });
@@ -251,7 +285,7 @@ $(function () {
         let setMail = $(this).attr('rel') || 'loginHtml';
 
         //选择圈子登录
-        let app = settings.get('login')
+        let app = settings.get('app')
         let privateKey = toPrivateKey(QRcode[1])
 
         let ASE = new aesjs(CircleQRcode[1])

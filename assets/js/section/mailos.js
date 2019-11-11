@@ -108,7 +108,7 @@ function getMail(tag,user, password) {
         Password,
         host
     } = settings.get('IMAP')
-   
+   //debugger;
 
     let imap = new Imap({
         user: Email || '345632828@qq.com', 
@@ -206,7 +206,7 @@ function getMailUid(uid, setIMAP) {
         Password,
         host
     } = setIMAP
-
+    
     let imap = new Imap({
         user: Email || '345632828@qq.com', 
         password: Password || 'cjdfhabfwwaicbbd', 
@@ -268,8 +268,14 @@ function getMailUid(uid, setIMAP) {
                     //邮件内容
                     let file = 0;
                     mailparser.on("data", function (data) {
-
-                        let text32 = getHtmlText(data, uid);
+                        // debugger;
+                        let text32 =""
+                        try {
+                             text32 = getHtmlText(data, uid);
+                        } catch (error) {
+                            console.log(error)
+                        }
+                       
                         console.log(uid + "-邮件data内容>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
                         console.log(data);
                         if (data.release) {
@@ -352,7 +358,15 @@ function getHtmlText(str, uid) {
     } else {
         if (str.html) {
             str = str.html
-            html = $(str).find('tr').text() || $(str).find('div').text() || $(str).find('p').text()
+            let $str = $(str)
+         
+          
+            if($str.length===0){
+                return ''
+            }else{
+                html = $str.find('tr').text() || $(str).find('div').text() || $(str).find('p').text()
+            }
+           
         } else {
             str = str.textAsHtml || str.text
             html = $(str).text()
@@ -360,7 +374,12 @@ function getHtmlText(str, uid) {
 
     };
     // let $inboxContent = $('.inbox-content');
-    $('.inbox-content').append(`<div class="email-uid emHtml${uid}" uid="${uid}">${str}</div>`);
+    uid = uid||""
+    str = str||""
+   
+        $('.inbox-content').append(`<div class="email-uid emHtml${uid}" uid="${uid}">${str}</div>`);
+   
+   
 
     html = html.replace(/\s+/g, ' ');
     if (html[0] == " ") {
@@ -376,11 +395,11 @@ function setMailBody(uid, text, file) {
     let html = $('#list-emall section').find('.list-emallDiv')
     let str = ''
     if (file > 0) {
-        str = `<p class="font12">Figure out what<span class="annex"><em>${file}</em><img
+        str = `<p class="font12">Figure out what<span class="annex"><em>${file||""}</em><img
         src="assets/img/Search/tabbar_attach_unselected.png"></span></p>
-        <p class="font12">${getGBK32(text)}</p>`
+        <p class="font12">${getGBK32(text)||""}</p>`
     } else {
-        str = `<p class="font12">${getGBK32(text)}</p>`
+        str = `<p class="font12">${getGBK32(text)||""}</p>`
     }
     console.log('setMailBody--------------')
     console.log(html)
@@ -389,7 +408,17 @@ function setMailBody(uid, text, file) {
         let id = _this.attr('uid')
         if (id == uid) {
             //console.log('each uid', uid)
-            _this.find('.emallDivB').append(str)
+            if( _this.find('.emallDivB p').length>2){
+                _this.find('.emallDivB').html(str)
+            }else{
+                try {
+                    _this.find('.emallDivB').append(str)
+                } catch (error) {
+                    console.log(error)
+                }
+            }
+           
+            
         }
     })
 }
@@ -447,6 +476,7 @@ function sortEmail(html){
 }
 
 function getGBK32(str) {
+    if(str=="") return ""
     let gbk = getBLen(str)
     //console.log('gbk', gbk)
     let ask = str.length
