@@ -95,7 +95,7 @@ class mailos {
 
 
 
-function getMail(tag,user, password) {
+function getMail(tag, user, password) {
     // tag 默认值为Inbox  取值范围 = 'Inbox Node Starred Drafts Sent Spam Trash'
     // 获取最新十封邮件
     let Imap = require('imap')
@@ -108,11 +108,11 @@ function getMail(tag,user, password) {
         Password,
         host
     } = settings.get('IMAP')
-   //debugger;
+    
 
     let imap = new Imap({
-        user: Email || '345632828@qq.com', 
-        password: Password || 'cjdfhabfwwaicbbd', 
+        user: Email || '345632828@qq.com',
+        password: Password || 'cjdfhabfwwaicbbd',
         host: host || 'imap.qq.com',
         port: 993, //邮箱服务器的端口地址
         tls: true, //使用安全传输协议
@@ -196,6 +196,7 @@ function getMail(tag,user, password) {
 }
 
 let userlist = []
+
 function getMailUid(uid, setIMAP) {
     // 获取最新十封邮件
     let Imap = require('imap')
@@ -206,12 +207,12 @@ function getMailUid(uid, setIMAP) {
         Password,
         host
     } = setIMAP
-    
+
     let imap = new Imap({
-        user: Email || '345632828@qq.com', 
-        password: Password || 'cjdfhabfwwaicbbd', 
-        host: host || 'imap.qq.com', 
-        port: 993, 
+        user: Email || '345632828@qq.com',
+        password: Password || 'cjdfhabfwwaicbbd',
+        host: host || 'imap.qq.com',
+        port: 993,
         tls: true, //使用安全传输协议
         tlsOptions: {
             rejectUnauthorized: false
@@ -254,6 +255,23 @@ function getMailUid(uid, setIMAP) {
                         console.log("发件人: " + headers.get('from').text);
                         if (headers.get('to')) {
                             console.log("收件人: " + headers.get('to').text);
+                            to = headers.get('to').text
+                            if ($('.myEmail').attr('rel') !== 'setName') {
+                                try {
+                                    to = to.split(',')
+                                    if(to[0].indexOf('<')>-1){
+                                        let name = to[0].match( /\<(.+?)\>/g)
+                                       
+                                        $('.myEmail').text(name[0]).attr('rel', 'setName')
+                                    }else{
+                                        $('.myEmail').text(to[0]).attr('rel', 'setName')
+                                    }
+                                   
+                                } catch (error) {
+                                    console.log(error)
+                                }
+                             
+                            }
                         } else {
                             console.log("收件人: " + '');
                         }
@@ -261,21 +279,21 @@ function getMailUid(uid, setIMAP) {
 
                         setMailHeader(uid, headers)
                         console.log(userlist)
-                        settings.set('userlist',userlist)
-                       
+                        settings.set('userlist', userlist)
+
                     });
 
                     //邮件内容
                     let file = 0;
                     mailparser.on("data", function (data) {
-                        // debugger;
-                        let text32 =""
+                       
+                        let text32 = ""
                         try {
-                             text32 = getHtmlText(data, uid);
+                            text32 = getHtmlText(data, uid);
                         } catch (error) {
                             console.log(error)
                         }
-                       
+
                         console.log(uid + "-邮件data内容>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
                         console.log(data);
                         if (data.release) {
@@ -328,28 +346,28 @@ function getMailUid(uid, setIMAP) {
 
 //控制邮箱显示，及以取内容前32个字符
 function getHtmlText(str, uid) {
-    
-    if(Object.prototype.toString.call(str.html) !=='[object String]'){
+
+    if (Object.prototype.toString.call(str.html) !== '[object String]') {
         console.log('getHtmlText(str, uid) 第一个参数不是字符串')
         return 'getHtmlText(str, uid) 第一个参数不是字符串'
-    }
-    let html
-    if(str.html.indexOf('newconfidantcontent')>0){
-        str.html =  $(str.html).attr('id')
-    }
-    if ( str.html.indexOf('newconfidant') > 0 && str.html.indexOf('newconfidantcontent') < 0) {
+    };
+    let html;
+    if (str.html.indexOf('newconfidantcontent') > 0) {
+        str.html = $(str.html).attr('id');
+    };
+    if (str.html.indexOf('newconfidant') > 0 && str.html.indexOf('newconfidantcontent') < 0) {
 
-        html = str.html
-        str = str.html
-        console.log('html-=-=-=-==')
-        console.log(html)
-        let n = html.indexOf('<span')
-        let strAes = html.substr(0, n)
-        console.log('strAes', strAes)
-       
-        let ks = WinAES.sodiumGet(html)
-        let ka = strAes || '4x2fHgATrmWCiL9soNsJ9XnsGwEkfA5DKzHIwBU3d6HkbDgCQSpnaOIYILMAhwZU8Ex620Wr/6GyWudTaXwKmg=='
-        let en = WinAES.Decrypt(ka, ks.substr(0, 16))
+        html = str.html;
+        str = str.html;
+        console.log('html-=-=-=-==');
+        console.log(html);
+        let n = html.indexOf('<span');
+        let strAes = html.substr(0, n);
+        console.log('strAes', strAes);
+
+        let ks = WinAES.sodiumGet(html);
+        let ka = strAes || '4x2fHgATrmWCiL9soNsJ9XnsGwEkfA5DKzHIwBU3d6HkbDgCQSpnaOIYILMAhwZU8Ex620Wr/6GyWudTaXwKmg==';
+        let en = WinAES.Decrypt(ka, ks.substr(0, 16));
 
         str = en || str
 
@@ -357,16 +375,16 @@ function getHtmlText(str, uid) {
         console.log('END sodiumGet---->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>-----')
     } else {
         if (str.html) {
-            str = str.html
-            let $str = $(str)
-         
-          
-            if($str.length===0){
+            str = str.html;
+            let $str = $(str);
+
+
+            if ($str.length === 0) {
                 return ''
-            }else{
+            } else {
                 html = $str.find('tr').text() || $(str).find('div').text() || $(str).find('p').text()
-            }
-           
+            };
+
         } else {
             str = str.textAsHtml || str.text
             html = $(str).text()
@@ -374,18 +392,18 @@ function getHtmlText(str, uid) {
 
     };
     // let $inboxContent = $('.inbox-content');
-    uid = uid||""
-    str = str||""
-   
-        $('.inbox-content').append(`<div class="email-uid emHtml${uid}" uid="${uid}">${str}</div>`);
-   
-   
+    uid = uid || "";
+    str = str || "";
+
+    $('.inbox-content').append(`<div class="email-uid emHtml${uid}" uid="${uid}">${str}</div>`);
+
+
 
     html = html.replace(/\s+/g, ' ');
     if (html[0] == " ") {
-        html = html.substr(1, 33)
+        html = html.substr(1, 33);
     } else {
-        html = html.substr(0, 32)
+        html = html.substr(0, 32);
     };
 
     return html
@@ -408,17 +426,17 @@ function setMailBody(uid, text, file) {
         let id = _this.attr('uid')
         if (id == uid) {
             //console.log('each uid', uid)
-            if( _this.find('.emallDivB p').length>2){
+            if (_this.find('.emallDivB p').length > 2) {
                 _this.find('.emallDivB').html(str)
-            }else{
+            } else {
                 try {
                     _this.find('.emallDivB').append(str)
                 } catch (error) {
                     console.log(error)
                 }
             }
-           
-            
+
+
         }
     })
 }
@@ -432,7 +450,8 @@ function setMailHeader(uid, headers) {
     let to = headers.get('to')
     if (headers.get('to')) {
         console.log("收件人: " + headers.get('to').text);
-        to = headers.get('to').text
+
+
     } else {
         console.log("收件人: " + '');
         to = ''
@@ -440,7 +459,7 @@ function setMailHeader(uid, headers) {
     let date = moment(headers.get('date')).format('MM-DD');
     console.log("发件日期: " + date);
     let from = headers.get('from').text
-    if(from.length){
+    if (from.length) {
         from = from.split("<")[0]
     }
     let fromImg = from.substr(0, 1)
@@ -458,7 +477,7 @@ function setMailHeader(uid, headers) {
     </div>`
     // 排序显示
 
-    
+
     userlist.push({
         from,
         date,
@@ -470,13 +489,13 @@ function setMailHeader(uid, headers) {
 
 }
 
-function sortEmail(html){
-    
+function sortEmail(html) {
+
 
 }
 
 function getGBK32(str) {
-    if(str=="") return ""
+    if (str == "") return ""
     let gbk = getBLen(str)
     //console.log('gbk', gbk)
     let ask = str.length

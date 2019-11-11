@@ -347,7 +347,6 @@
     let ck = "t+INmZg96TCvt7w1Rt9Q+iToWFwdT2hCq6ck1sUwxR4="
 
     ipcRenderer.on('NewEmail', function (event, message) { // 监听父页面定义的端口
-      //debugger;
       console.table(message)
       userlist = settings.get('userlist')
       console.log(userlist)
@@ -472,9 +471,13 @@
 
             // alert('邮件发送--需要真正发邮件修改NewEmail.html 238行的代码')
             transporter.sendMail(mailOptions, (error, info) => {
+
               if (error) {
                 return console.log(error);
               }
+              alert('邮件发送成功.')
+              setTimeout(()=> window.close(),500)
+             
               console.log('Message sent: %s', info.messageId);
               // Message sent: <04ec7731-cc68-1ef6-303c-61b0f796b78f@qq.com>
             });

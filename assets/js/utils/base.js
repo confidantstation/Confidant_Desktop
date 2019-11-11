@@ -133,7 +133,7 @@ class aesjs {
         //         return req.data
 
         //     }).then((req) => {
-        //         debugger
+        //        
         //         resolve(req)
         //     })
         // });
@@ -370,12 +370,17 @@ function getUnit8SKPK(k) {
 function toPrivateKey(d) {
     //base64 解码再转化成 Uint8Array数组
     let arr
-    try {
-       arr = new Uint8Array(Buffer.from(d, 'base64'))
-    } catch (error) {
-        console.log(error)
-        return []
+    if(Object.prototype.toString.call(d)==="[object String]"){
+        try {
+            arr = new Uint8Array(Buffer.from(d, 'base64'))
+         } catch (error) {
+             console.log(error)
+             return new Uint8Array()
+         }
+    }else{
+        return new Uint8Array()
     }
+    
     return arr
 }
 

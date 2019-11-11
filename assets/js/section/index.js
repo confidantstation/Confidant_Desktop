@@ -4,12 +4,13 @@ const settings = require('electron-settings');
 const jsQR = require("jsqr");
 
 //设置自加1 变量msgid
-if (!settings.get('msgid')) {
+if (settings.get('msgid')<1) {
     settings.set('msgid', 1)
-} else {
-    if (settings.get('msgid') < 50) {
-        settings.set('msgid', 50)
-    }
+}
+
+//settings.set('circle', {})
+if (!settings.get('circle')) {
+    settings.set('circle', {})
 }
 
 /* 暂存代码区
@@ -29,14 +30,47 @@ settings.set('IMAP', {
     host: ""
 })
 
+// settings.set('arr',[1,2,3,4,5,6])
 
+// let a1 = settings.get('arr')
+// console.log(a1)
+// console.log(a1[0])
 
+// a1.push('jjjjj')
+// console.log(a1)
 
 $(function () {
+    require('./assets/js/imports');
+
+
+    if (settings.get('QRcode')) {
+
+        let initAesjs = new aesjs()
+        initAesjs.initSodium() // 初始化  aesjs
+
+        let getqrc = settings.get('QRcode')
+        console.log(getqrc)
+        if (Object.prototype.toString.call(getqrc.data) === "[object String]") {
+            QRcode = getqrc.data.split(',')
+            console.log(QRcode[0])
+            console.log(QRcode[0] == 'type_3')
+            if (QRcode[0] == 'type_3') {
+                $('#logBox').hide();
+                $('#logBoxA').show();
+                let username = window.atob(QRcode[3])
+                settings.set('username', username)
+                $('.usernameSpan').text(username)
+            } else {
+                $('#logBox,#logBoxA').show()
+                alert('请导入你的私钥')
+            }
+        }
+
+    }
 
     $(".ImportBtnAccount").click(function () {
         //导入账户
-        require('./assets/js/imports');
+       
         let _this = $(this)
         let canvas = document.getElementById("logBoxCanvas")
         let ctx = canvas.getContext("2d")
@@ -79,8 +113,192 @@ $(function () {
         });
 
     });
+
+
+    // 导入圈子存储功能-函数
+    function setcircle(val) {
+
+        let arr = settings.get('circle');
+        if (Object.prototype.toString.call(arr) === "[object Object]") {
+
+            let usn = val.params.UserSn
+            let $usn = $(`.u${usn}`)
+            if($usn.length===0){
+                $('.modalMt').prepend(`<p class="u${usn}" usn="${usn}">${usn.substr(0,12)}</p>`)
+            }
+           
+            $('.modalMt').attr('usn',usn)
+            arr[usn] = val
+            settings.set('UserId', usn)
+            settings.set('circle', arr);
+            showMtlist(arr,usn)
+        }
+        let a = settings.get('circle');
+        console.log(a)
+    }
+
+    function showMtlist(d,s){
+    
+        for(let i in d){
+            if(i!==s){
+                $('.modalMt').prepend(`<p class="u${i}" usn="${i}">${i.substr(0,12)}</p>`)
+            }
+        }
+    }
+
+    // 导入圈子存储功能
+    CircleQRcode = settings.get('CircleQRcode')
+    console.log (CircleQRcode)
+    if(Object.prototype.toString.call(CircleQRcode.data)==="[object String]") {
+        CircleQRcode = CircleQRcode.data.split(',')
+        settings.set('msgid', settings.get('msgid') + 1)
+    }
+    console.table (CircleQRcode)
+    if (CircleQRcode[0] == 'type_1') {
+       debugger;
+        let ASE = new aesjs(CircleQRcode[1])
+        ASE.initSodium()
+        let rd = ASE.getaseid()
+      
+        let data // set wsdata
+        data = ASE.getserverip()
+
+        data.then((req) => {
+            return req
+        }).then((req) => {
+            debugger;
+
+            settings.set('wsdata', req)
+            let wsdata = req
+            let privateKey = toPrivateKey(QRcode[1])
+            let publicKey = privateKey.slice(-32);
+
+            let ts1 = [-64, 18, 65, -98, 95, 105, 80, 8, 106, 78, -81, 94, -56, -115, 27, -108, 67, 3, 57, 97, 72, -78, 90, 19, -79, -55, 26, -93, -109, -104, 16, -96]
+            let ts2 = [192, 18, 65, 158, 95, 105, 80, 8, 106, 78, 175, 94, 200, 141, 27, 148, 67, 3, 57, 97, 72, 178, 90, 19, 177, 201, 26, 163, 147, 152, 16, 160]
+
+            let ts3 = tobase64('wBJBnl9pUAhqTq9eyI0blEMDOWFIsloTsckao5OYEKA=', 'reset')
+
+            console.log(ts3)
+
+            let ts6 = ASE.from_string(ts2)
+
+            //let ts3 = ASE.crypto_box_seal('aaa',ts2)
+
+            publicKey = tobase64(publicKey)
+            console.log('CircleQRcode ', CircleQRcode)
+            console.log('toPrivateKey ', QRcode)
+            console.log('privateKey', privateKey)
+            console.log('publicKey', publicKey)
+            //设置密钥
+            settings.set('sodium', {
+                privateKey,
+                publicKey: toPrivateKey(publicKey),
+
+            })
+
+            let str = {
+                "Action": "Recovery",
+                "RouteId": rd.RID,
+                "UserSn": rd.USN,
+                "Pubkey": publicKey,
+            }
+
+            let app = {
+                appid: 'MIFI',
+                timestamp: new Date().getTime(),
+                apiversion: 6,
+                msgid: settings.get('msgid') + 1,
+                offset: 0,
+                more: 0
+            }
+
+
+            let tp = ASE.sodium(app.timestamp, privateKey)
+
+            app.Sign = tobase64(tp)
+            app.params = str
+            console.log('set app str')
+            settings.set('app', app);
+
+            //let data = settings.get('wsdata') || 0
+
+            if (Object.prototype.toString.call(wsdata) === '[object Object]') {
+                console.log(`wss://${wsdata.ServerHost}:${wsdata.ServerPort}`)
+                ws = new WebSocket(`wss://${wsdata.ServerHost}:${wsdata.ServerPort}`, "lws-minimal");
+                ws.onopen = function () {
+                    let str = app || settings.get('app')
+                    str.msgid = settings.get('msgid')
+                    str = JSON.stringify(str)
+                    console.log('send app ', str)
+                    ws.send(str);
+                    //alert("数据发送中...");
+
+                };
+
+
+                ws.onmessage = function (evt) {
+                    //alert('接收消息成功...')
+                    console.log('接收消息成功...', evt)
+                    console.log('data...', evt.data)
+                    let data = JSON.parse(evt.data)
+                    console.log('data', data)
+                    if (data.params.RetCode === 0) {
+                        let datas = data.params
+                        let str1 = {
+                            Action: "Login",
+                            RouteId: datas.RouteId,
+                            UserSn: datas.UserSn,
+                            UserId: datas.UserId,
+                            Sign: 1,
+                            DataFileVersion: 6,
+                            NickName: datas.NickName
+                        }
+                        let circle1 = {
+                            appid: 'MIFI',
+                            timestamp: new Date().getTime(),
+                            apiversion: 6,
+                            msgid: settings.get('msgid') + 1,
+                            offset: 0,
+                            more: 0
+                        }
+                        circle1.params = str1
+                        console.log('circle----------------------', circle1)
+                        settings.set('circle1', circle1)
+                       
+                        setcircle(circle1);
+
+                       
+                        $('#logBoxA').hide();
+                        $('#logBoxB').show();
+                        ws.close()
+
+                    }
+                };
+
+                ws.onclose = function () {
+                    // 关闭 websocket
+                    console.log('ws onclose')
+                };
+            } else {
+                alert('wsdata 不存在！进入模拟测试环节')
+                $('#logBoxA').hide();
+                $('#logBoxB').show();
+
+            }
+        })
+
+    } else {
+        alert('请导入你的圈子')
+    }
+    // 导入圈子 本地存储
+
+
+    $('.footerImpor').click(function () {
+        $('.ImportBtnCircle').click()
+    })
     $('.ImportBtnCircle').click(function () {
         //导入圈子
+        settings.set('msgid', settings.get('msgid') + 1)
         let _this = $(this)
         let privateKey = toPrivateKey(QRcode[1])
         let name = window.atob(QRcode[3])
@@ -93,9 +311,6 @@ $(function () {
         let ctx = canvas.getContext("2d")
         $("#uploadA").click(); //隐藏了input:file样式后，点击头像就可以本地上传
         $("#uploadA").on("change", function () {
-
-
-
 
             let objUrl = getObjectURL(this.files[0]); //获取图片的路径，该路径不是图片在本地的路径
             if (objUrl) {
@@ -132,13 +347,11 @@ $(function () {
 
                         let data // set wsdata
                         data = ASE.getserverip()
-                        // debugger
+
                         data.then((req) => {
                             return req
-
-
                         }).then((req) => {
-                            // debugger
+                            
                             settings.set('wsdata', req)
                             let wsdata = req
                             let privateKey = toPrivateKey(QRcode[1])
@@ -190,9 +403,8 @@ $(function () {
                             app.params = str
                             console.log('set app str')
                             settings.set('app', app);
-                            // debugger;
-                            //let data = settings.get('wsdata') || 0
 
+                            //let data = settings.get('wsdata') || 0
 
                             if (Object.prototype.toString.call(wsdata) === '[object Object]') {
                                 console.log(`wss://${wsdata.ServerHost}:${wsdata.ServerPort}`)
@@ -225,7 +437,7 @@ $(function () {
                                             DataFileVersion: 6,
                                             NickName: datas.NickName
                                         }
-                                        let app1 = {
+                                        let circle1 = {
                                             appid: 'MIFI',
                                             timestamp: new Date().getTime(),
                                             apiversion: 6,
@@ -233,14 +445,33 @@ $(function () {
                                             offset: 0,
                                             more: 0
                                         }
-                                        app1.params = str1
-                                        console.log('app1----------------------', app1)
-                                        settings.set('app', app1)
-                                        settings.set('UserId', str1.UserId)
-                                        //ws.close();
+                                        circle1.params = str1
+                                        console.log('circle----------------------', circle1)
+                                        settings.set('circle1', circle1)
+                                       
+                                        setcircle(circle1);
+
+                                        // function setcircle(val) {
+
+                                        //     let arr = settings.get('circle');
+                                        //     if (Object.prototype.toString.call(arr) === "[object Object]") {
+
+                                        //         let usn = circle1.params.UserSn
+                                        //         let $usn = $(`.u${usn}`)
+                                        //         if($usn.length===0){
+                                        //             $('.modalMt').prepend(`<p class="u${usn}" usn="${usn}">${usn.substr(0,12)}</p>`)
+                                        //         }
+                                               
+                                        //         $('.modalMt').attr('usn',usn)
+                                        //         arr[usn] = val
+                                        //         settings.set('circle', arr);
+                                        //     }
+                                        //     let a = settings.get('circle');
+                                        //     console.log(a)
+                                        // }
                                         $('#logBoxA').hide();
                                         $('#logBoxB').show();
-
+                                        ws.close()
 
                                     }
                                 };
@@ -257,11 +488,11 @@ $(function () {
                             }
                         })
 
-
-
                     } else {
                         alert('请导入你的圈子')
                     }
+                    // then 结束
+
 
 
                 }
@@ -283,9 +514,11 @@ $(function () {
     $('.ImportBtnLogin').click(function () {
         /* 邮件配置测试*/
         let setMail = $(this).attr('rel') || 'loginHtml';
-
+      debugger;
         //选择圈子登录
-        let app = settings.get('app')
+        let usn = $('.modalMt').attr('usn')
+        let circleArr = settings.get('circle')
+        app = circleArr[usn]
         let privateKey = toPrivateKey(QRcode[1])
 
         let ASE = new aesjs(CircleQRcode[1])
@@ -315,7 +548,7 @@ $(function () {
             console.log('data...', evt.data)
             let data = JSON.parse(evt.data)
             console.log('data', data)
-            if (data.retcode == 225) {
+            if (data.retcode>0) {
 
                 hideInbox(setMail)
                 // if(setMail==='setEmail'){
@@ -331,9 +564,8 @@ $(function () {
                 remote.getCurrentWindow().setSize(1032, 600)
                 //remote.getCurrentWindow().maximize()
                 remote.getCurrentWindow().center()
-
-
                 require('./assets/js/section/email.js');
+                ws.close();
 
             }
             if (data.params) {
@@ -349,6 +581,19 @@ $(function () {
             // 关闭 websocket
             console.log('ws onclose')
         };
+    })
+
+
+
+    //切换圈子
+    $('.mt').click(function () {
+        $('.modalMt').show()
+    })
+
+    $(document).on('click', '.modalMt p', function () {
+        let usn = $(this).attr('usn')
+        $('.modalMt').attr('usn', usn).hide()
+        $('.mt-text').text($(this).text())
     })
 
 })

@@ -100,7 +100,7 @@
                 let Email = $mailLoginInput.eq(0).val()
                 let Password = $mailLoginInput.eq(1).val()
 
-                //debugger;
+                
                 settings.set('IMAP', { Email, Password, host:getHost(rel) })
 
                 hideInbox('setEmailHtmlLogin')
