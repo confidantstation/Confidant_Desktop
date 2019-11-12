@@ -243,14 +243,16 @@
     overflow: hidden;
     overflow-y: auto;
   }
-  .dot{
+
+  .dot {
     width: 120px;
     height: 40px;
     float: left;
     outline: 0px solid #ccc;
-   
+
   }
-  .dotA{
+
+  .dotA {
     display: block;
     width: 12px;
     height: 12px;
@@ -259,7 +261,8 @@
     margin: 16px 0 0 8px;
     float: left;
   }
-  .dotB{
+
+  .dotB {
     display: block;
     width: 12px;
     height: 12px;
@@ -268,7 +271,8 @@
     margin: 16px 0 0 8px;
     float: left;
   }
-  .dotC{
+
+  .dotC {
     display: block;
     width: 12px;
     height: 12px;
@@ -283,9 +287,9 @@
   <div class="emailSendPageA">
     <header>
       <div class="dot">
-          <span class="dotA"></span>
-          <span class="dotB"></span>
-          <span class="dotC"></span>
+        <span class="dotA"></span>
+        <span class="dotB"></span>
+        <span class="dotC"></span>
       </div>
       <button class="SaveDraftBtn">Save Draft</button><button class="SendBtn" id='SendBtn'>Send</button>
     </header>
@@ -340,7 +344,7 @@
   let userlist;
   $(function () {
 
-    $('.dotA').click(function(){
+    $('.dotA').click(function () {
       window.close()
     })
 
@@ -360,10 +364,11 @@
         </div>`
       if ($.isArray(userlist)) {
         let str = ""
-        
+        debugger;
         userlist.map((x) => {
           let to1 = x.to
-          to1 = to1.split(",")[0]
+          //to1 = to1.split(",")[0]
+          to1 = to1.text || ""
           let html = `<div class="userlist">
             <div class="userlistA">
                 <div class='fromImg'>${x.from.substr(0, 1)}</div>
@@ -383,12 +388,12 @@
       let from = $(this).find('.to').html()
       //alert(from)
       let val = $('#To').val()
-      if(val){
-        $('#To').val(val+" "+from)
-      }else{
+      if (val) {
+        $('#To').val(val + " " + from)
+      } else {
         $('#To').val(from)
       }
-     
+
     })
 
 
@@ -416,7 +421,7 @@
 
 
       let to = $('#To').val()
-      to = to.split(' ')
+      to = to.split(',')
       let subject = $('#Subject').val()
       let cc = $('#Cc').val()
       let bcc = $('#Bcc').val()
@@ -455,6 +460,7 @@
         sendMail(to, ws)
       }
       ws.onmessage = function (evt) {
+        debugger;
         //alert('接收消息成功...')
         console.log('接收消息成功...', evt)
         console.log('data...', evt.data)
@@ -466,21 +472,41 @@
           if (params.Action === "CheckmailUkey") {
             console.log(params.Action)
             let arr = params.Payload
-
-            mailOptions.html = sendMailEncrypt(arr, html)
-
-            // alert('邮件发送--需要真正发邮件修改NewEmail.html 238行的代码')
-            transporter.sendMail(mailOptions, (error, info) => {
-
-              if (error) {
-                return console.log(error);
+            let keyNub = 0, arrNub = 0
+            if (Object.prototype.toString.call(arr) === "[object Array]") {
+              for (let i in arr) {
+                let PubKey = arr[i]['PubKey']
+                try {
+                  if (Object.prototype.toString.call(PubKey) === "[object String]" && PubKey.length > 3) {
+                    keyNub++
+                  }
+                } catch (error) {
+                  console.log(error)
+                }
+                arrNub++
               }
-              alert('邮件发送成功.')
-              setTimeout(()=> window.close(),500)
-             
-              console.log('Message sent: %s', info.messageId);
-              // Message sent: <04ec7731-cc68-1ef6-303c-61b0f796b78f@qq.com>
-            });
+              debugger;
+              if (keyNub !== 0 && keyNub === arrNub) {
+                mailOptions.html = sendMailEncrypt(arr, html)
+              }
+
+
+            } else {
+              mailOptions.html = html
+            }
+
+
+            // transporter.sendMail(mailOptions, (error, info) => {
+
+            //   if (error) {
+            //     return console.log(error);
+            //   }
+            //   alert('邮件发送成功.')
+            //   setTimeout(() => window.close(), 500)
+
+            //   console.log('Message sent: %s', info.messageId);
+            //   // Message sent: <04ec7731-cc68-1ef6-303c-61b0f796b78f@qq.com>
+            // });
           }
         }
 
@@ -511,6 +537,8 @@
   }
 
   function sendMail(To, ws) {
+    debugger;
+    let Unum
 
     let sodiumKey = settings.get('sodium')
     //可测试的邮件地址 345632828@qq.com,kuangzihui@163.com
@@ -559,6 +587,7 @@
 
   //加密邮件 主函数
   function sendMailEncrypt(arr, html) {
+    debugger;
     let rand = randomPassword(32)
     let text = AES.Encrypt(html, rand.substr(0, 16))
     let PubKey = toPrivateKey(arr[0].PubKey)

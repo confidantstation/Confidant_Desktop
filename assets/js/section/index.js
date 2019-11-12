@@ -4,14 +4,16 @@ const settings = require('electron-settings');
 const jsQR = require("jsqr");
 
 //设置自加1 变量msgid
-if (settings.get('msgid')<1) {
+if (settings.get('msgid') < 1) {
     settings.set('msgid', 1)
 }
 
+//settings.set('CircleQRcode',{})
 //settings.set('circle', {})
 if (!settings.get('circle')) {
     settings.set('circle', {})
 }
+
 
 /* 暂存代码区
 settings.set('msgid', settings.get('msgid') + 1)
@@ -42,7 +44,13 @@ settings.set('IMAP', {
 $(function () {
     require('./assets/js/imports');
 
+    // 退出
+    $('.footerQuit').click(function () {
+        window.close()
+    });
 
+
+     //导入账户 存储功能
     if (settings.get('QRcode')) {
 
         let initAesjs = new aesjs()
@@ -70,7 +78,7 @@ $(function () {
 
     $(".ImportBtnAccount").click(function () {
         //导入账户
-       
+
         let _this = $(this)
         let canvas = document.getElementById("logBoxCanvas")
         let ctx = canvas.getContext("2d")
@@ -116,57 +124,79 @@ $(function () {
 
 
     // 导入圈子存储功能-函数
-    function setcircle(val) {
+    function setcircle(val, status) {
 
         let arr = settings.get('circle');
+      
         if (Object.prototype.toString.call(arr) === "[object Object]") {
-
+           
             let usn = val.params.UserSn
-            let $usn = $(`.u${usn}`)
-            if($usn.length===0){
-                $('.modalMt').prepend(`<p class="u${usn}" usn="${usn}">${usn.substr(0,12)}</p>`)
+            let name = val.params.RouterName 
+            if(Object.prototype.toString.call(name)==="[object String]"){
+                name = window.atob(name)
+            }else{
+                name = "Undefined"
             }
            
-            $('.modalMt').attr('usn',usn)
+            $('.modalMt').attr('usn', usn)
             arr[usn] = val
             settings.set('UserId', usn)
             settings.set('circle', arr);
-            showMtlist(arr,usn)
+            if (status) {
+                for (let i in arr) {
+                    let $usn = $(`.u${usn}`)
+                    if ($usn.length === 0) {
+                        $('.modalMt').prepend(`<p class="u${usn}" usn="${usn}">${name.substr(0,12)}</p>`)
+                        $('.mt-text').text(`${name.substr(0,12)}`)
+                    }
+                }
+            }else{
+                showMtlist(arr,name)
+            }
+
         }
-        let a = settings.get('circle');
-        console.log(a)
+
     }
 
-    function showMtlist(d,s){
-    
-        for(let i in d){
-            if(i!==s){
-                $('.modalMt').prepend(`<p class="u${i}" usn="${i}">${i.substr(0,12)}</p>`)
-            }
+    function showMtlist(d, name) {
+        // if (!d[s]) {
+        //     $('.modalMt').prepend(`<p class="u${s}" usn="${s}">${s.substr(0,12)}</p>`)
+        // }
+        for(let s in d){
+            let name =d[s].params.RouterName
+            name = window.atob(name)
+            $('.modalMt').prepend(`<p class="u${s}" usn="${s}">${name.substr(0,12)}</p>`)
         }
+        $('.mt-text').text($('.modalMt').find('p').eq(0).text())
     }
 
     // 导入圈子存储功能
-    CircleQRcode = settings.get('CircleQRcode')
-    console.log (CircleQRcode)
-    if(Object.prototype.toString.call(CircleQRcode.data)==="[object String]") {
-        CircleQRcode = CircleQRcode.data.split(',')
+    debugger
+    CircleQRcode = settings.get('CircleQRcode') 
+
+    if (Object.prototype.toString.call(CircleQRcode) === "[object Object]") {
+        try {
+            CircleQRcode = CircleQRcode.data.split(',')
+        } catch (error) {
+            console.log(error)
+        }
+        
         settings.set('msgid', settings.get('msgid') + 1)
     }
-    console.table (CircleQRcode)
+    console.table(CircleQRcode)
     if (CircleQRcode[0] == 'type_1') {
-       debugger;
+
         let ASE = new aesjs(CircleQRcode[1])
         ASE.initSodium()
         let rd = ASE.getaseid()
-      
+
         let data // set wsdata
         data = ASE.getserverip()
 
         data.then((req) => {
             return req
         }).then((req) => {
-            debugger;
+
 
             settings.set('wsdata', req)
             let wsdata = req
@@ -244,11 +274,13 @@ $(function () {
                     console.log('data', data)
                     if (data.params.RetCode === 0) {
                         let datas = data.params
+                      
                         let str1 = {
                             Action: "Login",
                             RouteId: datas.RouteId,
                             UserSn: datas.UserSn,
                             UserId: datas.UserId,
+                            RouterName:datas.RouterName,
                             Sign: 1,
                             DataFileVersion: 6,
                             NickName: datas.NickName
@@ -264,10 +296,10 @@ $(function () {
                         circle1.params = str1
                         console.log('circle----------------------', circle1)
                         settings.set('circle1', circle1)
-                       
+
                         setcircle(circle1);
 
-                       
+
                         $('#logBoxA').hide();
                         $('#logBoxB').show();
                         ws.close()
@@ -351,7 +383,7 @@ $(function () {
                         data.then((req) => {
                             return req
                         }).then((req) => {
-                            
+
                             settings.set('wsdata', req)
                             let wsdata = req
                             let privateKey = toPrivateKey(QRcode[1])
@@ -433,6 +465,7 @@ $(function () {
                                             RouteId: datas.RouteId,
                                             UserSn: datas.UserSn,
                                             UserId: datas.UserId,
+                                            RouterName:datas.RouterName,
                                             Sign: 1,
                                             DataFileVersion: 6,
                                             NickName: datas.NickName
@@ -448,27 +481,10 @@ $(function () {
                                         circle1.params = str1
                                         console.log('circle----------------------', circle1)
                                         settings.set('circle1', circle1)
-                                       
-                                        setcircle(circle1);
 
-                                        // function setcircle(val) {
+                                        setcircle(circle1, 1);
 
-                                        //     let arr = settings.get('circle');
-                                        //     if (Object.prototype.toString.call(arr) === "[object Object]") {
 
-                                        //         let usn = circle1.params.UserSn
-                                        //         let $usn = $(`.u${usn}`)
-                                        //         if($usn.length===0){
-                                        //             $('.modalMt').prepend(`<p class="u${usn}" usn="${usn}">${usn.substr(0,12)}</p>`)
-                                        //         }
-                                               
-                                        //         $('.modalMt').attr('usn',usn)
-                                        //         arr[usn] = val
-                                        //         settings.set('circle', arr);
-                                        //     }
-                                        //     let a = settings.get('circle');
-                                        //     console.log(a)
-                                        // }
                                         $('#logBoxA').hide();
                                         $('#logBoxB').show();
                                         ws.close()
@@ -514,10 +530,10 @@ $(function () {
     $('.ImportBtnLogin').click(function () {
         /* 邮件配置测试*/
         let setMail = $(this).attr('rel') || 'loginHtml';
-      debugger;
+
         //选择圈子登录
         let usn = $('.modalMt').attr('usn')
-        let circleArr = settings.get('circle')
+        let circleArr = settings.get('circle') || []
         app = circleArr[usn]
         let privateKey = toPrivateKey(QRcode[1])
 
@@ -548,19 +564,10 @@ $(function () {
             console.log('data...', evt.data)
             let data = JSON.parse(evt.data)
             console.log('data', data)
-            if (data.retcode>0) {
+            if (data.retcode > 0) {
 
                 hideInbox(setMail)
-                // if(setMail==='setEmail'){
-                //     $('#logBoxC').show()
-                //     hideInbox(setMail)
-                //     settings.set('status', 'setEmail');
-                // }else{
-                //     $('#logBoxC,#emailHtml').show()
-
-                //     settings.set('status', 'login');
-                // }
-
+                
                 remote.getCurrentWindow().setSize(1032, 600)
                 //remote.getCurrentWindow().maximize()
                 remote.getCurrentWindow().center()
@@ -587,7 +594,7 @@ $(function () {
 
     //切换圈子
     $('.mt').click(function () {
-        $('.modalMt').show()
+        $('.modalMt').toggle();
     })
 
     $(document).on('click', '.modalMt p', function () {

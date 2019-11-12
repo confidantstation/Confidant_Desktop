@@ -102,8 +102,8 @@ $(function () {
         });
 
         win.show()
-        //关掉窗口调试功能
-        //win.webContents.openDevTools();
+        //关掉窗口调试功能 写邮件
+        win.webContents.openDevTools();
 
         win.on('information-dialog-selection', () => {
             win = null
