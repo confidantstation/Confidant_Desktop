@@ -31,6 +31,17 @@ body {
     background: #e6e6e6;
 }
 
+.max-modal{
+    width:100vw;
+    height: 100vh;
+    background: #333;
+    opacity: 0.3;
+    position: absolute;
+    top:0;
+    left:0;
+    display: none;
+}
+
 .logBoxStyle {
     background: #fff;
     width: 100%;

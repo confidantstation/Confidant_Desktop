@@ -26,11 +26,11 @@ settings.set('status', 0);
 settings.set('wsdata', 0)
 let testdata = settings.get('wsdata');
 console.log(testdata)
-settings.set('IMAP', {
-    Email: "",
-    Password: "",
-    host: ""
-})
+// settings.set('IMAP', {
+//     Email: "",
+//     Password: "",
+//     host: ""
+// })
 
 // settings.set('arr',[1,2,3,4,5,6])
 
@@ -171,7 +171,7 @@ $(function () {
     }
 
     // 导入圈子存储功能
-    debugger
+   
     CircleQRcode = settings.get('CircleQRcode') 
 
     if (Object.prototype.toString.call(CircleQRcode) === "[object Object]") {
@@ -530,6 +530,13 @@ $(function () {
     $('.ImportBtnLogin').click(function () {
         /* 邮件配置测试*/
         let setMail = $(this).attr('rel') || 'loginHtml';
+        let IMAP = settings.get('IMAP')
+        debugger;
+        if(IMAP.Email&&IMAP.Password&&IMAP.host){
+            setMail = 'loginHtml'
+        }else{
+            setMail = 'setEmailHtml'
+        }
 
         //选择圈子登录
         let usn = $('.modalMt').attr('usn')

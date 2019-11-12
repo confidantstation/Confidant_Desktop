@@ -10,6 +10,7 @@
             </div>
         </div>
         <!--modal-->
+        <!-- <div class="max-modal"></div>
         <div class="newAccountDiv" style="display: none;">
             <div class="newAccountHead">New Account</div>
             <section>
@@ -48,35 +49,41 @@
                 </div>
             </section>
         </div>
-        <!--modal-->
+        modal
         <div class="mailLogin" style="display: none;margin-left:-110px;">
-            <header>
-                <img id='mailLoginImg' src="./assets/img/mails/email_icon_163_n.png">
-            </header>
-            <section>
-                <p class="mailLoginTitle">Email</p>
-                <p><input class="mailLoginInput" type="text" placeholder="example@gmail.com"></p>
-                <p class="mailLoginTitle">Password</p>
-                <p><input class="mailLoginInput" type="password" placeholder="Password/Authorization code"></p>
-            </section>
-            <footer>
-                <button class="mailLoginBtn">Login</button>
-            </footer>
+            <form action="" onsubmit="return false">
+                <header>
+                    <img id='mailLoginImg' src="./assets/img/mails/email_icon_163_n.png">
+                </header>
+                <section>
+
+                    <p class="mailLoginTitle">Email</p>
+                    <p><input class="mailLoginInput" type="email" autofocus="autofocus" placeholder="example@gmail.com">
+                    </p>
+                    <p class="mailLoginTitle">Password</p>
+                    <p><input class="mailLoginInput" type="password" pattern='.{6,20}'
+                            placeholder="Password/Authorization code"></p>
+                </section>
+                <footer>
+                    <button class="mailLoginBtn">Login</button>
+                </footer>
+            </form>
         </div>
-    </div>
+    </div> -->
 
 
 
     <script>
+        
 
         $(function () {
             const settings = require('electron-settings');
-            $('.newAccountBtn,.newAccountBtnImg').click(function () {
-
-                $('.newAccountDiv').show()
+            $(document).on('click','.newAccountBtn,.newAccountBtnImg,.New-Account',function(){
+                $('.newAccountDiv,.max-modal').show()
             })
+         
             $('.newAccountCancel').click(function () {
-                $('.newAccountDiv').hide()
+                $('.newAccountDiv,.max-modal').hide()
             })
             $('.newAccountList').hover(function () {
                 $(this).css({ 'background': "#6646F7", 'color': '#fff' })
@@ -92,16 +99,18 @@
                 rel = _this.find('.ia img').attr('rel')
                 $('#mailLoginImg').attr('src', img)
                 $('.newAccountDiv').hide()
-                $('.mailLogin').show()
+                $('.mailLogin,.max-modal').show()
             })
 
             $('.mailLoginBtn').click(function () {
+              
+                console.log(Math.ceil(Math.random()*10))
                 let $mailLoginInput = $('.mailLoginInput')
                 let Email = $mailLoginInput.eq(0).val()
                 let Password = $mailLoginInput.eq(1).val()
 
-                
-                settings.set('IMAP', { Email, Password, host:getHost(rel) })
+
+                settings.set('IMAP', { Email, Password, host: getHost(rel) })
 
                 hideInbox('setEmailHtmlLogin')
 
@@ -109,10 +118,10 @@
         })
         function getHost(name) {
             let mailName = ["QQMailbox", "QQMail", "163Mail", "Gmail", "Outlook, Hotmail, live", "iCloud", "Other (IMAP)"]
-            switch(name){
+            switch (name) {
                 case 'QQMail':
                     return 'imap.qq.com'
-                break;
+                    break;
                 default:
                     return 0
             }

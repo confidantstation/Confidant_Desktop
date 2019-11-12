@@ -71,10 +71,10 @@
                 </span>
             </div>
             <div class="modalMt nui-scroll">
-                <p usn = '1'>MT’s Power Station1</p>
-                <p usn = '2'>MT’s Power Station2</p>
-                <p usn = '3'>MT’s Power Station3</p>
-                <p usn = '4'>MT’s Power Station4</p>
+                <p usn='1'>MT’s Power Station1</p>
+                <p usn='2'>MT’s Power Station2</p>
+                <p usn='3'>MT’s Power Station3</p>
+                <p usn='4'>MT’s Power Station4</p>
                 <p>MT’s Power Station</p>
                 <p>MT’s Power Station</p>
                 <p>MT’s Power Station</p>
@@ -88,7 +88,7 @@
                 <span class="footerQuit">退 出</span>
                 <span class="footerImpor">导入圈子</span>
             </p>
-            <p class="ImportBtnLogin" rel='setEmailHtml'>配置邮件</p>
+            <p class="ImportBtnLogin" rel='setEmailHtml'>配置邮箱</p>
         </footer>
     </div>
 
@@ -145,7 +145,7 @@
                     </ul>
                 </section>
                 <footer>
-                    <ul class="emall-card">
+                    <ul class="emall-card emall-card2">
                         <li rel='Inbox'>
                             <div class="spanA">
                                 <div class="centerDiv"><img class="newTag"
@@ -220,6 +220,70 @@
 
         <!-- modal -->
 
+        <div class="max-modal"></div>
+        <div class="newAccountDiv" style="display: none;">
+            <div class="newAccountHead">New Account</div>
+            <section>
+                <div class="newAccount">
+                    <div class="newAccountList">
+                        <i class="ia"><img rel='QQMailbox' src="./assets/img/mails/email_icon_qqmailbox.png"></i>
+                        <i class="ib">QQMailbox</i>
+                    </div>
+                    <div class="newAccountList">
+                        <i class="ia"><img rel='QQMail' src="./assets/img/mails/email_icon_qq.png"></i>
+                        <i class="ib">QQMail</i>
+                    </div>
+                    <div class="newAccountList">
+                        <i class="ia"><img rel='163Mail' src="./assets/img/mails/email_icon_163.png"></i>
+                        <i class="ib">163Mail</i>
+                    </div>
+                    <div class="newAccountList">
+                        <i class="ia"><img rel='Gmail' src="./assets/img/mails/email_icon_google.png"></i>
+                        <i class="ib">Gmail</i>
+                    </div>
+                    <div class="newAccountList">
+                        <i class="ia"><img rel='Outlook' src="./assets/img/mails/email_icon_outlook.png"></i>
+                        <i class="ib">Outlook, Hotmail, live</i>
+                    </div>
+                    <div class="newAccountList">
+                        <i class="ia"><img rel='iCloud' src="./assets/img/mails/email_icon_icloud.png"></i>
+                        <i class="ib">iCloud</i>
+                    </div>
+                    <div class="newAccountList">
+                        <i class="ia"><img rel='Other' src="./assets/img/mails/email_icon_other.png"></i>
+                        <i class="ib">Other (IMAP)</i>
+                    </div>
+                    <div class="newAccountFooter">
+                        <button class="newAccountCancel">Cancel</button>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <!--modal-->
+        <div class="mailLogin" style="display: none;margin-left:-110px;">
+            <form action="" onsubmit="return false">
+                <header>
+                    <img id='mailLoginImg' src="./assets/img/mails/email_icon_163_n.png">
+                </header>
+                <section>
+
+                    <p class="mailLoginTitle">Email</p>
+                    <p><input class="mailLoginInput" type="email" value="345632828@qq.com" autofocus="autofocus"
+                            placeholder="example@gmail.com">
+                    </p>
+                    <p class="mailLoginTitle">Password</p>
+                    <p><input class="mailLoginInput" type="password" pattern='.{6,20}'
+                            placeholder="Password/Authorization code" value='cjdfhabfwwaicbbd'></p>
+                </section>
+                <footer>
+                    <button class="mailLoginBtn">Login</button>
+                </footer>
+            </form>
+
+        </div>
+    </div>
+
+    </div>
 
 </body>
 
@@ -236,6 +300,73 @@
     $("#logBox").click(function () {
         console.log(remote.app.getRemoteObject())
     })
+
+    // 邮箱首页弹窗
+
+
+    $(function () {
+        const settings = require('electron-settings');
+        $(document).on('click', '.newAccountBtn,.newAccountBtnImg,.New-Account', function () {
+            $('.newAccountDiv,.max-modal').show()
+        })
+
+        $('.newAccountCancel').click(function () {
+            $('.newAccountDiv,.max-modal').hide()
+        })
+        $('.newAccountList').hover(function () {
+            $(this).css({ 'background': "#6646F7", 'color': '#fff' })
+        }, function () {
+            $(this).css({ 'background': "#fff", 'color': '#000' })
+        })
+        let rel = ''
+        $('.newAccountList').click(function () {
+            let _this = $(this)
+            let val = _this.find('.ib').text()
+            let img = _this.find('.ia img').attr('src')
+            img = img.replace('.png', '_n.png')
+            rel = _this.find('.ia img').attr('rel')
+            $('#mailLoginImg').attr('src', img)
+            $('.newAccountDiv').hide()
+            $('.mailLogin,.max-modal').show()
+        })
+
+        $('.mailLoginBtn').click(function () {
+            debugger;
+            console.log(Math.ceil(Math.random() * 10))
+
+            let $mailLoginInput = $('.mailLoginInput')
+            let Email = $mailLoginInput.eq(0).val()
+            let Password = $mailLoginInput.eq(1).val()
+
+            if (Email && Password) {
+                let lastImap = settings.get('IMAP')
+                if (lastImap.Email !== Email) {
+                    settings.set('IMAP', { Email, Password, host: getHost(rel) })
+                    let getMailVal = getMail()
+                    $('.myEmail').text(Email)
+                } else {
+                    console.log('mailLoginBtn click,请忽重复配置邮箱')
+                }
+
+                hideInbox('setEmailHtmlLogin')
+            }
+
+
+
+        })
+
+    })
+
+    function getHost(name) {
+        let mailName = ["QQMailbox", "QQMail", "163Mail", "Gmail", "Outlook, Hotmail, live", "iCloud", "Other (IMAP)"]
+        switch (name) {
+            case 'QQMail':
+                return 'imap.qq.com'
+                break;
+            default:
+                return 0
+        }
+    }
 </script>
 
 </html>

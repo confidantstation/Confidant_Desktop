@@ -1,10 +1,7 @@
 /*
 控制邮件显示的样式
 */
-body div:last-child {
-    padding-left: 0;
-    font-size: inherit;
-}
+
 #logBoxC .inbox-emall .email-uid div {
     max-width: 380px;
 }
@@ -79,7 +76,7 @@ body div:last-child {
 #menu header {
     width: 100%;
     height: 130px;
-    text-align: center;
+    text-align: center;   
 }
 
 #menu section {
@@ -569,6 +566,12 @@ footer .emall-card .newTag {
     border: 1px solid rgba(230, 230, 230, 1);
 }
 
+.index-mailLoginBtn {
+    width: 240px;
+    height: 44px;
+    background: rgba(102, 70, 247, 1);
+    border-radius: 7px;
+}
 .mailLoginBtn {
     width: 240px;
     height: 44px;

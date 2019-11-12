@@ -6,6 +6,7 @@ function getObjectURL(file) {
     return url;
 }
 
+
 function parseJSON(response) {
     return response.json();
 }
@@ -588,6 +589,7 @@ function getMail(user, password) {
     });
 
     imap.once('error', function (err) {
+        console.log("<<<<<<<<<<<<<<<<<<<<<<<< imap.once err >>>>>>>>>>>>>>>>>>>>>>>>");
         console.log(err);
     });
 
@@ -759,10 +761,9 @@ function hideInbox(id) {
 
     } else if (id === 'setEmailHtmlLogin') {
 
-        $('#setEmailHtml').hide()
+        $('#setEmailHtml,.mailLogin,.max-modal').hide()
         $('.nav,#emailHtml,#new-emall').show()
-
-        getMail();
+        //return getMail();
     } else if (id === '') {
 
     } else if (id === '') {

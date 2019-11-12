@@ -61,12 +61,12 @@ $(function () {
         getMail()
     });
 
-    $('.emall-card li').click(function(){
+    $('.emall-card2 li').click(function(){
         let tag = $(this).attr('rel')
         console.log(tag)
 
     })
-
+    
 
 })
 

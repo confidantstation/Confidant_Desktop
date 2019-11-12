@@ -364,7 +364,7 @@
         </div>`
       if ($.isArray(userlist)) {
         let str = ""
-        debugger;
+      
         userlist.map((x) => {
           let to1 = x.to
           //to1 = to1.split(",")[0]
@@ -460,7 +460,7 @@
         sendMail(to, ws)
       }
       ws.onmessage = function (evt) {
-        debugger;
+        
         //alert('接收消息成功...')
         console.log('接收消息成功...', evt)
         console.log('data...', evt.data)
@@ -485,7 +485,7 @@
                 }
                 arrNub++
               }
-              debugger;
+            
               if (keyNub !== 0 && keyNub === arrNub) {
                 mailOptions.html = sendMailEncrypt(arr, html)
               }
@@ -496,17 +496,17 @@
             }
 
 
-            // transporter.sendMail(mailOptions, (error, info) => {
+            transporter.sendMail(mailOptions, (error, info) => {
 
-            //   if (error) {
-            //     return console.log(error);
-            //   }
-            //   alert('邮件发送成功.')
-            //   setTimeout(() => window.close(), 500)
+              if (error) {
+                return console.log(error);
+              }
+              alert('邮件发送成功.')
+              setTimeout(() => window.close(), 500)
 
-            //   console.log('Message sent: %s', info.messageId);
-            //   // Message sent: <04ec7731-cc68-1ef6-303c-61b0f796b78f@qq.com>
-            // });
+              console.log('Message sent: %s', info.messageId);
+              // Message sent: <04ec7731-cc68-1ef6-303c-61b0f796b78f@qq.com>
+            });
           }
         }
 
@@ -537,8 +537,6 @@
   }
 
   function sendMail(To, ws) {
-    debugger;
-    let Unum
 
     let sodiumKey = settings.get('sodium')
     //可测试的邮件地址 345632828@qq.com,kuangzihui@163.com
@@ -587,7 +585,7 @@
 
   //加密邮件 主函数
   function sendMailEncrypt(arr, html) {
-    debugger;
+   
     let rand = randomPassword(32)
     let text = AES.Encrypt(html, rand.substr(0, 16))
     let PubKey = toPrivateKey(arr[0].PubKey)

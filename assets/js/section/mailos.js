@@ -99,6 +99,7 @@ function getMail(tag, user, password) {
     // tag 默认值为Inbox  取值范围 = 'Inbox Node Starred Drafts Sent Spam Trash'
     // 获取最新十封邮件
     let Imap = require('imap')
+    
     //let MailParser = require("mailparser").MailParser
     //let fs = require("fs")
     let inspect = require('util').inspect;
@@ -108,11 +109,21 @@ function getMail(tag, user, password) {
         Password,
         host
     } = settings.get('IMAP')
-    
 
+
+    // let imap = new Imap({
+    //     user: Email || '345632828@qq.com',
+    //     password: Password || 'cjdfhabfwwaicbbd',
+    //     host: host || 'imap.qq.com',
+    //     port: 993, //邮箱服务器的端口地址
+    //     tls: true, //使用安全传输协议
+    //     tlsOptions: {
+    //         rejectUnauthorized: false
+    //     } //禁用对证书有效性的检查
+    // });
     let imap = new Imap({
-        user: Email || '345632828@qq.com',
-        password: Password || 'cjdfhabfwwaicbbd',
+        user: Email ,
+        password: Password ,
         host: host || 'imap.qq.com',
         port: 993, //邮箱服务器的端口地址
         tls: true, //使用安全传输协议
@@ -120,6 +131,8 @@ function getMail(tag, user, password) {
             rejectUnauthorized: false
         } //禁用对证书有效性的检查
     });
+
+  
 
 
     function openInbox(cb) {
@@ -166,6 +179,7 @@ function getMail(tag, user, password) {
                     let attr = inspect(attrs, false, 8)
                     // console.log(prefix + 'Attributes: %s', attr);
                     // console.log(attrs.uid)
+                    // 获得指定UID的邮件
                     getMailUid(attrs.uid, setIMAP)
                 });
                 msg.once('end', function () {
@@ -174,6 +188,7 @@ function getMail(tag, user, password) {
             });
             f.once('error', function (err) {
                 console.log('Fetch error: ' + err);
+                
             });
             f.once('end', function () {
                 console.log('Done fetching all messages!');
@@ -192,6 +207,7 @@ function getMail(tag, user, password) {
 
     imap.connect();
 
+    return imap;
     // end getMail
 }
 
@@ -259,18 +275,18 @@ function getMailUid(uid, setIMAP) {
                             if ($('.myEmail').attr('rel') !== 'setName') {
                                 try {
                                     to = to.split(',')
-                                    if(to[0].indexOf('<')>-1){
-                                        let name = to[0].match( /\<(.+?)\>/g)
-                                       
+                                    if (to[0].indexOf('<') > -1) {
+                                        let name = to[0].match(/\<(.+?)\>/g)
+
                                         $('.myEmail').text(name[0]).attr('rel', 'setName')
-                                    }else{
+                                    } else {
                                         $('.myEmail').text(to[0]).attr('rel', 'setName')
                                     }
-                                   
+
                                 } catch (error) {
                                     console.log(error)
                                 }
-                             
+
                             }
                         } else {
                             console.log("收件人: " + '');
@@ -286,7 +302,7 @@ function getMailUid(uid, setIMAP) {
                     //邮件内容
                     let file = 0;
                     mailparser.on("data", function (data) {
-                       
+
                         let text32 = ""
                         try {
                             text32 = getHtmlText(data, uid);
@@ -444,20 +460,26 @@ function setMailBody(uid, text, file) {
 // 设置邮箱列表（导航)
 
 function setMailHeader(uid, headers) {
+    /*
+    JSON.stringify(from) == {"value":[{"address":"lagou@mail.lagoujobs.com","name":"拉勾网"}],"html":""
+    */
+ 
     console.log(`setMailHeader-----------`)
     console.log("邮件主题: " + headers.get('subject'));
     console.log("发件人: " + headers.get('from').text);
-    let to = headers.get('to')
-    if (headers.get('to')) {
-        console.log("收件人: " + headers.get('to').text);
-
-
-    } else {
-        console.log("收件人: " + '');
-        to = ''
-    }
+    console.log("收件人: " + headers.get('to').text);
     let date = moment(headers.get('date')).format('MM-DD');
     console.log("发件日期: " + date);
+    
+    let fromObj = headers.get('from');
+    let toObj = headers.get('to');
+    if (Object.prototype.toString.call(toObj) === "[object Object]") {
+        toObj = JSON.stringify(toObj)
+    }
+    if (Object.prototype.toString.call(fromObj) === "[object Object]") {
+        fromObj = JSON.stringify(fromObj)
+    }
+
     let from = headers.get('from').text
     if (from.length) {
         from = from.split("<")[0]
@@ -485,7 +507,14 @@ function setMailHeader(uid, headers) {
         to
     })
 
-    $('#list-emall section').prepend(html)
+    let $uid = $(`.emuid${uid}`)
+    if($uid.length>0){
+        $(`.emuid${uid}`).html(html)
+    }else{
+        $('#list-emall section').prepend(html)
+    }
+
+   
 
 }
 
