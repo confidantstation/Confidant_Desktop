@@ -600,6 +600,25 @@ function getMail(user, password) {
     imap.connect();
 }
 
+
+// 切换邮箱服务器
+function getHost(name) {
+    
+    debugger;
+    let mailName = ["QQMailbox", "QQMail", "163Mail", "Gmail", "Outlook, Hotmail, live", "iCloud", "Other (IMAP)"]
+    switch (name) {
+        case 'QQMail':
+            return 'imap.qq.com'
+            break;
+        case '163Mail':
+            return 'imap.163.com'
+        case 'QQMailbox':
+            return 'imap.exmail.qq.com'
+        default:
+            return 0
+    }
+}
+
 class mailos2 {
     constructor() {
         this.Imap = require('imap')

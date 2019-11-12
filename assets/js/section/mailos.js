@@ -99,17 +99,25 @@ function getMail(tag, user, password) {
     // tag 默认值为Inbox  取值范围 = 'Inbox Node Starred Drafts Sent Spam Trash'
     // 获取最新十封邮件
     let Imap = require('imap')
-    
-    //let MailParser = require("mailparser").MailParser
-    //let fs = require("fs")
     let inspect = require('util').inspect;
     const settings = require('electron-settings');
+    
+
+    //let MailParser = require("mailparser").MailParser
+    //let fs = require("fs")
+
+    // settings.set('IMAP', {
+    //     Email: "18670723672@163.com",
+    //     Password: "operactionwall3",
+    //     host: "imap.163.com"
+    // })
+
     const setIMAP = {
         Email,
         Password,
         host
     } = settings.get('IMAP')
-
+    debugger;
 
     // let imap = new Imap({
     //     user: Email || '345632828@qq.com',
@@ -122,8 +130,8 @@ function getMail(tag, user, password) {
     //     } //禁用对证书有效性的检查
     // });
     let imap = new Imap({
-        user: Email ,
-        password: Password ,
+        user: Email,
+        password: Password,
         host: host || 'imap.qq.com',
         port: 993, //邮箱服务器的端口地址
         tls: true, //使用安全传输协议
@@ -131,8 +139,8 @@ function getMail(tag, user, password) {
             rejectUnauthorized: false
         } //禁用对证书有效性的检查
     });
+    debugger;
 
-  
 
 
     function openInbox(cb) {
@@ -188,7 +196,7 @@ function getMail(tag, user, password) {
             });
             f.once('error', function (err) {
                 console.log('Fetch error: ' + err);
-                
+
             });
             f.once('end', function () {
                 console.log('Done fetching all messages!');
@@ -207,7 +215,7 @@ function getMail(tag, user, password) {
 
     imap.connect();
 
-    return imap;
+    
     // end getMail
 }
 
@@ -225,9 +233,9 @@ function getMailUid(uid, setIMAP) {
     } = setIMAP
 
     let imap = new Imap({
-        user: Email || '345632828@qq.com',
-        password: Password || 'cjdfhabfwwaicbbd',
-        host: host || 'imap.qq.com',
+        user: Email,
+        password: Password,
+        host: host,
         port: 993,
         tls: true, //使用安全传输协议
         tlsOptions: {
@@ -463,14 +471,14 @@ function setMailHeader(uid, headers) {
     /*
     JSON.stringify(from) == {"value":[{"address":"lagou@mail.lagoujobs.com","name":"拉勾网"}],"html":""
     */
- 
+
     console.log(`setMailHeader-----------`)
     console.log("邮件主题: " + headers.get('subject'));
     console.log("发件人: " + headers.get('from').text);
     console.log("收件人: " + headers.get('to').text);
     let date = moment(headers.get('date')).format('MM-DD');
     console.log("发件日期: " + date);
-    
+
     let fromObj = headers.get('from');
     let toObj = headers.get('to');
     if (Object.prototype.toString.call(toObj) === "[object Object]") {
@@ -508,13 +516,13 @@ function setMailHeader(uid, headers) {
     })
 
     let $uid = $(`.emuid${uid}`)
-    if($uid.length>0){
+    if ($uid.length > 0) {
         $(`.emuid${uid}`).html(html)
-    }else{
+    } else {
         $('#list-emall section').prepend(html)
     }
 
-   
+
 
 }
 

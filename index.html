@@ -325,23 +325,26 @@
             let img = _this.find('.ia img').attr('src')
             img = img.replace('.png', '_n.png')
             rel = _this.find('.ia img').attr('rel')
+
             $('#mailLoginImg').attr('src', img)
             $('.newAccountDiv').hide()
-            $('.mailLogin,.max-modal').show()
+            $('.mailLogin,.max-modal').show().attr('rel',rel)
         })
 
         $('.mailLoginBtn').click(function () {
-            debugger;
+          
             console.log(Math.ceil(Math.random() * 10))
 
             let $mailLoginInput = $('.mailLoginInput')
             let Email = $mailLoginInput.eq(0).val()
             let Password = $mailLoginInput.eq(1).val()
-
+            let rel = $('.mailLogin').attr('rel')
+            let host = getHost(rel)
+            
             if (Email && Password) {
-                let lastImap = settings.get('IMAP')
+                let lastImap = settings.get('IMAP')  
                 if (lastImap.Email !== Email) {
-                    settings.set('IMAP', { Email, Password, host: getHost(rel) })
+                    settings.set('IMAP', { Email, Password, host })
                     let getMailVal = getMail()
                     $('.myEmail').text(Email)
                 } else {
@@ -357,16 +360,7 @@
 
     })
 
-    function getHost(name) {
-        let mailName = ["QQMailbox", "QQMail", "163Mail", "Gmail", "Outlook, Hotmail, live", "iCloud", "Other (IMAP)"]
-        switch (name) {
-            case 'QQMail':
-                return 'imap.qq.com'
-                break;
-            default:
-                return 0
-        }
-    }
+    
 </script>
 
 </html>
