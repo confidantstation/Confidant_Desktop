@@ -109,14 +109,19 @@
                 let Email = $mailLoginInput.eq(0).val()
                 let Password = $mailLoginInput.eq(1).val()
                 let rel = $('.mailLogin').attr('rel')
-                debugger;
+               
                 let host = getHost(rel)
 
                 if (Email && Password) {
                 let lastImap = settings.get('IMAP')  
                 if (lastImap.Email !== Email) {
-                    settings.set('IMAP', { Email, Password, host })
-                    let getMailVal = getMail()
+                    
+                   
+                    try {
+                      getMail({ Email, Password, host })
+                    } catch (error) {
+                       console.log(error)
+                    }
                     $('.myEmail').text(Email)
                 } else {
                     console.log('mailLoginBtn click,请忽重复配置邮箱')

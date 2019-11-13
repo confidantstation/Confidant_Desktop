@@ -71,14 +71,14 @@
                 </span>
             </div>
             <div class="modalMt nui-scroll">
-                <p usn='1'>MT’s Power Station1</p>
+                <!-- <p usn='1'>MT’s Power Station1</p>
                 <p usn='2'>MT’s Power Station2</p>
                 <p usn='3'>MT’s Power Station3</p>
                 <p usn='4'>MT’s Power Station4</p>
                 <p>MT’s Power Station</p>
                 <p>MT’s Power Station</p>
                 <p>MT’s Power Station</p>
-                <p>MT’s Power Station</p>
+                <p>MT’s Power Station</p> -->
             </div>
 
             <button class="ImportBtn ImportBtnLogin" style="margin-top:38px;">Login</button>
@@ -88,7 +88,7 @@
                 <span class="footerQuit">退 出</span>
                 <span class="footerImpor">导入圈子</span>
             </p>
-            <p class="ImportBtnLogin" rel='setEmailHtml'>配置邮箱</p>
+            <!-- <p class="ImportBtnLogin" rel='setEmailHtml'>配置邮箱</p> -->
         </footer>
     </div>
 
@@ -126,14 +126,14 @@
                             <div class="spanB myEmail"></div>
                             <div class="spanC"><img src="assets/img/tabbar_hook.png"></div>
                         </li>
-                        <li>
+                        <!-- <li>
                             <div class="spanA">
                                 <div class="centerDiv"><img class="newTag" src="assets/img/email_icon_qqmailbox_n.png">
                                 </div>
                             </div>
                             <div class="spanB">chenkai@example.com</div>
                             <div class="spanC"></div>
-                        </li>
+                        </li> -->
                         <li>
                             <div class="spanA">
                                 <div class="centerDiv"><img class="newTag" src="assets/img/email_icon_addemail.png">
@@ -281,6 +281,15 @@
             </form>
 
         </div>
+        <div class="error">
+            <header><h3>消息提示</h3></header>
+            <section>
+                <p class="error-text"></p>
+            </section>
+            <footer>
+                <button class="index-mailLoginBtn error-button">确定</button>
+            </footer>
+        </div>
     </div>
 
     </div>
@@ -288,14 +297,18 @@
 </body>
 
 <script>window.$ = window.jQuery = require('jquery');</script>
-<script src='assets/js/utils/base.js'></script>
+ <script src='assets/js/utils/base.js'></script>
 <script src='assets/js/section/mailos.js'></script>
 <script src='assets/js/section/index.js'></script>
-<script src='assets/js/section/email.js'></script>
+
 <script>
+   
+//    require('./assets/js/section/base.js');
+//     require('./assets/js/section/mailos.js');
+//     require('./assets/js/section/email.js');
     const { remote } = require('electron');
     const remoteObj = remote.app.getRemoteObject();
-
+   
     console.log(remoteObj)
     $("#logBox").click(function () {
         console.log(remote.app.getRemoteObject())
@@ -305,6 +318,7 @@
 
 
     $(function () {
+       // alert(typeof getGBK32)
         const settings = require('electron-settings');
         $(document).on('click', '.newAccountBtn,.newAccountBtnImg,.New-Account', function () {
             $('.newAccountDiv,.max-modal').show()
@@ -334,7 +348,7 @@
         $('.mailLoginBtn').click(function () {
           
             console.log(Math.ceil(Math.random() * 10))
-
+           //debugger;
             let $mailLoginInput = $('.mailLoginInput')
             let Email = $mailLoginInput.eq(0).val()
             let Password = $mailLoginInput.eq(1).val()
@@ -344,8 +358,16 @@
             if (Email && Password) {
                 let lastImap = settings.get('IMAP')  
                 if (lastImap.Email !== Email) {
-                    settings.set('IMAP', { Email, Password, host })
-                    let getMailVal = getMail()
+                   
+                  
+                    try {
+                     getMail({ Email, Password, host })
+                        // let mail_status = settings.get('mail_status')
+                        // settings.set('IMAP', { Email, Password, host })
+                    } catch (error) {
+                       console.log(error)
+                    }
+                   
                     $('.myEmail').text(Email)
                 } else {
                     console.log('mailLoginBtn click,请忽重复配置邮箱')
@@ -358,9 +380,12 @@
 
         })
 
+        $('.error-button').click(function(){
+            $('.error').hide()
+        })
+
     })
 
-    
 </script>
 
 </html>

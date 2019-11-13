@@ -281,6 +281,10 @@
     font-size: 12px;
     line-height: 18px;
 }
+#logBoxC .font12{
+    font-size: 12px;
+    line-height: 18px;
+}
 
 .emallDivA .userLogo {
     width: 44px;
@@ -536,6 +540,20 @@ footer .emall-card .newTag {
     padding: 50px 30px 30px;
 }
 
+.error{
+    width: 300px;
+    margin:0 0 0 -110;
+    height: 400px;
+    background: rgba(245, 246, 247, 1);
+    box-shadow: 0px 4px 18px 0px rgba(30, 30, 36, 0.2);
+    border-radius: 8px;
+    position: absolute;
+    top: 50px;
+    left: 50%;
+    box-sizing: border-box;
+    padding: 50px 30px 30px;
+    display: none;
+}
 .mailLogin header {
     text-align: center;
 }

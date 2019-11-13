@@ -364,7 +364,7 @@
         </div>`
       if ($.isArray(userlist)) {
         let str = ""
-      
+
         userlist.map((x) => {
           let to1 = x.to
           //to1 = to1.split(",")[0]
@@ -384,6 +384,7 @@
       }
 
     });
+
     $(document).on('click', '.userlist', function () {
       let from = $(this).find('.to').html()
       //alert(from)
@@ -426,21 +427,28 @@
       let cc = $('#Cc').val()
       let bcc = $('#Bcc').val()
       let html = $('#content').html()
-
+      let IMAP = settings.get('IMAP')
+      const setIMAP = {
+        Email,
+        Password,
+        host
+      } = settings.get('IMAP')
+      let gms = getNodemailerService(Email) || "qq"
+      debugger;
       let transporter = nodemailer.createTransport({
         // host: 'smtp.ethereal.email',
-        service: 'qq', // 使用了内置传输发送邮件 查看支持列表：https://nodemailer.com/smtp/well-known/
+        service:gms.service, // 使用了内置传输发送邮件 查看支持列表：https://nodemailer.com/smtp/well-known/
         port: 465, // SMTP 端口
         secureConnection: true, // 使用了 SSL
         auth: {
-          user: '345632828@qq.com',
+          user: gms.user,
           // 这里密码不是qq密码，是你设置的smtp授权码
-          pass: 'cjdfhabfwwaicbbd',
+          pass: Password,
         }
       });
 
       let mailOptions = {
-        from: '"345632828" <345632828@qq.com>', // sender address
+        from: `${Email}`, // sender address
         to, // list of receivers
         subject, // Subject line
         // 发送text或者html格式
@@ -460,7 +468,7 @@
         sendMail(to, ws)
       }
       ws.onmessage = function (evt) {
-        
+
         //alert('接收消息成功...')
         console.log('接收消息成功...', evt)
         console.log('data...', evt.data)
@@ -485,7 +493,7 @@
                 }
                 arrNub++
               }
-            
+
               if (keyNub !== 0 && keyNub === arrNub) {
                 mailOptions.html = sendMailEncrypt(arr, html)
               }
@@ -585,7 +593,7 @@
 
   //加密邮件 主函数
   function sendMailEncrypt(arr, html) {
-   
+
     let rand = randomPassword(32)
     let text = AES.Encrypt(html, rand.substr(0, 16))
     let PubKey = toPrivateKey(arr[0].PubKey)

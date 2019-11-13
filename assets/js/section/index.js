@@ -41,16 +41,15 @@ console.log(testdata)
 // a1.push('jjjjj')
 // console.log(a1)
 
-$(function () {
-    require('./assets/js/imports');
 
+$(function () {
     // 退出
     $('.footerQuit').click(function () {
         window.close()
     });
 
 
-     //导入账户 存储功能
+    //导入账户 存储功能
     if (settings.get('QRcode')) {
 
         let initAesjs = new aesjs()
@@ -127,17 +126,17 @@ $(function () {
     function setcircle(val, status) {
 
         let arr = settings.get('circle');
-      
+
         if (Object.prototype.toString.call(arr) === "[object Object]") {
-           
+
             let usn = val.params.UserSn
-            let name = val.params.RouterName 
-            if(Object.prototype.toString.call(name)==="[object String]"){
+            let name = val.params.RouterName
+            if (Object.prototype.toString.call(name) === "[object String]") {
                 name = window.atob(name)
-            }else{
+            } else {
                 name = "Undefined"
             }
-           
+
             $('.modalMt').attr('usn', usn)
             arr[usn] = val
             settings.set('UserId', usn)
@@ -150,8 +149,8 @@ $(function () {
                         $('.mt-text').text(`${name.substr(0,12)}`)
                     }
                 }
-            }else{
-                showMtlist(arr,name)
+            } else {
+                showMtlist(arr, name)
             }
 
         }
@@ -162,8 +161,8 @@ $(function () {
         // if (!d[s]) {
         //     $('.modalMt').prepend(`<p class="u${s}" usn="${s}">${s.substr(0,12)}</p>`)
         // }
-        for(let s in d){
-            let name =d[s].params.RouterName
+        for (let s in d) {
+            let name = d[s].params.RouterName
             name = window.atob(name)
             $('.modalMt').prepend(`<p class="u${s}" usn="${s}">${name.substr(0,12)}</p>`)
         }
@@ -171,8 +170,8 @@ $(function () {
     }
 
     // 导入圈子存储功能
-   
-    CircleQRcode = settings.get('CircleQRcode') 
+
+    CircleQRcode = settings.get('CircleQRcode')
 
     if (Object.prototype.toString.call(CircleQRcode) === "[object Object]") {
         try {
@@ -180,7 +179,7 @@ $(function () {
         } catch (error) {
             console.log(error)
         }
-        
+
         settings.set('msgid', settings.get('msgid') + 1)
     }
     console.table(CircleQRcode)
@@ -255,6 +254,7 @@ $(function () {
             if (Object.prototype.toString.call(wsdata) === '[object Object]') {
                 console.log(`wss://${wsdata.ServerHost}:${wsdata.ServerPort}`)
                 ws = new WebSocket(`wss://${wsdata.ServerHost}:${wsdata.ServerPort}`, "lws-minimal");
+
                 ws.onopen = function () {
                     let str = app || settings.get('app')
                     str.msgid = settings.get('msgid')
@@ -274,13 +274,13 @@ $(function () {
                     console.log('data', data)
                     if (data.params.RetCode === 0) {
                         let datas = data.params
-                      
+
                         let str1 = {
                             Action: "Login",
                             RouteId: datas.RouteId,
                             UserSn: datas.UserSn,
                             UserId: datas.UserId,
-                            RouterName:datas.RouterName,
+                            RouterName: datas.RouterName,
                             Sign: 1,
                             DataFileVersion: 6,
                             NickName: datas.NickName
@@ -440,7 +440,9 @@ $(function () {
 
                             if (Object.prototype.toString.call(wsdata) === '[object Object]') {
                                 console.log(`wss://${wsdata.ServerHost}:${wsdata.ServerPort}`)
-                                ws = new WebSocket(`wss://${wsdata.ServerHost}:${wsdata.ServerPort}`, "lws-minimal");
+
+                                let ws = new WebSocket(`wss://${wsdata.ServerHost}:${wsdata.ServerPort}`, "lws-minimal");
+
                                 ws.onopen = function () {
                                     let str = app || settings.get('app')
                                     str.msgid = settings.get('msgid')
@@ -465,7 +467,7 @@ $(function () {
                                             RouteId: datas.RouteId,
                                             UserSn: datas.UserSn,
                                             UserId: datas.UserId,
-                                            RouterName:datas.RouterName,
+                                            RouterName: datas.RouterName,
                                             Sign: 1,
                                             DataFileVersion: 6,
                                             NickName: datas.NickName
@@ -531,10 +533,10 @@ $(function () {
         /* 邮件配置测试*/
         let setMail = $(this).attr('rel') || 'loginHtml';
         let IMAP = settings.get('IMAP')
-        debugger;
-        if(IMAP.Email&&IMAP.Password&&IMAP.host){
+
+        if (IMAP.Email && IMAP.Password && IMAP.host) {
             setMail = 'loginHtml'
-        }else{
+        } else {
             setMail = 'setEmailHtml'
         }
 
@@ -553,14 +555,9 @@ $(function () {
         console.log('app login', app)
         //alert("登录...");
 
-        let data = settings.get('wsdata') || 0
+        let wsdata = settings.get('wsdata') || 0
 
-        if (data) {
-            ws = new WebSocket(`wss://${data.ServerHost}:${data.ServerPort}`, "lws-minimal");
-        } else {
-            alert('wsdata 不存在！')
-            ws = new WebSocket('wss://47.244.138.61:18006', "lws-minimal");
-        }
+        let ws = new WebSocket(`wss://${wsdata.ServerHost}:${wsdata.ServerPort}`, "lws-minimal");
 
         ws.onopen = function () {
             ws.send(app);
@@ -574,11 +571,12 @@ $(function () {
             if (data.retcode > 0) {
 
                 hideInbox(setMail)
-                
+
                 remote.getCurrentWindow().setSize(1032, 600)
                 //remote.getCurrentWindow().maximize()
                 remote.getCurrentWindow().center()
-                require('./assets/js/section/email.js');
+                
+               getMail();
                 ws.close();
 
             }

@@ -1,107 +1,15 @@
-class mailos {
-    constructor() {
-        this.Imap = require('imap')
-        this.MailParser = require("mailparser").MailParser
-        this.fs = require("fs")
-        this.list = []
-    }
-    init() {
-        const Imap = this.Imap
-        return new Imap({
-            user: '345632828@qq.com', //你的邮箱账号
-            password: 'cjdfhabfwwaicbbd', //你的邮箱密码
-            host: 'imap.qq.com', //邮箱服务器的主机地址
-            port: 993, //邮箱服务器的端口地址
-            tls: true, //使用安全传输协议
-            tlsOptions: {
-                rejectUnauthorized: false
-            } //禁用对证书有效性的检查
-        });
-
-    }
-
-    getlist() {
-        let _this = this
-        let imap = this.init()
-        const MailParser = this.MailParser
-        let mlist = []
-        const fs = this.fs
-
-        function openInbox(cb) {
-            imap.openBox('INBOX', true, cb);
-        }
-
-
-        imap.once('ready', function () {
-
-            openInbox(function (err, box) {
-                console.log("打开邮箱")
-
-                if (err) throw err;
-                let Arr = ['ALL', ['SINCE', 'Oct 22, 2019']]
-
-                imap.search(Arr, function (err, results) {
-                    if (err) throw err;
-                    let f = imap.fetch(results, {
-                        bodies: ''
-                    })
-
-                    f.on('message', function (msg, seqno) {
-                        let prefix = '#' + seqno;
-
-                        msg.once('attributes', function (attrs) {
-
-                            let key = attrs.uid + ""
-                            attrs['seqno'] = prefix
-                            mlist[key] = attrs
-                        });
-                        msg.once('end', function () {
-                            console.log(seqno + '完成');
-                            //console.log(mlist)
-                            _this.list = mlist
-                        });
-                        // end f
-                    });
-
-                    f.once('error', function (err) {
-                        console.log('抓取出现错误: ' + err);
-                    });
-                    f.once('end', function () {
-                        console.log(_this.list)
-                        console.log('所有邮件抓取完成!');
-                        imap.end();
-                    });
-                });
-                // end search
-            });
-            // end ready
-        });
-
-        imap.once('error', function (err) {
-            console.log(err);
-        });
-
-        imap.once('end', function () {
-
-            console.log('关闭邮箱');
-        });
-
-        imap.connect();
-
-    }
-
-
-}
 
 
 
-function getMail(tag, user, password) {
+
+function getMail(obj, user, password) {
     // tag 默认值为Inbox  取值范围 = 'Inbox Node Starred Drafts Sent Spam Trash'
     // 获取最新十封邮件
     let Imap = require('imap')
     let inspect = require('util').inspect;
+    let uidList = {}
     const settings = require('electron-settings');
-    
+
 
     //let MailParser = require("mailparser").MailParser
     //let fs = require("fs")
@@ -116,8 +24,8 @@ function getMail(tag, user, password) {
         Email,
         Password,
         host
-    } = settings.get('IMAP')
-    debugger;
+    } = obj || settings.get('IMAP')
+
 
     // let imap = new Imap({
     //     user: Email || '345632828@qq.com',
@@ -139,7 +47,7 @@ function getMail(tag, user, password) {
             rejectUnauthorized: false
         } //禁用对证书有效性的检查
     });
-    debugger;
+
 
 
 
@@ -147,7 +55,13 @@ function getMail(tag, user, password) {
         imap.openBox('INBOX', true, cb);
     }
 
+
     imap.once('ready', function () {
+        settings.set('mail_status','ready')
+        if(obj){
+           // $('.mailLogin,.max-modal').show();
+        }
+       
         openInbox(function (err, box) {
             if (err) throw err;
             //拉取最新 10条邮件
@@ -188,17 +102,25 @@ function getMail(tag, user, password) {
                     // console.log(prefix + 'Attributes: %s', attr);
                     // console.log(attrs.uid)
                     // 获得指定UID的邮件
-                    getMailUid(attrs.uid, setIMAP)
+                    let uid = attrs.uid
+                    if (!uidList[uid]) {
+                        uidList[uid] = uid
+                        getMailUid(attrs.uid, setIMAP)
+                    } 
                 });
                 msg.once('end', function () {
                     // console.log(prefix + 'Finished');
                 });
             });
             f.once('error', function (err) {
+                settings.set('mail_status','f error')
+                $('.error').find('error-text').text()
+                $('.error').show()
                 console.log('Fetch error: ' + err);
-
+                alert('邮箱异常登录，请稍后重试')
             });
             f.once('end', function () {
+                settings.set('mail_status','f end')
                 console.log('Done fetching all messages!');
                 imap.end();
             });
@@ -206,17 +128,21 @@ function getMail(tag, user, password) {
     });
 
     imap.once('error', function (err) {
+        settings.set('mail_status','error')
+        $('.error').find('.error-text').text('f error')
+        $('.error').show()
         console.log(err);
     });
 
     imap.once('end', function () {
+        settings.set('mail_status','end')
         console.log('Connection ended');
     });
 
     imap.connect();
 
-    
-    // end getMail
+
+   
 }
 
 let userlist = []
@@ -347,6 +273,7 @@ function getMailUid(uid, setIMAP) {
                 });
             });
             f.once('error', function (err) {
+                alert(1)
                 console.log('抓取出现错误: ' + err);
             });
             f.once('end', function () {
@@ -358,6 +285,7 @@ function getMailUid(uid, setIMAP) {
     });
 
     imap.once('error', function (err) {
+        
         console.log(err);
     });
 
@@ -369,11 +297,12 @@ function getMailUid(uid, setIMAP) {
 }
 
 //控制邮箱显示，及以取内容前32个字符
+let $inbox = $('.inbox-content')
 function getHtmlText(str, uid) {
 
-    if (Object.prototype.toString.call(str.html) !== '[object String]') {
+    if (Object.prototype.toString.call(str.html || str.textAsHtml) !== '[object String]') {
         console.log('getHtmlText(str, uid) 第一个参数不是字符串')
-        return 'getHtmlText(str, uid) 第一个参数不是字符串'
+        return ''
     };
     let html;
     if (str.html.indexOf('newconfidantcontent') > 0) {
@@ -415,13 +344,15 @@ function getHtmlText(str, uid) {
         };
 
     };
-    // let $inboxContent = $('.inbox-content');
+  
     uid = uid || "";
     str = str || "";
-
-    $('.inbox-content').append(`<div class="email-uid emHtml${uid}" uid="${uid}">${str}</div>`);
-
-
+    
+    if($inbox.length){
+        let instr = `<div class="email-uid emHtml${uid}" uid="${uid}">${str}</div>`;
+        //let instr2 = `<iframe class="email-uid emHtml${uid}" uid="${uid}" src= = ${str}>${str}</iframe>`
+        $inbox.append(instr);
+    }
 
     html = html.replace(/\s+/g, ' ');
     if (html[0] == " ") {
@@ -561,3 +492,4 @@ function getBLen(str) {
     }
     return len;
 }
+

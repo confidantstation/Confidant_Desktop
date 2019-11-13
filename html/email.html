@@ -1,40 +1,112 @@
 <template class="task-template">
-   <div id='emailHtml' class="html">
-            <div id='list-emall'>
-                <header class="jusCenter">
-                    <div class="list-search"><input type='text' placeholder="Search" /></div>
-                </header>
-                <!-- <div class="section-scroll nui-scroll"> -->
-                    <section class="section-scroll nui-scroll" ></section>
-                <!-- </div> -->
-
-            </div>
-            <div class='inbox-emall'>
-                <header>
-                    <div class="inboxEmallA">
-                        Inbox
-                    </div>
-                    <div class="inboxEmallB">
-                        <img class="userLogo" src="assets/img/inbox/statusbar_delete.png">
-                        <img class="userLogo" src="assets/img/inbox/statusbar_download_node.png">
-                        <img class="userLogo" src="assets/img/inbox/statusbar_hedo.png">
-                    </div>
-                </header>
-                <section class="jusCenter">
-                    <div class="inbox-content nui-scroll">
-
-                    </div>
-
-                </section>
-                <footer>
-                    <button id='sendEmail' class="inboxBtn">Reply</button><button class="inboxBtnA">Forward</button>
-                </footer>
-            </div>
+    <div id='emailHtml' class="html">
+        <div id='list-emall'>
+            <header class="jusCenter">
+                <div class="list-search"><input type='text' placeholder="Search" /></div>
+            </header>
+            <!-- <div class="section-scroll nui-scroll"> -->
+            <section class="section-scroll nui-scroll"></section>
+            <!-- </div> -->
 
         </div>
-        <script>
-            require('./app/windows/email-windows')
-        </script>
+        <div class='inbox-emall'>
+            <header>
+                <div class="inboxEmallA">
+                    Inbox
+                </div>
+                <div class="inboxEmallB">
+                    <img class="userLogo" src="assets/img/inbox/statusbar_delete.png">
+                    <img class="userLogo" src="assets/img/inbox/statusbar_download_node.png">
+                    <img class="userLogo" src="assets/img/inbox/statusbar_hedo.png">
+                </div>
+            </header>
+            <section class="jusCenter">
+                <div class="inbox-content nui-scroll">
 
-</div>  
+                </div>
+
+            </section>
+            <footer>
+                <button id='sendEmail' class="inboxBtn">Reply</button><button class="inboxBtnA">Forward</button>
+            </footer>
+        </div>
+
+    </div>
+    <script>
+        require('./app/windows/email-windows');
+        $(function () {
+            let status = settings.get('status')
+            if (status === 'loginHtml') {
+                // getMail();
+            }else if(status === 'setEmailHtml'){
+
+            }
+
+            //查看邮件
+            $(document).on('click', '.list-emallDiv', function () {
+               
+
+                let data = settings.get('wsdata') || 0
+                let ws
+                if (data) {
+                    ws = new WebSocket(`wss://${data.ServerHost}:${data.ServerPort}`, "lws-minimal");
+                } else {
+                    alert('wsdata 不存在！')
+                    return false
+                }
+
+                ws.onopen = function () {
+                    sendMailAES('345632828@qq.com', ws)
+                }
+                ws.onmessage = function (evt) {
+                    //alert('接收消息成功...')
+                    console.log('接收消息成功...', evt)
+                    console.log('data...', evt.data)
+                    let data = JSON.parse(evt.data)
+                    console.log('data', data)
+                    if (data.params) {
+                        let params = data.params
+                        if (params.Action === "CheckmailUkey") {
+                            settings.set('CheckmailUkey', data);
+                        }
+
+                    }
+
+                }
+
+                ws.onclose = function () {
+                    // 关闭 websocket
+                    console.log('ws onclose')
+                };
+
+                let uid = $(this).attr('uid')
+                console.log('list uid', uid)
+                $('.inbox-emall footer').hide()
+                $('.email-uid').hide()
+                $('.email-uid').each(function () {
+                    let id = $(this).attr('uid')
+                    if (id == uid) {
+                        $(this).show()
+                        $('.inbox-emall footer').show().attr('uid', uid)
+                    }
+                })
+
+
+            });
+            $('.list-search').click(function () {
+                getMail()
+            });
+
+            $('.emall-card2 li').click(function () {
+                let tag = $(this).attr('rel')
+                console.log(tag)
+
+            })
+
+
+        })
+
+    </script>
+
+    </div>
 </template>
