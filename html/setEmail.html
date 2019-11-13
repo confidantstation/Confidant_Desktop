@@ -113,8 +113,15 @@
                 let host = getHost(rel)
 
                 if (Email && Password) {
+                    debugger;
                 let lastImap = settings.get('IMAP')  
-                if (lastImap.Email !== Email) {
+                if(!lastImap){
+                    try {
+                      getMail({ Email, Password, host })
+                    } catch (error) {
+                       console.log(error)
+                    }
+                }else if (lastImap.Email !== Email) {
                     
                    
                     try {
@@ -124,6 +131,11 @@
                     }
                     $('.myEmail').text(Email)
                 } else {
+                    // try {
+                    //   getMail({ Email, Password, host })
+                    // } catch (error) {
+                    //    console.log(error)
+                    // }
                     console.log('mailLoginBtn click,请忽重复配置邮箱')
                 }
 

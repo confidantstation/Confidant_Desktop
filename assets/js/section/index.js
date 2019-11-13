@@ -26,11 +26,7 @@ settings.set('status', 0);
 settings.set('wsdata', 0)
 let testdata = settings.get('wsdata');
 console.log(testdata)
-// settings.set('IMAP', {
-//     Email: "",
-//     Password: "",
-//     host: ""
-// })
+settings.set('IMAP', "")
 
 // settings.set('arr',[1,2,3,4,5,6])
 
@@ -532,14 +528,15 @@ $(function () {
     } = require('electron');
     $('.ImportBtnLogin').click(function () {
         /* 邮件配置测试*/
-        // let setMail = $(this).attr('rel') || 'loginHtml';
-        // let IMAP = settings.get('IMAP')
+        debugger;
+        let setMail = '';
+        let IMAP = settings.get('IMAP')
 
-        // if (IMAP.Email && IMAP.Password && IMAP.host) {
-        //     setMail = 'loginHtml'
-        // } else {
-        //     setMail = 'setEmailHtml'
-        // }
+        if (IMAP) {
+            setMail = 'loginHtml'
+        } else {
+            setMail = 'setEmailHtml'
+        }
 
         //选择圈子登录
         let usn = $('.modalMt').attr('usn')
@@ -577,7 +574,7 @@ $(function () {
                 //remote.getCurrentWindow().maximize()
                 remote.getCurrentWindow().center()
 
-                getMail();
+               
                 ws.close();
 
             }

@@ -296,7 +296,7 @@
 
 </body>
 
-<script>window.$ = window.jQuery = require('jquery');</script>
+<script>window.$ = window.jQuery = require('jquery');require('./assets/js/imports');</script>
  <script src='assets/js/utils/base.js'></script>
 <script src='assets/js/section/mailos.js'></script>
 <script src='assets/js/section/index.js'></script>
@@ -304,8 +304,8 @@
 <script>
    
 //    require('./assets/js/section/base.js');
-//     require('./assets/js/section/mailos.js');
-//     require('./assets/js/section/email.js');
+
+
     const { remote } = require('electron');
     const remoteObj = remote.app.getRemoteObject();
    

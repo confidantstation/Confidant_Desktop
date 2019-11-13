@@ -55,7 +55,7 @@ function getMail(obj, user, password) {
 
     imap.once('ready', function () {
         settings.set('mail_status', 'ready')
-
+       
         settings.set('IMAP', { Email, Password, host })
         if (obj) {
             // $('.mailLogin,.max-modal').show();

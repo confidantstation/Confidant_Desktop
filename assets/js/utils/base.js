@@ -1,5 +1,4 @@
 const moment = require('moment');
-require('./assets/js/imports');
 
 function getObjectURL(file) {
     let url = window.webkitURL.createObjectURL(file)
@@ -518,16 +517,17 @@ function getHost(name) {
 function hideInbox(id) {
     $('#logBoxB').hide();
     if (id === 'setEmailHtml') {
-
+        settings.set('status','setEmailHtml')
         hideMenu('.nav')
         $(`#${id},#logBoxC`).show()
 
     } else if (id === 'loginHtml') {
-
+        settings.set('status','loginHtml')
         $(`#${id},#logBoxC,#emailHtml,#new-emall`).show()
+        getMail();
 
     } else if (id === 'setEmailHtmlLogin') {
-
+        settings.set('status','setEmailHtmlLogin')
         $('#setEmailHtml,.mailLogin,.max-modal').hide()
         $('.nav,#emailHtml,#new-emall').show()
        

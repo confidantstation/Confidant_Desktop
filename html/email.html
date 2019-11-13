@@ -35,12 +35,13 @@
     <script>
         require('./app/windows/email-windows');
         $(function () {
-            // let status = settings.get('status')
-            // if (status === 'loginHtml') {
-            //     // getMail();
-            // }else if(status === 'setEmailHtml'){
+            debugger;
+            let status = settings.get('status')
+            if (status === 'loginHtml') {
+                getMail();
+            }else if(status === 'setEmailHtml'){
 
-            // }
+            }
 
             //查看邮件
             $(document).on('click', '.list-emallDiv', function () {
