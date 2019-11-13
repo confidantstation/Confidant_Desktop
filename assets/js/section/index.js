@@ -532,14 +532,14 @@ $(function () {
     } = require('electron');
     $('.ImportBtnLogin').click(function () {
         /* 邮件配置测试*/
-        let setMail = $(this).attr('rel') || 'loginHtml';
-        let IMAP = settings.get('IMAP')
+        // let setMail = $(this).attr('rel') || 'loginHtml';
+        // let IMAP = settings.get('IMAP')
 
-        if (IMAP.Email && IMAP.Password && IMAP.host) {
-            setMail = 'loginHtml'
-        } else {
-            setMail = 'setEmailHtml'
-        }
+        // if (IMAP.Email && IMAP.Password && IMAP.host) {
+        //     setMail = 'loginHtml'
+        // } else {
+        //     setMail = 'setEmailHtml'
+        // }
 
         //选择圈子登录
         let usn = $('.modalMt').attr('usn')
