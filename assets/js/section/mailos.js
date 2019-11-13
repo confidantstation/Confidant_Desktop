@@ -1,7 +1,3 @@
-
-
-
-
 function getMail(obj, user, password) {
     // tag 默认值为Inbox  取值范围 = 'Inbox Node Starred Drafts Sent Spam Trash'
     // 获取最新十封邮件
@@ -19,6 +15,7 @@ function getMail(obj, user, password) {
     //     Password: "operactionwall3",
     //     host: "imap.163.com"
     // })
+   
 
     const setIMAP = {
         Email,
@@ -57,11 +54,13 @@ function getMail(obj, user, password) {
 
 
     imap.once('ready', function () {
-        settings.set('mail_status','ready')
-        if(obj){
-           // $('.mailLogin,.max-modal').show();
+        settings.set('mail_status', 'ready')
+
+        settings.set('IMAP', { Email, Password, host })
+        if (obj) {
+            // $('.mailLogin,.max-modal').show();
         }
-       
+
         openInbox(function (err, box) {
             if (err) throw err;
             //拉取最新 10条邮件
@@ -102,25 +101,27 @@ function getMail(obj, user, password) {
                     // console.log(prefix + 'Attributes: %s', attr);
                     // console.log(attrs.uid)
                     // 获得指定UID的邮件
+                    //getMailUid(attrs.uid, setIMAP)
+
                     let uid = attrs.uid
                     if (!uidList[uid]) {
                         uidList[uid] = uid
                         getMailUid(attrs.uid, setIMAP)
-                    } 
+                    }
                 });
                 msg.once('end', function () {
                     // console.log(prefix + 'Finished');
                 });
             });
             f.once('error', function (err) {
-                settings.set('mail_status','f error')
+                settings.set('mail_status', 'f error')
                 $('.error').find('error-text').text()
                 $('.error').show()
                 console.log('Fetch error: ' + err);
                 alert('邮箱异常登录，请稍后重试')
             });
             f.once('end', function () {
-                settings.set('mail_status','f end')
+                settings.set('mail_status', 'f end')
                 console.log('Done fetching all messages!');
                 imap.end();
             });
@@ -128,21 +129,21 @@ function getMail(obj, user, password) {
     });
 
     imap.once('error', function (err) {
-        settings.set('mail_status','error')
-        $('.error').find('.error-text').text('f error')
-        $('.error').show()
+        // settings.set('mail_status', 'error')
+        // $('.error').find('.error-text').text('f error')
+        // $('.error').show()
         console.log(err);
     });
 
     imap.once('end', function () {
-        settings.set('mail_status','end')
+        settings.set('mail_status', 'end')
         console.log('Connection ended');
     });
 
     imap.connect();
 
 
-   
+
 }
 
 let userlist = []
@@ -273,7 +274,7 @@ function getMailUid(uid, setIMAP) {
                 });
             });
             f.once('error', function (err) {
-                alert(1)
+               
                 console.log('抓取出现错误: ' + err);
             });
             f.once('end', function () {
@@ -285,7 +286,7 @@ function getMailUid(uid, setIMAP) {
     });
 
     imap.once('error', function (err) {
-        
+
         console.log(err);
     });
 
@@ -298,6 +299,7 @@ function getMailUid(uid, setIMAP) {
 
 //控制邮箱显示，及以取内容前32个字符
 let $inbox = $('.inbox-content')
+
 function getHtmlText(str, uid) {
 
     if (Object.prototype.toString.call(str.html || str.textAsHtml) !== '[object String]') {
@@ -344,15 +346,14 @@ function getHtmlText(str, uid) {
         };
 
     };
-  
+
     uid = uid || "";
     str = str || "";
+
+    let instr = `<div class="email-uid emHtml${uid}" uid="${uid}">${str}</div>`;
     
-    if($inbox.length){
-        let instr = `<div class="email-uid emHtml${uid}" uid="${uid}">${str}</div>`;
-        //let instr2 = `<iframe class="email-uid emHtml${uid}" uid="${uid}" src= = ${str}>${str}</iframe>`
-        $inbox.append(instr);
-    }
+    $inbox.append(instr);
+
 
     html = html.replace(/\s+/g, ' ');
     if (html[0] == " ") {
@@ -492,4 +493,3 @@ function getBLen(str) {
     }
     return len;
 }
-

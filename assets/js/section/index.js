@@ -176,6 +176,145 @@ $(function () {
     if (Object.prototype.toString.call(CircleQRcode) === "[object Object]") {
         try {
             CircleQRcode = CircleQRcode.data.split(',')
+            if (CircleQRcode[0] == 'type_1') {
+
+                let ASE = new aesjs(CircleQRcode[1])
+                ASE.initSodium()
+                let rd = ASE.getaseid()
+
+                let data // set wsdata
+                data = ASE.getserverip()
+
+                data.then((req) => {
+                    return req
+                }).then((req) => {
+
+
+                    settings.set('wsdata', req)
+                    let wsdata = req
+                    let privateKey = toPrivateKey(QRcode[1])
+                    let publicKey = privateKey.slice(-32);
+
+                    let ts1 = [-64, 18, 65, -98, 95, 105, 80, 8, 106, 78, -81, 94, -56, -115, 27, -108, 67, 3, 57, 97, 72, -78, 90, 19, -79, -55, 26, -93, -109, -104, 16, -96]
+                    let ts2 = [192, 18, 65, 158, 95, 105, 80, 8, 106, 78, 175, 94, 200, 141, 27, 148, 67, 3, 57, 97, 72, 178, 90, 19, 177, 201, 26, 163, 147, 152, 16, 160]
+
+                    let ts3 = tobase64('wBJBnl9pUAhqTq9eyI0blEMDOWFIsloTsckao5OYEKA=', 'reset')
+
+                    console.log(ts3)
+
+                    let ts6 = ASE.from_string(ts2)
+
+                    //let ts3 = ASE.crypto_box_seal('aaa',ts2)
+
+                    publicKey = tobase64(publicKey)
+                    console.log('CircleQRcode ', CircleQRcode)
+                    console.log('toPrivateKey ', QRcode)
+                    console.log('privateKey', privateKey)
+                    console.log('publicKey', publicKey)
+                    //设置密钥
+                    settings.set('sodium', {
+                        privateKey,
+                        publicKey: toPrivateKey(publicKey),
+
+                    })
+
+                    let str = {
+                        "Action": "Recovery",
+                        "RouteId": rd.RID,
+                        "UserSn": rd.USN,
+                        "Pubkey": publicKey,
+                    }
+
+                    let app = {
+                        appid: 'MIFI',
+                        timestamp: new Date().getTime(),
+                        apiversion: 6,
+                        msgid: settings.get('msgid') + 1,
+                        offset: 0,
+                        more: 0
+                    }
+
+
+                    let tp = ASE.sodium(app.timestamp, privateKey)
+
+                    app.Sign = tobase64(tp)
+                    app.params = str
+                    console.log('set app str')
+                    settings.set('app', app);
+
+                    //let data = settings.get('wsdata') || 0
+
+                    if (Object.prototype.toString.call(wsdata) === '[object Object]') {
+                        console.log(`wss://${wsdata.ServerHost}:${wsdata.ServerPort}`)
+                        ws = new WebSocket(`wss://${wsdata.ServerHost}:${wsdata.ServerPort}`, "lws-minimal");
+
+                        ws.onopen = function () {
+                            let str = app || settings.get('app')
+                            str.msgid = settings.get('msgid')
+                            str = JSON.stringify(str)
+                            console.log('send app ', str)
+                            ws.send(str);
+                            //alert("数据发送中...");
+
+                        };
+
+
+                        ws.onmessage = function (evt) {
+                            //alert('接收消息成功...')
+                            console.log('接收消息成功...', evt)
+                            console.log('data...', evt.data)
+                            let data = JSON.parse(evt.data)
+                            console.log('data', data)
+                            if (data.params.RetCode === 0) {
+                                let datas = data.params
+
+                                let str1 = {
+                                    Action: "Login",
+                                    RouteId: datas.RouteId,
+                                    UserSn: datas.UserSn,
+                                    UserId: datas.UserId,
+                                    RouterName: datas.RouterName,
+                                    Sign: 1,
+                                    DataFileVersion: 6,
+                                    NickName: datas.NickName
+                                }
+                                let circle1 = {
+                                    appid: 'MIFI',
+                                    timestamp: new Date().getTime(),
+                                    apiversion: 6,
+                                    msgid: settings.get('msgid') + 1,
+                                    offset: 0,
+                                    more: 0
+                                }
+                                circle1.params = str1
+                                console.log('circle----------------------', circle1)
+                                settings.set('circle1', circle1)
+
+                                setcircle(circle1);
+
+
+                                $('#logBoxA').hide();
+                                $('#logBoxB').show();
+                                ws.close()
+
+                            }
+                        };
+
+                        ws.onclose = function () {
+                            // 关闭 websocket
+                            console.log('ws onclose')
+                        };
+                    } else {
+                        alert('wsdata 不存在！进入模拟测试环节')
+                        $('#logBoxA').hide();
+                        $('#logBoxB').show();
+
+                    }
+                })
+
+            } else {
+                alert('请导入你的圈子')
+            }
         } catch (error) {
             console.log(error)
         }
@@ -183,145 +322,7 @@ $(function () {
         settings.set('msgid', settings.get('msgid') + 1)
     }
     console.table(CircleQRcode)
-    if (CircleQRcode[0] == 'type_1') {
 
-        let ASE = new aesjs(CircleQRcode[1])
-        ASE.initSodium()
-        let rd = ASE.getaseid()
-
-        let data // set wsdata
-        data = ASE.getserverip()
-
-        data.then((req) => {
-            return req
-        }).then((req) => {
-
-
-            settings.set('wsdata', req)
-            let wsdata = req
-            let privateKey = toPrivateKey(QRcode[1])
-            let publicKey = privateKey.slice(-32);
-
-            let ts1 = [-64, 18, 65, -98, 95, 105, 80, 8, 106, 78, -81, 94, -56, -115, 27, -108, 67, 3, 57, 97, 72, -78, 90, 19, -79, -55, 26, -93, -109, -104, 16, -96]
-            let ts2 = [192, 18, 65, 158, 95, 105, 80, 8, 106, 78, 175, 94, 200, 141, 27, 148, 67, 3, 57, 97, 72, 178, 90, 19, 177, 201, 26, 163, 147, 152, 16, 160]
-
-            let ts3 = tobase64('wBJBnl9pUAhqTq9eyI0blEMDOWFIsloTsckao5OYEKA=', 'reset')
-
-            console.log(ts3)
-
-            let ts6 = ASE.from_string(ts2)
-
-            //let ts3 = ASE.crypto_box_seal('aaa',ts2)
-
-            publicKey = tobase64(publicKey)
-            console.log('CircleQRcode ', CircleQRcode)
-            console.log('toPrivateKey ', QRcode)
-            console.log('privateKey', privateKey)
-            console.log('publicKey', publicKey)
-            //设置密钥
-            settings.set('sodium', {
-                privateKey,
-                publicKey: toPrivateKey(publicKey),
-
-            })
-
-            let str = {
-                "Action": "Recovery",
-                "RouteId": rd.RID,
-                "UserSn": rd.USN,
-                "Pubkey": publicKey,
-            }
-
-            let app = {
-                appid: 'MIFI',
-                timestamp: new Date().getTime(),
-                apiversion: 6,
-                msgid: settings.get('msgid') + 1,
-                offset: 0,
-                more: 0
-            }
-
-
-            let tp = ASE.sodium(app.timestamp, privateKey)
-
-            app.Sign = tobase64(tp)
-            app.params = str
-            console.log('set app str')
-            settings.set('app', app);
-
-            //let data = settings.get('wsdata') || 0
-
-            if (Object.prototype.toString.call(wsdata) === '[object Object]') {
-                console.log(`wss://${wsdata.ServerHost}:${wsdata.ServerPort}`)
-                ws = new WebSocket(`wss://${wsdata.ServerHost}:${wsdata.ServerPort}`, "lws-minimal");
-
-                ws.onopen = function () {
-                    let str = app || settings.get('app')
-                    str.msgid = settings.get('msgid')
-                    str = JSON.stringify(str)
-                    console.log('send app ', str)
-                    ws.send(str);
-                    //alert("数据发送中...");
-
-                };
-
-
-                ws.onmessage = function (evt) {
-                    //alert('接收消息成功...')
-                    console.log('接收消息成功...', evt)
-                    console.log('data...', evt.data)
-                    let data = JSON.parse(evt.data)
-                    console.log('data', data)
-                    if (data.params.RetCode === 0) {
-                        let datas = data.params
-
-                        let str1 = {
-                            Action: "Login",
-                            RouteId: datas.RouteId,
-                            UserSn: datas.UserSn,
-                            UserId: datas.UserId,
-                            RouterName: datas.RouterName,
-                            Sign: 1,
-                            DataFileVersion: 6,
-                            NickName: datas.NickName
-                        }
-                        let circle1 = {
-                            appid: 'MIFI',
-                            timestamp: new Date().getTime(),
-                            apiversion: 6,
-                            msgid: settings.get('msgid') + 1,
-                            offset: 0,
-                            more: 0
-                        }
-                        circle1.params = str1
-                        console.log('circle----------------------', circle1)
-                        settings.set('circle1', circle1)
-
-                        setcircle(circle1);
-
-
-                        $('#logBoxA').hide();
-                        $('#logBoxB').show();
-                        ws.close()
-
-                    }
-                };
-
-                ws.onclose = function () {
-                    // 关闭 websocket
-                    console.log('ws onclose')
-                };
-            } else {
-                alert('wsdata 不存在！进入模拟测试环节')
-                $('#logBoxA').hide();
-                $('#logBoxB').show();
-
-            }
-        })
-
-    } else {
-        alert('请导入你的圈子')
-    }
     // 导入圈子 本地存储
 
 
@@ -575,8 +576,8 @@ $(function () {
                 remote.getCurrentWindow().setSize(1032, 600)
                 //remote.getCurrentWindow().maximize()
                 remote.getCurrentWindow().center()
-                
-               getMail();
+
+                getMail();
                 ws.close();
 
             }
