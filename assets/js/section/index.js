@@ -507,15 +507,10 @@ $(function () {
                         alert('请导入你的圈子')
                     }
                     // then 结束
-
-
-
                 }
                 img.src = objUrl;
 
             }
-
-
             // end click
         });
 
