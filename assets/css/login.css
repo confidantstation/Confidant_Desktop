@@ -23,6 +23,14 @@ body {
     -webkit-app-region: drag;
 } */
 
+#loading{
+    box-sizing: border-box;
+    padding:50px;
+    text-align: center;
+    width:100%;
+    background: rgba(230, 230, 230, 1);
+}
+
 #setMailForm{
     z-index: 999;
 }

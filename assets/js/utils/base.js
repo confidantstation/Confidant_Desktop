@@ -110,7 +110,7 @@ class aesjs {
     }
     getrid(k) {
         k = this.asetxt || k
-        console.log('ID USN', this.Decrypt(k))
+        //console.log('ID USN', this.Decrypt(k))
         return this.getaseid(this.Decrypt(k)).RID
     }
     getserverip() {
@@ -119,7 +119,7 @@ class aesjs {
         return request(`https://pprouter.online:9001/v1/pprmap/Check?rid=${this.getrid()}`)
             .then((req) => {
 
-                console.log('getserverip---set wsdata', req)
+                //console.log('getserverip---set wsdata', req)
 
                 return req.data
 
@@ -170,9 +170,9 @@ class aesjs {
 
         const sodium = _sodium;
         let key = k || this.key
-        console.log('START sodiumGet---->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>-----')
+        //console.log('START sodiumGet---->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>-----')
         let sd = settings.get('sodium')
-        console.log(sd)
+        //console.log(sd)
 
         let arr = toNewconfidantObj(str)
 
@@ -181,21 +181,21 @@ class aesjs {
         let privateKey = getUnit8SKPK(sd.privateKey)
         let publicKey = getUnit8SKPK(sd.publicKey)
 
-        console.log('privateKey', privateKey)
+        //console.log('privateKey', privateKey)
 
         let sk = sodium.crypto_sign_ed25519_sk_to_curve25519(privateKey);
         let pk = sodium.crypto_sign_ed25519_pk_to_curve25519(publicKey);
 
 
         let k2 = toPrivateKey(key)
-        console.log('k2', k2)
-        console.log('解密私钥sk1', sk)
+        //console.log('k2', k2)
+        //console.log('解密私钥sk1', sk)
 
         let ks = ""
         try {
             ks = sodium.crypto_box_seal_open(k2, pk, sk)
         } catch (err) {
-            console.log(err)
+            //console.log(err)
         }
 
         // console.log('ks', ks)
@@ -203,7 +203,7 @@ class aesjs {
         // console.log('from_string', sodium.from_string(ks))
         // console.log('to_string', sodium.to_string(ks))
         ks = dataToString(ks)
-        console.log('END sodiumGet---->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>-----')
+        //console.log('END sodiumGet---->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>-----')
         return ks
     }
     crypto_sign_ed25519_sk_to_curve25519(privateKey) {
@@ -262,15 +262,15 @@ class aesjs {
         let pk = sodium.crypto_sign_ed25519_pk_to_curve25519(publicKey);
 
         let k2 = toPrivateKey(key)
-        console.log('k2', k2)
-        console.log('sk', sk)
+        //console.log('k2', k2)
+        //console.log('sk', sk)
 
 
         let ks = sodium.crypto_box_seal_open(k2, pk, sk)
-        console.log('ks', ks)
-        console.log('string', dataToString(ks))
+        //console.log('ks', ks)
+        //console.log('string', dataToString(ks))
         ks = dataToString(ks)
-        console.log('END sodiumGet---->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>-----')
+        //console.log('END sodiumGet---->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>-----')
         return ks
     }
 }
@@ -317,7 +317,7 @@ function sendMailAES(To, ws) {
         "Type": 1
     }
 
-    console.log(getUnit8SKPK(sodiumKey.privateKey))
+    //console.log(getUnit8SKPK(sodiumKey.privateKey))
 
     let app = {
         appid: 'MIFI',
@@ -557,27 +557,130 @@ function saveEmail(emObj) {
     let { Email, Password, host } = emObj
     let lastImap = settings.get('IMAP')
     if (!lastImap) {
-        
-            getMail({ Email, Password, host });
-            hideInbox('setEmailHtmlLogin')
-            //$('#setMailForm')[0].reset()  
-            
-      
-       
+
+        getMail({ Email, Password, host });
+        hideInbox('setEmailHtmlLogin')
+        //$('#setMailForm')[0].reset()  
+
     } else if (lastImap.Email !== Email) {
 
-        
-            getMail({ Email, Password, host })
-            hideInbox('setEmailHtmlLogin')
-            $('#setMailForm')[0].reset()  
-       
+
+        getMail({ Email, Password, host })
+        hideInbox('setEmailHtmlLogin')
+        $('#setMailForm')[0].reset()
+
         $('.myEmail').text(Email)
         $('.fromImg2').text(Email.substr(0, 1))
     } else {
-      
+
         hideInbox('setEmailHtmlLogin')
         alert('请忽重复配置邮箱')
         console.log('mailLoginBtn click,请忽重复配置邮箱')
     }
 }
 
+
+ function mailNameArraytoBase64(to) {
+
+    if (Object.prototype.toString.call(to) === '[object Array]') {
+      let tob = to.map(function (v) {
+        return window.btoa(v)
+      })
+      return tob.join(',')
+    } else {
+      return false
+    }
+  }
+
+  function sendMail(To, ws) {
+
+    let sodiumKey = settings.get('sodium')
+    //可测试的邮件地址 345632828@qq.com,kuangzihui@163.com
+    let str = {
+      Action: "CheckmailUkey",
+      Unum: To.length,
+      Users: mailNameArraytoBase64(To),
+      Type: 1
+    }
+
+    console.log(getUnit8SKPK(sodiumKey.privateKey))
+
+    let app = {
+      appid: 'MIFI',
+      timestamp: new Date().getTime(),
+      apiversion: 6,
+      msgid: settings.get('msgid') + 1,
+      offset: 0,
+      more: 0
+    }
+
+    let tp = AES.sodium(app.timestamp, getUnit8SKPK(sodiumKey.privateKey))
+
+    app.Sign = tobase64(tp)
+    app.params = str
+    app = JSON.stringify(app)
+    ws.send(app)
+  }
+
+
+  //加密邮件 字符拼接函数
+  function toNewconfidantHtml(text, key, uid) {
+    /* 返回加密后的html
+     *
+     * @param  {text}       
+     * @param  {key} 
+     * @param  {uid} 
+     * @return {html}           
+     */
+    let keys = toNewconfidantkeyString(key)
+
+
+    let html = `${text}<span style='display:none' id='newconfidantkey${keys}'></span><span style='display:none' id='newconfidantuserid${uid}'></span><div newmyconfidantbegin=''><br /><br /><br /><span>Sent from MyConfidant, the app for encrypted email.</span></div>`
+    return html
+  }
+
+  //加密邮件 主函数
+  function sendMailEncrypt(arr, html) {
+
+    let rand = randomPassword(32)
+    let text = AES.Encrypt(html, rand.substr(0, 16))
+    let PubKey = toPrivateKey(arr[0].PubKey)
+    // rand =''
+    let uid = settings.get('UserId')
+    let std = AES.crypto_box_seal(rand, PubKey)
+    std = tobase64(std)
+
+    let keyArr = arr.map((x) => {
+      let key = AES.crypto_box_seal(rand, toPrivateKey(x.PubKey))
+      //console.log(key)
+
+      key = tobase64(key)
+      let name = x.User
+      return { name, key }
+
+    })
+    //console.log(keyArr)
+    // let keys = toNewconfidantkeyString(keyArr)
+
+
+    let NewconfidantHtml = toNewconfidantHtml(text, keyArr, uid);
+
+    // let ks = AES.sodiumGet(NewconfidantHtml, rand)
+    // let en = AES.Decrypt(text, ks.substr(0, 16))
+    //console.log('NewconfidantHtml', NewconfidantHtml)
+    return NewconfidantHtml
+  }
+
+  //加密邮件 字符拼接函数二
+  function toNewconfidantkeyString(arr) {
+    let str = ''
+    for (let i in arr) {
+      let s = `${arr[i].name}&&${arr[i].key}`
+      if (str === '') {
+        str = str + s
+      } else {
+        str = str + '##' + s
+      }
+    }
+    return str
+  }

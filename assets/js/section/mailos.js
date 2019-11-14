@@ -1,4 +1,5 @@
-function getMail(obj, user, password) {
+let nub = 0
+function getMail(obj, total) {
     // tag 默认值为Inbox  取值范围 = 'Inbox Node Starred Drafts Sent Spam Trash'
     // 获取最新十封邮件
     let Imap = require('imap')
@@ -23,7 +24,7 @@ function getMail(obj, user, password) {
         host
     } = obj || settings.get('IMAP')
 
-
+   
     // let imap = new Imap({
     //     user: Email || '345632828@qq.com',
     //     password: Password || 'cjdfhabfwwaicbbd',
@@ -62,7 +63,10 @@ function getMail(obj, user, password) {
         if (obj) {
             // $('.mailLogin,.max-modal').show();
         }
-
+        if(total){
+            nub = nub +10
+            settings.set('total',{Email:nub})
+        }
         openInbox(function (err, box) {
             if (err) throw err;
             //拉取最新 10条邮件
@@ -75,7 +79,14 @@ function getMail(obj, user, password) {
             //      settings.set('messagesTotal',seq)
             // }
             // -10 有错误，下周排除
-            seq = box.messages.total - 10
+            if(total){
+                let n =  settings.get('total').Email
+                seq = box.messages.total -  n
+               
+            }else{
+                seq = box.messages.total - 10
+            }
+            
 
 
             let seq1 = [`${seq}:*`]
@@ -85,7 +96,7 @@ function getMail(obj, user, password) {
             });
             f.on('message', function (msg, seqno) {
 
-                console.log('Message #%d', seqno);
+                //console.log('Message #%d', seqno);
                 let prefix = '(#' + seqno + ') ';
 
                 msg.on('body', function (stream, info) {
@@ -203,13 +214,13 @@ function getMailUid(uid, setIMAP) {
 
                     //邮件头内容
                     mailparser.on("headers", function (headers) {
-                        console.log(prefix + "-邮件头信息>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-                        console.log(headers)
+                        // console.log(prefix + "-邮件头信息>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+                        // console.log(headers)
 
-                        console.log("邮件主题: " + headers.get('subject'));
-                        console.log("发件人: " + headers.get('from').text);
+                        // console.log("邮件主题: " + headers.get('subject'));
+                        // console.log("发件人: " + headers.get('from').text);
                         if (headers.get('to')) {
-                            console.log("收件人: " + headers.get('to').text);
+                            //console.log("收件人: " + headers.get('to').text);
                             to = headers.get('to').text
                             if ($('.myEmail').attr('rel') !== 'setName') {
                                 try {
@@ -233,8 +244,12 @@ function getMailUid(uid, setIMAP) {
                             console.log("收件人: " + '');
                         }
                         //console.log(headers.get('dkim-signature'))
-
-                        setMailHeader(uid, headers)
+                        try {
+                            setMailHeader(uid, headers)
+                        } catch (error) {
+                            console.log(error)
+                        }
+                       
                         console.log(userlist)
                         settings.set('userlist', userlist)
 
@@ -303,7 +318,7 @@ function getMailUid(uid, setIMAP) {
     imap.connect();
 }
 
-//控制邮箱显示，及以取内容前32个字符
+//控制邮箱显示，及以取内容前32个字符 存储邮件
 let $inbox = $('.inbox-content')
 
 function getHtmlText(str, uid) {
@@ -327,7 +342,7 @@ function getHtmlText(str, uid) {
         console.log('strAes', strAes);
 
         let ks = WinAES.sodiumGet(html);
-        let ka = strAes || '4x2fHgATrmWCiL9soNsJ9XnsGwEkfA5DKzHIwBU3d6HkbDgCQSpnaOIYILMAhwZU8Ex620Wr/6GyWudTaXwKmg==';
+        let ka = strAes;
         let en = WinAES.Decrypt(ka, ks.substr(0, 16));
 
         str = en || str
@@ -356,9 +371,9 @@ function getHtmlText(str, uid) {
     uid = uid || "";
     str = str || "";
 
-    let instr = `<div class="email-uid emHtml${uid}" uid="${uid}">${str}</div>`;
-
-    $inbox.append(instr);
+    //let instr = `<div class="email-uid emHtml${uid}" uid="${uid}">${str}</div>`;
+    let inhtml = `<object type="text/html" data="new.html" style="width:vw;height:100vh;background:#fff;display:block"  class="email-uid emHtml${uid}" uid="${uid}">${str}</object>`
+    $inbox.append(inhtml);
 
 
     html = html.replace(/\s+/g, ' ');
@@ -372,7 +387,6 @@ function getHtmlText(str, uid) {
 }
 
 function setMailBody(uid, text, file) {
-    debugger;
     let html = $('#list-emall section').find('.list-emallDiv')
     let str = ''
     if (file > 0) {
@@ -404,13 +418,14 @@ function setMailBody(uid, text, file) {
     })
 }
 
-// 设置邮箱列表（导航)
+// 设置邮箱列表（导航) .section-scroll
 
 function setMailHeader(uid, headers) {
     /*
     JSON.stringify(from) == {"value":[{"address":"lagou@mail.lagoujobs.com","name":"拉勾网"}],"html":""
     */
-
+   
+    
     console.log(`setMailHeader-----------`)
     console.log("邮件主题: " + headers.get('subject'));
     console.log("发件人: " + headers.get('from').text);
@@ -460,7 +475,7 @@ function setMailHeader(uid, headers) {
     if ($uid.length > 0) {
         $(`.emuid${uid}`).html(html)
     } else {
-        $('#list-emall section').prepend(html)
+        $('#section-scrollDiv').prepend(html)
     }
 
 

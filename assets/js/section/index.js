@@ -26,7 +26,7 @@ settings.set('status', 0);
 settings.set('wsdata', 0)
 let testdata = settings.get('wsdata');
 console.log(testdata)
-settings.set('IMAP', "")
+// settings.set('IMAP', "")
 
 // settings.set('arr',[1,2,3,4,5,6])
 
@@ -523,7 +523,7 @@ $(function () {
     } = require('electron');
     $('.ImportBtnLogin').click(function () {
         /* 邮件配置测试*/
-        //debugger;
+      
         let setMail = '';
         let IMAP = settings.get('IMAP')
 

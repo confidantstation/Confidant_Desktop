@@ -2,11 +2,13 @@
     <div id='emailHtml' class="html">
         <div id='list-emall'>
             <header class="jusCenter">
-                <div class="list-search"><input id="Search"  type='text' placeholder="Search" /></div>
+                <div class="list-search"><input id="Search" type='text' placeholder="Search" /></div>
             </header>
-            <!-- <div class="section-scroll nui-scroll"> -->
-            <section class="section-scroll nui-scroll"></section>
-            <!-- </div> -->
+
+            <section class="section-scroll nui-scroll">
+                <div id='section-scrollDiv'></div>
+                <div id="loading">正在加载...</div>
+            </section>
 
         </div>
         <div class='inbox-emall'>
@@ -34,18 +36,51 @@
     </div>
     <script>
         require('./app/windows/email-windows');
-        $(function () {
-            //debugger;
-            let status = settings.get('status')
-            if (status === 'loginHtml') {
-                getMail();
-            }else if(status === 'setEmailHtml'){
 
-            }
+        let loading = false;
+        function loadData() {
+
+            setTimeout(function () {
+                $('#loading').hide();
+                getMail(null, 1);
+                loading = false;
+            }, 2000)
+
+        }
+        $(function () {
+
+            // let status = settings.get('status')
+            // if (status === 'loginHtml') {
+            //     getMail();
+            // } else if (status === 'setEmailHtml') {
+
+            // }
+
+            $('.section-scroll').scroll(function () {
+                let range = 40;
+                let t = $(this).scrollTop();
+                let h = 534 || $(window).height();
+                let scrollHeight = $('#section-scrollDiv').height();
+                let totalHeight = parseFloat(h) + parseFloat(t);
+                console.table({ scrollHeight, totalHeight, h, t, val: scrollHeight - totalHeight })
+                if (scrollHeight < totalHeight + range) {
+                    if (loading) return;
+                    loading = true;
+                    $('#loading').show();
+                    let th = 200
+                    if(scrollHeight>1000){
+                        th =  parseFloat(scrollHeight*0.1)
+                    }
+                    $(this).scrollTop(t-th);
+                    loadData();
+                }
+                console.log($('.section-scroll').height())
+                console.log($(this).scrollTop())
+            })
 
             //查看邮件
             $(document).on('click', '.list-emallDiv', function () {
-               
+
 
                 let data = settings.get('wsdata') || 0
                 let ws
