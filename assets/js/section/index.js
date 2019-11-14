@@ -523,7 +523,7 @@ $(function () {
     } = require('electron');
     $('.ImportBtnLogin').click(function () {
         /* 邮件配置测试*/
-        debugger;
+        //debugger;
         let setMail = '';
         let IMAP = settings.get('IMAP')
 

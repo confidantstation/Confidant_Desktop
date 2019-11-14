@@ -302,7 +302,7 @@ function splitNewconfidant(str) {
     return arr2
 }
 
-function sendMailAES(To,ws){
+function sendMailAES(To, ws) {
     console.log(ws)
     console.log(WinAES)
     console.log(settings.get('msgid'))
@@ -313,11 +313,11 @@ function sendMailAES(To,ws){
     let str = {
         "Action": "CheckmailUkey",
         "Unum": 1,
-        "Users":window.btoa(To) ,
+        "Users": window.btoa(To),
         "Type": 1
     }
 
-    console.log(getUnit8SKPK(sodiumKey.privateKey) )
+    console.log(getUnit8SKPK(sodiumKey.privateKey))
 
     let app = {
         appid: 'MIFI',
@@ -327,7 +327,7 @@ function sendMailAES(To,ws){
         offset: 0,
         more: 0
     }
-   
+
     let tp = WinAES.sodium(app.timestamp, getUnit8SKPK(sodiumKey.privateKey))
 
     app.Sign = tobase64(tp)
@@ -475,8 +475,8 @@ function getNodemailerService(id) {
         "iCloud": "iCloud",
         "QQMail": "QQ"
     }
-    let email =  settings.get('IMAP').Email
-    let reName =  settings.get('mailConfigre')
+    let email = settings.get('IMAP').Email
+    let reName = settings.get('mailConfigre')
     return reName
 }
 // 切换邮箱服务器
@@ -517,20 +517,20 @@ function getHost(name) {
 function hideInbox(id) {
     $('#logBoxB').hide();
     if (id === 'setEmailHtml') {
-        settings.set('status','setEmailHtml')
+        settings.set('status', 'setEmailHtml')
         hideMenu('.nav')
         $(`#${id},#logBoxC`).show()
 
     } else if (id === 'loginHtml') {
-        settings.set('status','loginHtml')
+        settings.set('status', 'loginHtml')
         $(`#${id},#logBoxC,#emailHtml,#new-emall`).show()
         getMail();
 
     } else if (id === 'setEmailHtmlLogin') {
-        settings.set('status','setEmailHtmlLogin')
+        settings.set('status', 'setEmailHtmlLogin')
         $('#setEmailHtml,.mailLogin,.max-modal').hide()
         $('.nav,#emailHtml,#new-emall').show()
-       
+
     } else if (id === '') {
 
     } else if (id === '') {
@@ -550,5 +550,35 @@ function hideInbox(id) {
 
 function hideMenu(h) {
     $(`#new-emall,${h}`).hide()
+}
+
+//保存邮件配置信息
+function saveEmail(emObj) {
+    let { Email, Password, host } = emObj
+    let lastImap = settings.get('IMAP')
+    if (!lastImap) {
+        try {
+            getMail({ Email, Password, host });
+            hideInbox('setEmailHtmlLogin')
+        } catch (error) {
+            console.log(error)
+        }
+       
+    } else if (lastImap.Email !== Email) {
+
+        try {
+            getMail({ Email, Password, host })
+            hideInbox('setEmailHtmlLogin')
+        } catch (error) {
+            console.log(error)
+        }
+        $('.myEmail').text(Email)
+        $('.fromImg2').text(Email.substr(0, 1))
+    } else {
+      
+        hideInbox('setEmailHtmlLogin')
+        alert('请忽重复配置邮箱')
+        console.log('mailLoginBtn click,请忽重复配置邮箱')
+    }
 }
 

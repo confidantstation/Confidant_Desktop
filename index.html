@@ -121,7 +121,9 @@
                     <ul class="emall-card">
                         <li>
                             <div class="spanA">
-                                <div class="centerDiv"><img class="newTag userLogo" src="assets/img/user/1.jpg"></div>
+                                <div class="centerDiv fromImg2" style="color: #fff;">
+                                    <!-- <img class="newTag userLogo" src="assets/img/user/1.jpg"> -->
+                                </div>
                             </div>
                             <div class="spanB myEmail"></div>
                             <div class="spanC"><img src="assets/img/tabbar_hook.png"></div>
@@ -282,7 +284,9 @@
 
         </div>
         <div class="error">
-            <header><h3>消息提示</h3></header>
+            <header>
+                <h3>消息提示</h3>
+            </header>
             <section>
                 <p class="error-text"></p>
             </section>
@@ -296,19 +300,19 @@
 
 </body>
 
-<script>window.$ = window.jQuery = require('jquery');require('./assets/js/imports');</script>
- <script src='assets/js/utils/base.js'></script>
+<script>window.$ = window.jQuery = require('jquery'); require('./assets/js/imports');</script>
+<script src='assets/js/utils/base.js'></script>
 <script src='assets/js/section/mailos.js'></script>
 <script src='assets/js/section/index.js'></script>
 
 <script>
-   
-//    require('./assets/js/section/base.js');
+
+    //    require('./assets/js/section/base.js');
 
 
     const { remote } = require('electron');
     const remoteObj = remote.app.getRemoteObject();
-   
+
     console.log(remoteObj)
     $("#logBox").click(function () {
         console.log(remote.app.getRemoteObject())
@@ -318,7 +322,7 @@
 
 
     $(function () {
-       // alert(typeof getGBK32)
+        // alert(typeof getGBK32)
         const settings = require('electron-settings');
         $(document).on('click', '.newAccountBtn,.newAccountBtnImg,.New-Account', function () {
             $('.newAccountDiv,.max-modal').show()
@@ -342,45 +346,29 @@
 
             $('#mailLoginImg').attr('src', img)
             $('.newAccountDiv').hide()
-            $('.mailLogin,.max-modal').show().attr('rel',rel)
+            $('.mailLogin,.max-modal').show().attr('rel', rel)
         })
 
-        $('.mailLoginBtn').click(function () {
-          
-            console.log(Math.ceil(Math.random() * 10))
-           //debugger;
-            let $mailLoginInput = $('.mailLoginInput')
-            let Email = $mailLoginInput.eq(0).val()
-            let Password = $mailLoginInput.eq(1).val()
-            let rel = $('.mailLogin').attr('rel')
-            let host = getHost(rel)
-            
-            if (Email && Password) {
-                let lastImap = settings.get('IMAP')  
-                if (lastImap.Email !== Email) {
-                   
-                  
-                    try {
-                     getMail({ Email, Password, host })
-                        // let mail_status = settings.get('mail_status')
-                        // settings.set('IMAP', { Email, Password, host })
-                    } catch (error) {
-                       console.log(error)
-                    }
-                   
-                    $('.myEmail').text(Email)
-                } else {
-                    console.log('mailLoginBtn click,请忽重复配置邮箱')
-                }
+        // $('.mailLoginBtn').click(function () {
 
-                hideInbox('setEmailHtmlLogin')
-            }
+        //     console.log(Math.ceil(Math.random() * 10))
+        //     //debugger;
+        //     let $mailLoginInput = $('.mailLoginInput')
+        //     let Email = $mailLoginInput.eq(0).val()
+        //     let Password = $mailLoginInput.eq(1).val()
+        //     let rel = $('.mailLogin').attr('rel')
+        //     let host = getHost(rel)
+
+        //     if (Email && Password) {
+
+        //         saveEmail({ Email, Password, host })
 
 
+        //     }
 
-        })
+        // })
 
-        $('.error-button').click(function(){
+        $('.error-button').click(function () {
             $('.error').hide()
         })
 

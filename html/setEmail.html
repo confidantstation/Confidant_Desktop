@@ -73,77 +73,55 @@
 
 
 
-    <script>
-        
+        <script>
 
-        $(function () {
-            const settings = require('electron-settings');
-            $(document).on('click','.newAccountBtn,.newAccountBtnImg,.New-Account',function(){
-                $('.newAccountDiv,.max-modal').show()
-            })
-         
-            $('.newAccountCancel').click(function () {
-                $('.newAccountDiv,.max-modal').hide()
-            })
-            $('.newAccountList').hover(function () {
-                $(this).css({ 'background': "#6646F7", 'color': '#fff' })
-            }, function () {
-                $(this).css({ 'background': "#fff", 'color': '#000' })
-            })
-            let rel = ''
-            $('.newAccountList').click(function () {
-                let _this = $(this)
-                let val = _this.find('.ib').text()
-                let img = _this.find('.ia img').attr('src')
-                img = img.replace('.png', '_n.png')
-                rel = _this.find('.ia img').attr('rel')
-                $('#mailLoginImg').attr('src', img)
-                $('.newAccountDiv').hide()
-                $('.mailLogin,.max-modal').show().attr('rel',rel)
-            })
 
-            $('.mailLoginBtn').click(function () {
-              
-                console.log(Math.ceil(Math.random()*10))
-                let $mailLoginInput = $('.mailLoginInput')
-                let Email = $mailLoginInput.eq(0).val()
-                let Password = $mailLoginInput.eq(1).val()
-                let rel = $('.mailLogin').attr('rel')
-               
-                let host = getHost(rel)
+            $(function () {
+                const settings = require('electron-settings');
+                $(document).on('click', '.newAccountBtn,.newAccountBtnImg,.New-Account', function () {
+                    $('.newAccountDiv,.max-modal').show()
+                })
 
-                if (Email && Password) {
-                    debugger;
-                let lastImap = settings.get('IMAP')  
-                if(!lastImap){
-                    try {
-                      getMail({ Email, Password, host })
-                    } catch (error) {
-                       console.log(error)
+                $('.newAccountCancel').click(function () {
+                    $('.newAccountDiv,.max-modal').hide()
+                })
+                $('.newAccountList').hover(function () {
+                    $(this).css({ 'background': "#6646F7", 'color': '#fff' })
+                }, function () {
+                    $(this).css({ 'background': "#fff", 'color': '#000' })
+                })
+                let rel = ''
+                $('.newAccountList').click(function () {
+                    let _this = $(this)
+                    let val = _this.find('.ib').text()
+                    let img = _this.find('.ia img').attr('src')
+                    img = img.replace('.png', '_n.png')
+                    rel = _this.find('.ia img').attr('rel')
+                    $('#mailLoginImg').attr('src', img)
+                    $('.newAccountDiv').hide()
+                    $('.mailLogin,.max-modal').show().attr('rel', rel)
+                })
+
+                $('.mailLoginBtn').click(function () {
+
+                    console.log(Math.ceil(Math.random() * 10))
+                    let $mailLoginInput = $('.mailLoginInput')
+                    let Email = $mailLoginInput.eq(0).val()
+                    let Password = $mailLoginInput.eq(1).val()
+                    let rel = $('.mailLogin').attr('rel')
+                    let host = getHost(rel)
+
+                    if (Email && Password) {
+
+                        saveEmail({ Email, Password, host })
+                        //debugger;
+
+
+                       
                     }
-                }else if (lastImap.Email !== Email) {
-                    
-                   
-                    try {
-                      getMail({ Email, Password, host })
-                    } catch (error) {
-                       console.log(error)
-                    }
-                    $('.myEmail').text(Email)
-                } else {
-                    // try {
-                    //   getMail({ Email, Password, host })
-                    // } catch (error) {
-                    //    console.log(error)
-                    // }
-                    console.log('mailLoginBtn click,请忽重复配置邮箱')
-                }
 
-                hideInbox('setEmailHtmlLogin')
-            }
-
+                })
             })
-        })
-       
-    </script>
+
+        </script>
 </template>

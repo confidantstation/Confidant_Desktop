@@ -3,10 +3,10 @@ function getMail(obj, user, password) {
     // 获取最新十封邮件
     let Imap = require('imap')
     let inspect = require('util').inspect;
-    let uidList = {}
+
     const settings = require('electron-settings');
 
-
+    let uidList =  {} ||settings.get('uidList')
     //let MailParser = require("mailparser").MailParser
     //let fs = require("fs")
 
@@ -15,7 +15,7 @@ function getMail(obj, user, password) {
     //     Password: "operactionwall3",
     //     host: "imap.163.com"
     // })
-   
+
 
     const setIMAP = {
         Email,
@@ -56,7 +56,9 @@ function getMail(obj, user, password) {
     imap.once('ready', function () {
         settings.set('mail_status', 'ready')
        
+        //保存配置邮箱参数
         settings.set('IMAP', { Email, Password, host })
+
         if (obj) {
             // $('.mailLogin,.max-modal').show();
         }
@@ -102,10 +104,11 @@ function getMail(obj, user, password) {
                     // console.log(attrs.uid)
                     // 获得指定UID的邮件
                     //getMailUid(attrs.uid, setIMAP)
-
+                  
                     let uid = attrs.uid
                     if (!uidList[uid]) {
                         uidList[uid] = uid
+                        //settings.set('uidList', uidList)
                         getMailUid(attrs.uid, setIMAP)
                     }
                 });
@@ -214,8 +217,10 @@ function getMailUid(uid, setIMAP) {
                                         let name = to[0].match(/\<(.+?)\>/g)
 
                                         $('.myEmail').text(name[0]).attr('rel', 'setName')
+                                        $('.fromImg2').text(name[0].substr(0, 1))
                                     } else {
                                         $('.myEmail').text(to[0]).attr('rel', 'setName')
+                                        $('.fromImg2').text(to[0].substr(0, 1))
                                     }
 
                                 } catch (error) {
@@ -264,7 +269,7 @@ function getMailUid(uid, setIMAP) {
                             //data.release();
                             file++
                         };
-                        setMailBody(uid, text32, file);
+                        //setMailBody(uid, text32, file);
 
                     });
 
@@ -274,7 +279,7 @@ function getMailUid(uid, setIMAP) {
                 });
             });
             f.once('error', function (err) {
-               
+
                 console.log('抓取出现错误: ' + err);
             });
             f.once('end', function () {
@@ -351,7 +356,7 @@ function getHtmlText(str, uid) {
     str = str || "";
 
     let instr = `<div class="email-uid emHtml${uid}" uid="${uid}">${str}</div>`;
-    
+
     $inbox.append(instr);
 
 
@@ -366,14 +371,15 @@ function getHtmlText(str, uid) {
 }
 
 function setMailBody(uid, text, file) {
+    debugger;
     let html = $('#list-emall section').find('.list-emallDiv')
     let str = ''
     if (file > 0) {
-        str = `<p class="font12">Figure out what<span class="annex"><em>${file||""}</em><img
+        str = `<p class="font12">Figure out what<span class="annex"><em>${file || ""}</em><img
         src="assets/img/Search/tabbar_attach_unselected.png"></span></p>
-        <p class="font12">${getGBK32(text)||""}</p>`
+        <p class="font12">${getGBK32(text) || ""}</p>`
     } else {
-        str = `<p class="font12">${getGBK32(text)||""}</p>`
+        str = `<p class="font12">${getGBK32(text) || ""}</p>`
     }
     console.log('setMailBody--------------')
     console.log(html)
@@ -382,7 +388,7 @@ function setMailBody(uid, text, file) {
         let id = _this.attr('uid')
         if (id == uid) {
             //console.log('each uid', uid)
-            if (_this.find('.emallDivB p').length > 2) {
+            if (_this.find('.emallDivB p').length > 0) {
                 _this.find('.emallDivB').html(str)
             } else {
                 try {
@@ -435,6 +441,8 @@ function setMailHeader(uid, headers) {
         <div class="emallDivB">
             <p class="font12"><span class="from">${from}</span><span class="time date">${date}</span></p>
             <p class="font12"><span class='subject'>${subject}</span><span class="to" style="display:none">${to}</span></p>
+            <p class="font12"><span class="annex" style="display:none"><em></em><img src="assets/img/Search/tabbar_attach_unselected.png"></span></p>
+        <p class="font12"></p>
         </div>
     </div>`
     // 排序显示
