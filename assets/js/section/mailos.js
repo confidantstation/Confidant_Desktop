@@ -135,6 +135,7 @@ function getMail(obj, user, password) {
         // settings.set('mail_status', 'error')
         // $('.error').find('.error-text').text('f error')
         // $('.error').show()
+        alert('邮件账号或密码不正确，请重新配置')
         console.log(err);
     });
 
@@ -279,7 +280,7 @@ function getMailUid(uid, setIMAP) {
                 });
             });
             f.once('error', function (err) {
-
+               
                 console.log('抓取出现错误: ' + err);
             });
             f.once('end', function () {

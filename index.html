@@ -263,14 +263,14 @@
         </div>
         <!--modal-->
         <div class="mailLogin" style="display: none;margin-left:-110px;">
-            <form action="" onsubmit="return false">
+            <form action="" id='setMailForm' onsubmit="return false">
                 <header>
                     <img id='mailLoginImg' src="./assets/img/mails/email_icon_163_n.png">
                 </header>
                 <section>
 
                     <p class="mailLoginTitle">Email</p>
-                    <p><input class="mailLoginInput" type="email" value="345632828@qq.com" autofocus="autofocus"
+                    <p><input class="mailLoginInput" id='setMailFormInputEmail' type="email" value="345632828@qq.com" 
                             placeholder="example@gmail.com">
                     </p>
                     <p class="mailLoginTitle">Password</p>
@@ -349,25 +349,7 @@
             $('.mailLogin,.max-modal').show().attr('rel', rel)
         })
 
-        // $('.mailLoginBtn').click(function () {
-
-        //     console.log(Math.ceil(Math.random() * 10))
-        //     //debugger;
-        //     let $mailLoginInput = $('.mailLoginInput')
-        //     let Email = $mailLoginInput.eq(0).val()
-        //     let Password = $mailLoginInput.eq(1).val()
-        //     let rel = $('.mailLogin').attr('rel')
-        //     let host = getHost(rel)
-
-        //     if (Email && Password) {
-
-        //         saveEmail({ Email, Password, host })
-
-
-        //     }
-
-        // })
-
+       
         $('.error-button').click(function () {
             $('.error').hide()
         })

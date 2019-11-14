@@ -80,6 +80,7 @@
                 const settings = require('electron-settings');
                 $(document).on('click', '.newAccountBtn,.newAccountBtnImg,.New-Account', function () {
                     $('.newAccountDiv,.max-modal').show()
+                    
                 })
 
                 $('.newAccountCancel').click(function () {
@@ -100,9 +101,11 @@
                     $('#mailLoginImg').attr('src', img)
                     $('.newAccountDiv').hide()
                     $('.mailLogin,.max-modal').show().attr('rel', rel)
+                    $('#setMailFormInputEmail')[0].focus()  
                 })
 
                 $('.mailLoginBtn').click(function () {
+                    debugger
 
                     console.log(Math.ceil(Math.random() * 10))
                     let $mailLoginInput = $('.mailLoginInput')
@@ -113,7 +116,7 @@
 
                     if (Email && Password) {
 
-                        saveEmail({ Email, Password, host })
+                        saveEmail({ Email, Password, host ,rel })
                         //debugger;
 
 

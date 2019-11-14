@@ -2,7 +2,7 @@
     <div id='emailHtml' class="html">
         <div id='list-emall'>
             <header class="jusCenter">
-                <div class="list-search"><input type='text' placeholder="Search" /></div>
+                <div class="list-search"><input id="Search"  type='text' placeholder="Search" /></div>
             </header>
             <!-- <div class="section-scroll nui-scroll"> -->
             <section class="section-scroll nui-scroll"></section>
@@ -101,7 +101,7 @@
             $('.emall-card2 li').click(function () {
                 let tag = $(this).attr('rel')
                 console.log(tag)
-
+                $('#Search')[0].focus()
             })
 
 

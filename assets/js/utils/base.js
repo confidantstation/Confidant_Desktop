@@ -557,21 +557,20 @@ function saveEmail(emObj) {
     let { Email, Password, host } = emObj
     let lastImap = settings.get('IMAP')
     if (!lastImap) {
-        try {
+        
             getMail({ Email, Password, host });
             hideInbox('setEmailHtmlLogin')
-        } catch (error) {
-            console.log(error)
-        }
+            //$('#setMailForm')[0].reset()  
+            
+      
        
     } else if (lastImap.Email !== Email) {
 
-        try {
+        
             getMail({ Email, Password, host })
             hideInbox('setEmailHtmlLogin')
-        } catch (error) {
-            console.log(error)
-        }
+            $('#setMailForm')[0].reset()  
+       
         $('.myEmail').text(Email)
         $('.fromImg2').text(Email.substr(0, 1))
     } else {

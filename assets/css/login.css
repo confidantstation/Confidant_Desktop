@@ -23,6 +23,12 @@ body {
     -webkit-app-region: drag;
 } */
 
+#setMailForm{
+    z-index: 999;
+}
+#setMailFormInputEmail{
+    z-index: 999;
+}
 
 #logBox {
     display: block;

@@ -10,6 +10,11 @@
     padding: 0;
   }
 
+  .nui-scroll::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+
   /*正常情况下滑块的样式*/
   .nui-scroll::-webkit-scrollbar-thumb {
     background-color: rgba(0, 0, 0, .05);
@@ -42,6 +47,7 @@
     -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .4);
     background-color: rgba(0, 0, 0, .01);
   }
+
 
   #close {
     color: white;
@@ -433,15 +439,19 @@
         Password,
         host
       } = settings.get('IMAP')
-      let gms = getNodemailerService(Email) || "qq"
-      debugger;
+      let service = settings.get('mailConfigre').nodemailerService
+      if(!to&&!Email){
+        alert('请输入收件人')
+        return false
+      }
+      debugger
       let transporter = nodemailer.createTransport({
         // host: 'smtp.ethereal.email',
-        service:gms.service, // 使用了内置传输发送邮件 查看支持列表：https://nodemailer.com/smtp/well-known/
+        service, // 使用了内置传输发送邮件 查看支持列表：https://nodemailer.com/smtp/well-known/
         port: 465, // SMTP 端口
         secureConnection: true, // 使用了 SSL
         auth: {
-          user: gms.user,
+          user: Email,
           // 这里密码不是qq密码，是你设置的smtp授权码
           pass: Password,
         }
