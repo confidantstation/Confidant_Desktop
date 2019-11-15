@@ -456,6 +456,9 @@ function tobase64(d, k) {
 
         return arr2
     }
+    if (k == 'get') {
+        d = getUnit8SKPK(d)
+    }
 
     arr = Buffer.from(d, 'hex').toString("base64");
     return arr
@@ -480,31 +483,34 @@ function getNodemailerService(id) {
     return reName
 }
 // 切换邮箱服务器
-function getHost(name) {
+function getHost(name, email) {
 
 
     let mailName = ["QQMailbox", "QQMail", "163Mail", "Gmail", "Outlook, Hotmail, live", "iCloud", "Other (IMAP)"]
     switch (name) {
+        case 'QQMailbox':
+            settings.set('mailConfigre', {
+                nodemailerService: 'QQex',
+                imapHost: 'imap.exmail.qq.com',
+                type: 1,
+            });
+            return 'imap.exmail.qq.com'
+            break;
         case 'QQMail':
             settings.set('mailConfigre', {
                 nodemailerService: 'QQ',
-                imapHost: 'imap.qq.com'
+                imapHost: 'imap.qq.com',
+                type: 2
             });
             return 'imap.qq.com'
             break;
         case '163Mail':
             settings.set('mailConfigre', {
                 nodemailerService: '163',
-                imapHost: 'imap.163.com'
+                imapHost: 'imap.163.com',
+                type: 3
             });
             return 'imap.163.com'
-            break;
-        case 'QQMailbox':
-            settings.set('mailConfigre', {
-                nodemailerService: 'QQex',
-                imapHost: 'imap.exmail.qq.com'
-            });
-            return 'imap.exmail.qq.com'
             break;
         default:
             return 0
@@ -580,38 +586,38 @@ function saveEmail(emObj) {
 }
 
 
- function mailNameArraytoBase64(to) {
+function mailNameArraytoBase64(to) {
 
     if (Object.prototype.toString.call(to) === '[object Array]') {
-      let tob = to.map(function (v) {
-        return window.btoa(v)
-      })
-      return tob.join(',')
+        let tob = to.map(function (v) {
+            return window.btoa(v)
+        })
+        return tob.join(',')
     } else {
-      return false
+        return false
     }
-  }
+}
 
-  function sendMail(To, ws) {
+function sendMail(To, ws) {
 
     let sodiumKey = settings.get('sodium')
     //可测试的邮件地址 345632828@qq.com,kuangzihui@163.com
     let str = {
-      Action: "CheckmailUkey",
-      Unum: To.length,
-      Users: mailNameArraytoBase64(To),
-      Type: 1
+        Action: "CheckmailUkey",
+        Unum: To.length,
+        Users: mailNameArraytoBase64(To),
+        Type: 1
     }
 
     console.log(getUnit8SKPK(sodiumKey.privateKey))
 
     let app = {
-      appid: 'MIFI',
-      timestamp: new Date().getTime(),
-      apiversion: 6,
-      msgid: settings.get('msgid') + 1,
-      offset: 0,
-      more: 0
+        appid: 'MIFI',
+        timestamp: new Date().getTime(),
+        apiversion: 6,
+        msgid: settings.get('msgid') + 1,
+        offset: 0,
+        more: 0
     }
 
     let tp = AES.sodium(app.timestamp, getUnit8SKPK(sodiumKey.privateKey))
@@ -620,11 +626,11 @@ function saveEmail(emObj) {
     app.params = str
     app = JSON.stringify(app)
     ws.send(app)
-  }
+}
 
 
-  //加密邮件 字符拼接函数
-  function toNewconfidantHtml(text, key, uid) {
+//加密邮件 字符拼接函数
+function toNewconfidantHtml(text, key, uid) {
     /* 返回加密后的html
      *
      * @param  {text}       
@@ -637,10 +643,10 @@ function saveEmail(emObj) {
 
     let html = `${text}<span style='display:none' id='newconfidantkey${keys}'></span><span style='display:none' id='newconfidantuserid${uid}'></span><div newmyconfidantbegin=''><br /><br /><br /><span>Sent from MyConfidant, the app for encrypted email.</span></div>`
     return html
-  }
+}
 
-  //加密邮件 主函数
-  function sendMailEncrypt(arr, html) {
+//加密邮件 主函数
+function sendMailEncrypt(arr, html) {
 
     let rand = randomPassword(32)
     let text = AES.Encrypt(html, rand.substr(0, 16))
@@ -651,12 +657,12 @@ function saveEmail(emObj) {
     std = tobase64(std)
 
     let keyArr = arr.map((x) => {
-      let key = AES.crypto_box_seal(rand, toPrivateKey(x.PubKey))
-      //console.log(key)
+        let key = AES.crypto_box_seal(rand, toPrivateKey(x.PubKey))
+        //console.log(key)
 
-      key = tobase64(key)
-      let name = x.User
-      return { name, key }
+        key = tobase64(key)
+        let name = x.User
+        return { name, key }
 
     })
     //console.log(keyArr)
@@ -669,18 +675,20 @@ function saveEmail(emObj) {
     // let en = AES.Decrypt(text, ks.substr(0, 16))
     //console.log('NewconfidantHtml', NewconfidantHtml)
     return NewconfidantHtml
-  }
+}
 
-  //加密邮件 字符拼接函数二
-  function toNewconfidantkeyString(arr) {
+//加密邮件 字符拼接函数二
+function toNewconfidantkeyString(arr) {
     let str = ''
     for (let i in arr) {
-      let s = `${arr[i].name}&&${arr[i].key}`
-      if (str === '') {
-        str = str + s
-      } else {
-        str = str + '##' + s
-      }
+        let s = `${arr[i].name}&&${arr[i].key}`
+        if (str === '') {
+            str = str + s
+        } else {
+            str = str + '##' + s
+        }
     }
     return str
-  }
+}
+
+

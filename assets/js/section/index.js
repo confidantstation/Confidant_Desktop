@@ -26,7 +26,7 @@ settings.set('status', 0);
 settings.set('wsdata', 0)
 let testdata = settings.get('wsdata');
 console.log(testdata)
-// settings.set('IMAP', "")
+settings.set('IMAP', "")
 
 // settings.set('arr',[1,2,3,4,5,6])
 
@@ -141,8 +141,8 @@ $(function () {
                 for (let i in arr) {
                     let $usn = $(`.u${usn}`)
                     if ($usn.length === 0) {
-                        $('.modalMt').prepend(`<p class="u${usn}" usn="${usn}">${name.substr(0,12)}</p>`)
-                        $('.mt-text').text(`${name.substr(0,12)}`)
+                        $('.modalMt').prepend(`<p class="u${usn}" usn="${usn}">${name.substr(0, 12)}</p>`)
+                        $('.mt-text').text(`${name.substr(0, 12)}`)
                     }
                 }
             } else {
@@ -160,7 +160,7 @@ $(function () {
         for (let s in d) {
             let name = d[s].params.RouterName
             name = window.atob(name)
-            $('.modalMt').prepend(`<p class="u${s}" usn="${s}">${name.substr(0,12)}</p>`)
+            $('.modalMt').prepend(`<p class="u${s}" usn="${s}">${name.substr(0, 12)}</p>`)
         }
         $('.mt-text').text($('.modalMt').find('p').eq(0).text())
     }
@@ -185,7 +185,7 @@ $(function () {
                     return req
                 }).then((req) => {
 
-
+                    // debugger
                     settings.set('wsdata', req)
                     let wsdata = req
                     let privateKey = toPrivateKey(QRcode[1])
@@ -211,8 +211,11 @@ $(function () {
                     settings.set('sodium', {
                         privateKey,
                         publicKey: toPrivateKey(publicKey),
-
+                        publicKeyString: publicKey
                     })
+
+                    console.log('tobase64 publicKey', toPrivateKey(publicKey))
+                    console.log('tobase64 publicKey', tobase64(toPrivateKey(publicKey)))
 
                     let str = {
                         "Action": "Recovery",
@@ -406,7 +409,7 @@ $(function () {
                             settings.set('sodium', {
                                 privateKey,
                                 publicKey: toPrivateKey(publicKey),
-
+                                publicKeyString: publicKey
                             })
 
                             let str = {
@@ -424,6 +427,7 @@ $(function () {
                                 offset: 0,
                                 more: 0
                             }
+
 
 
                             let tp = ASE.sodium(app.timestamp, privateKey)
@@ -523,7 +527,7 @@ $(function () {
     } = require('electron');
     $('.ImportBtnLogin').click(function () {
         /* 邮件配置测试*/
-      
+        debugger
         let setMail = '';
         let IMAP = settings.get('IMAP')
 
@@ -542,7 +546,8 @@ $(function () {
         let ASE = new aesjs(CircleQRcode[1])
         let tp = ASE.sodium(app.timestamp, privateKey)
         WinAES = ASE
-
+        app.Sign = ASE.sodium(app.Action + app.timestamp, privateKey)
+        app.Sign = tobase64(app.Sign)
         app.params.Sign = tobase64(tp)
         app = JSON.stringify(app)
         console.log('app login', app)
@@ -559,26 +564,23 @@ $(function () {
             //alert('接收消息成功...')
             console.log('接收消息成功...', evt)
             console.log('data...', evt.data)
-            let data = JSON.parse(evt.data)
-            console.log('data', data)
-            if (data.retcode > 0) {
+            if (Object.prototype.toString.call(evt.data) === "[object String]") {
+                let data = JSON.parse(evt.data)
+                console.log('data', data)
 
-                hideInbox(setMail)
+                if (data.params.RetCode === 0) {
 
-                remote.getCurrentWindow().setSize(1032, 600)
-                //remote.getCurrentWindow().maximize()
-                remote.getCurrentWindow().center()
+                    hideInbox(setMail)
 
-               
-                ws.close();
+                    remote.getCurrentWindow().setSize(1032, 600)
+                    //remote.getCurrentWindow().maximize()
+                    remote.getCurrentWindow().center()
+                  
 
-            }
-            if (data.params) {
-                let params = data.params
-                if (params.Action === "CheckmailUkey") {
-                    console.log('CheckmailUkey')
                 }
             }
+
+
 
         }
 

@@ -19,9 +19,13 @@ body {
     border: 1px solid rgba(30, 30, 36, 0.25);
     border-left: 1px solid rgba(30, 30, 36, 0.90);
 }
-/* header{
-    -webkit-app-region: drag;
-} */
+header{
+    /* -webkit-app-region: drag; */
+}
+
+header button,header a,header input,#NewEmail{
+    -webkit-app-region:none;
+}
 
 #loading{
     box-sizing: border-box;

@@ -1,4 +1,90 @@
-let nub = 0
+let nub = 0;
+function SaveEmailConf() {
+    //debugger
+    let wsdata = settings.get('wsdata') || 0
+    console.log(WinAES)
+
+    let sodium = settings.get('sodium');
+    console.log(sodium)
+    console.log(tobase64(sodium.publicKey, 'get'))
+
+    const config = settings.get('mailConfigre');
+    const { Email } = settings.get('IMAP');
+
+
+
+    if (!config) {
+        alert('mailConfigre undefined')
+        return 'mailConfigre undefined'
+    }
+
+    let Type = config.type
+
+    let str = {
+        Action: "SaveEmailConf",
+        Version: 1,
+        Caller: 0,
+        Type,
+        User: window.btoa(Email),
+        Config: "test",
+        Userkey: sodium.publicKeyString,
+    }
+
+    let app = {
+        appid: 'MIFI',
+        timestamp: new Date().getTime(),
+        apiversion: 6,
+        msgid: settings.get('msgid') + 1,
+        offset: 0,
+        more: 0
+    }
+
+    let privateKey = getUnit8SKPK(sodium.privateKey)
+    let tp = WinAES.sodium(app.timestamp, privateKey)
+
+    app.Sign = tobase64(tp)
+    app.params = str
+    console.log('set app str')
+
+    let ws = new WebSocket(`wss://${wsdata.ServerHost}:${wsdata.ServerPort}`, "lws-minimal");
+
+    ws.onopen = function () {
+        let str = app
+        str.msgid = settings.get('msgid')
+        str = JSON.stringify(app)
+        console.log('send app ', app)
+        ws.send(str);
+        
+    }
+    ws.onmessage = function (evt) {
+     
+        //alert('接收消息成功...')
+        console.log('接收消息成功...', evt)
+        console.log('data...', evt.data)
+        let data = JSON.parse(evt.data)
+        console.log('data', data)
+        if (data.retcode > 0) {
+
+
+
+            ws.close();
+
+        }
+        if (data.params) {
+            // let params = data.params
+            // if (params.Action === "CheckmailUkey") {
+            //     console.log('CheckmailUkey')
+            // }
+        }
+
+    }
+
+    ws.onclose = function () {
+        // 关闭 websocket
+        console.log('ws onclose')
+    };
+};
+
 function getMail(obj, total) {
     // tag 默认值为Inbox  取值范围 = 'Inbox Node Starred Drafts Sent Spam Trash'
     // 获取最新十封邮件
@@ -7,7 +93,7 @@ function getMail(obj, total) {
 
     const settings = require('electron-settings');
 
-    let uidList =  {} ||settings.get('uidList')
+    let uidList = {} || settings.get('uidList')
     //let MailParser = require("mailparser").MailParser
     //let fs = require("fs")
 
@@ -24,7 +110,7 @@ function getMail(obj, total) {
         host
     } = obj || settings.get('IMAP')
 
-   
+
     // let imap = new Imap({
     //     user: Email || '345632828@qq.com',
     //     password: Password || 'cjdfhabfwwaicbbd',
@@ -56,16 +142,20 @@ function getMail(obj, total) {
 
     imap.once('ready', function () {
         settings.set('mail_status', 'ready')
-       
+
         //保存配置邮箱参数
+
         settings.set('IMAP', { Email, Password, host })
+
+        //判断用户是否配置过邮箱
+        SaveEmailConf({ Email, Password, host })
 
         if (obj) {
             // $('.mailLogin,.max-modal').show();
         }
-        if(total){
-            nub = nub +10
-            settings.set('total',{Email:nub})
+        if (total) {
+            nub = nub + 10
+            settings.set('total', { Email: nub })
         }
         openInbox(function (err, box) {
             if (err) throw err;
@@ -79,14 +169,14 @@ function getMail(obj, total) {
             //      settings.set('messagesTotal',seq)
             // }
             // -10 有错误，下周排除
-            if(total){
-                let n =  settings.get('total').Email
-                seq = box.messages.total -  n
-               
-            }else{
+            if (total) {
+                let n = settings.get('total').Email
+                seq = box.messages.total - n
+
+            } else {
                 seq = box.messages.total - 10
             }
-            
+
 
 
             let seq1 = [`${seq}:*`]
@@ -115,7 +205,7 @@ function getMail(obj, total) {
                     // console.log(attrs.uid)
                     // 获得指定UID的邮件
                     //getMailUid(attrs.uid, setIMAP)
-                  
+
                     let uid = attrs.uid
                     if (!uidList[uid]) {
                         uidList[uid] = uid
@@ -249,7 +339,7 @@ function getMailUid(uid, setIMAP) {
                         } catch (error) {
                             console.log(error)
                         }
-                       
+
                         console.log(userlist)
                         settings.set('userlist', userlist)
 
@@ -295,7 +385,7 @@ function getMailUid(uid, setIMAP) {
                 });
             });
             f.once('error', function (err) {
-               
+
                 console.log('抓取出现错误: ' + err);
             });
             f.once('end', function () {
@@ -372,9 +462,15 @@ function getHtmlText(str, uid) {
     str = str || "";
 
     //let instr = `<div class="email-uid emHtml${uid}" uid="${uid}">${str}</div>`;
-    let inhtml = `<object type="text/html" data="new.html" style="width:vw;height:100vh;background:#fff;display:block"  class="email-uid emHtml${uid}" uid="${uid}">${str}</object>`
-    $inbox.append(inhtml);
+    let inhtml = `<object type="text/html" data="${'_uid' + uid + window.btoa(uid)}.html"  class="email-uid emHtml${uid}" uid="${uid}">${str}</object>`
+    //$inbox.append(inhtml);
 
+    let $emHtml = $inbox.find(`.emHtml${uid}`)
+    if ($emHtml.length) {
+        $emHtml.html(`${str}`)
+    } else {
+        $inbox.append(inhtml);
+    };
 
     html = html.replace(/\s+/g, ' ');
     if (html[0] == " ") {
@@ -424,8 +520,8 @@ function setMailHeader(uid, headers) {
     /*
     JSON.stringify(from) == {"value":[{"address":"lagou@mail.lagoujobs.com","name":"拉勾网"}],"html":""
     */
-   
-    
+
+
     console.log(`setMailHeader-----------`)
     console.log("邮件主题: " + headers.get('subject'));
     console.log("发件人: " + headers.get('from').text);

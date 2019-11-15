@@ -15,6 +15,17 @@
     height: 5px;
   }
 
+  header {
+    -webkit-app-region: drag;
+  }
+
+  header button,
+  header a,
+  header input,
+  #NewEmail {
+    -webkit-app-region: none;
+  }
+
   /*正常情况下滑块的样式*/
   .nui-scroll::-webkit-scrollbar-thumb {
     background-color: rgba(0, 0, 0, .05);
@@ -106,6 +117,7 @@
 
   }
 
+  #emailSendPage article {}
 
 
 
@@ -422,7 +434,7 @@
         ws = new WebSocket(`wss://${data.ServerHost}:${data.ServerPort}`, "lws-minimal");
       } else {
         alert('wsdata 不存在！')
-       
+      }
 
 
       let to = $('#To').val()
@@ -438,7 +450,7 @@
         host
       } = settings.get('IMAP')
       let service = settings.get('mailConfigre').nodemailerService
-      if(!to&&!Email){
+      if (!to && !Email) {
         alert('请输入收件人')
         return false
       }
@@ -533,7 +545,7 @@
         console.log('ws onclose')
       };
 
-    }
+    })
 
     //alert(location.href)
   })
@@ -645,5 +657,5 @@
     return str
   }
 
-  })
+
 </script>

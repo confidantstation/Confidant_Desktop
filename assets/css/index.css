@@ -14,15 +14,18 @@
     max-width: 380px;
 }
 
-.email-uid {
+#logBoxC  .email-uid {
+    display: block;
     width: 100%;
     min-height: 502px;
-    display: none;
     word-break: break-all;
     word-wrap: break-word;
     background: #fff;
     padding: 5px 5px 5px 5px;
     box-sizing: border-box;
+    display: none;
+    z-index: 999;
+    position: relative;
 }
 
 
@@ -345,7 +348,7 @@
     text-align: right;
 }
 
-.inbox-content {
+#logBoxC .inbox-content {
     position: relative;
     top: 7px;
     width: 435px;
