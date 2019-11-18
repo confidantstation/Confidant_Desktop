@@ -35,6 +35,7 @@
 
     </div>
     <script>
+       
         require('./app/windows/email-windows');
         let loading = false;
         function loadData() {
@@ -55,7 +56,7 @@
 
             // }
 
-           
+
             $('.section-scroll').scroll(function () {
                 let range = 40;
                 let t = $(this).scrollTop();
@@ -128,9 +129,35 @@
                 })
 
 
+
+
             });
             $('.list-search').click(function () {
-                getMail()
+                console.log('list-search')
+
+                let ws1 = new InitWebSocket()
+
+                // InitWebSocket.prototype.onopen = getInitData
+                // InitWebSocket.prototype.onmessage = onDataReport// 便于外部重新定义方法处理数据
+                // InitWebSocket.prototype.send = function (data) {
+                //     this.websocket.send(data)
+                // }
+                ws1.onopen = getInitData
+                ws1.onmessage = onDataReport
+
+                function getInitData() {
+                    // const msg = {
+                    //     type: '91000',
+                    //     info: JSON.stringify({})
+                    // }
+                    // this.sendMsg(msg)
+                }
+                //ws1自定义的数据处理方式
+                function onDataReport(e) {
+                    const data = e.data
+                    //数据处理
+
+                }
             });
 
             $('.emall-card2 li').click(function () {

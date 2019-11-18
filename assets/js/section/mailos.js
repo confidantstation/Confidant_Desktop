@@ -11,8 +11,6 @@ function SaveEmailConf() {
     const config = settings.get('mailConfigre');
     const { Email } = settings.get('IMAP');
 
-
-
     if (!config) {
         alert('mailConfigre undefined')
         return 'mailConfigre undefined'
@@ -44,45 +42,11 @@ function SaveEmailConf() {
 
     app.Sign = tobase64(tp)
     app.params = str
+
     console.log('set app str')
 
-    let ws = new WebSocket(`wss://${wsdata.ServerHost}:${wsdata.ServerPort}`, "lws-minimal");
+  
 
-    ws.onopen = function () {
-        let str = app
-        str.msgid = settings.get('msgid')
-        str = JSON.stringify(app)
-        console.log('send app ', app)
-        ws.send(str);
-        
-    }
-    ws.onmessage = function (evt) {
-     
-        //alert('接收消息成功...')
-        console.log('接收消息成功...', evt)
-        console.log('data...', evt.data)
-        let data = JSON.parse(evt.data)
-        console.log('data', data)
-        if (data.retcode > 0) {
-
-
-
-            ws.close();
-
-        }
-        if (data.params) {
-            // let params = data.params
-            // if (params.Action === "CheckmailUkey") {
-            //     console.log('CheckmailUkey')
-            // }
-        }
-
-    }
-
-    ws.onclose = function () {
-        // 关闭 websocket
-        console.log('ws onclose')
-    };
 };
 
 function getMail(obj, total) {

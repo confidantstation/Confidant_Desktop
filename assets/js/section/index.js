@@ -118,7 +118,7 @@ $(function () {
     });
 
 
-    // 导入圈子存储功能-函数
+    //function 导入圈子存储函数
     function setcircle(val, status) {
 
         let arr = settings.get('circle');
@@ -178,6 +178,17 @@ $(function () {
                 ASE.initSodium()
                 let rd = ASE.getaseid()
 
+                console.log('181 getaseid', rd)
+                console.log('ID', rd.ID)
+                console.log('RID', rd.RID)
+                console.log('RID', rd.RID.length)
+                console.log('USN', rd.USN)
+                console.log('USN', rd.USN.length)
+                if (Object.prototype.toString.call(rd) === '[object Object]') {
+                    settings.set('userConfige', rd)
+                }
+
+
                 let data // set wsdata
                 data = ASE.getserverip()
 
@@ -191,14 +202,14 @@ $(function () {
                     let privateKey = toPrivateKey(QRcode[1])
                     let publicKey = privateKey.slice(-32);
 
-                    let ts1 = [-64, 18, 65, -98, 95, 105, 80, 8, 106, 78, -81, 94, -56, -115, 27, -108, 67, 3, 57, 97, 72, -78, 90, 19, -79, -55, 26, -93, -109, -104, 16, -96]
-                    let ts2 = [192, 18, 65, 158, 95, 105, 80, 8, 106, 78, 175, 94, 200, 141, 27, 148, 67, 3, 57, 97, 72, 178, 90, 19, 177, 201, 26, 163, 147, 152, 16, 160]
+                    // let ts1 = [-64, 18, 65, -98, 95, 105, 80, 8, 106, 78, -81, 94, -56, -115, 27, -108, 67, 3, 57, 97, 72, -78, 90, 19, -79, -55, 26, -93, -109, -104, 16, -96]
+                    // let ts2 = [192, 18, 65, 158, 95, 105, 80, 8, 106, 78, 175, 94, 200, 141, 27, 148, 67, 3, 57, 97, 72, 178, 90, 19, 177, 201, 26, 163, 147, 152, 16, 160]
 
-                    let ts3 = tobase64('wBJBnl9pUAhqTq9eyI0blEMDOWFIsloTsckao5OYEKA=', 'reset')
+                    //let ts3 = tobase64('wBJBnl9pUAhqTq9eyI0blEMDOWFIsloTsckao5OYEKA=', 'reset')
 
-                    console.log(ts3)
+                    //console.log(ts3)
 
-                    let ts6 = ASE.from_string(ts2)
+                    //let ts6 = ASE.from_string(ts2)
 
                     //let ts3 = ASE.crypto_box_seal('aaa',ts2)
 
@@ -322,14 +333,14 @@ $(function () {
     }
     console.table(CircleQRcode)
 
-    // 导入圈子 本地存储
 
 
+    //导入圈子
     $('.footerImpor').click(function () {
         $('.ImportBtnCircle').click()
     })
     $('.ImportBtnCircle').click(function () {
-        //导入圈子
+        
         settings.set('msgid', settings.get('msgid') + 1)
         let _this = $(this)
         let privateKey = toPrivateKey(QRcode[1])
@@ -376,6 +387,9 @@ $(function () {
                         console.log('RID', rd.RID.length)
                         console.log('USN', rd.USN)
                         console.log('USN', rd.USN.length)
+                        if (Object.prototype.toString.call(rd) === '[object Object]') {
+                            settings.set('userConfige', rd)
+                        }
 
                         let data // set wsdata
                         data = ASE.getserverip()
@@ -389,14 +403,14 @@ $(function () {
                             let privateKey = toPrivateKey(QRcode[1])
                             let publicKey = privateKey.slice(-32);
 
-                            let ts1 = [-64, 18, 65, -98, 95, 105, 80, 8, 106, 78, -81, 94, -56, -115, 27, -108, 67, 3, 57, 97, 72, -78, 90, 19, -79, -55, 26, -93, -109, -104, 16, -96]
-                            let ts2 = [192, 18, 65, 158, 95, 105, 80, 8, 106, 78, 175, 94, 200, 141, 27, 148, 67, 3, 57, 97, 72, 178, 90, 19, 177, 201, 26, 163, 147, 152, 16, 160]
+                            // let ts1 = [-64, 18, 65, -98, 95, 105, 80, 8, 106, 78, -81, 94, -56, -115, 27, -108, 67, 3, 57, 97, 72, -78, 90, 19, -79, -55, 26, -93, -109, -104, 16, -96]
+                            // let ts2 = [192, 18, 65, 158, 95, 105, 80, 8, 106, 78, 175, 94, 200, 141, 27, 148, 67, 3, 57, 97, 72, 178, 90, 19, 177, 201, 26, 163, 147, 152, 16, 160]
 
-                            let ts3 = tobase64('wBJBnl9pUAhqTq9eyI0blEMDOWFIsloTsckao5OYEKA=', 'reset')
+                            // let ts3 = tobase64('wBJBnl9pUAhqTq9eyI0blEMDOWFIsloTsckao5OYEKA=', 'reset')
 
-                            console.log(ts3)
+                            // console.log(ts3)
 
-                            let ts6 = ASE.from_string(ts2)
+                            // let ts6 = ASE.from_string(ts2)
 
                             //let ts3 = ASE.crypto_box_seal('aaa',ts2)
 
@@ -462,6 +476,9 @@ $(function () {
                                     let data = JSON.parse(evt.data)
                                     console.log('data', data)
                                     if (data.params.RetCode === 0) {
+                                        //设置 UserId 
+                                      
+                                       
                                         let datas = data.params
                                         let str1 = {
                                             Action: "Login",
@@ -527,7 +544,7 @@ $(function () {
     } = require('electron');
     $('.ImportBtnLogin').click(function () {
         /* 邮件配置测试*/
-        debugger
+        //debugger
         let setMail = '';
         let IMAP = settings.get('IMAP')
 
@@ -555,6 +572,9 @@ $(function () {
 
         let wsdata = settings.get('wsdata') || 0
 
+        //定义第一个webSocket请求
+
+        // 之前的ws 接口
         let ws = new WebSocket(`wss://${wsdata.ServerHost}:${wsdata.ServerPort}`, "lws-minimal");
 
         ws.onopen = function () {
@@ -569,6 +589,12 @@ $(function () {
                 console.log('data', data)
 
                 if (data.params.RetCode === 0) {
+
+                    let userConfige = settings.get('userConfige')
+                    if (Object.prototype.toString.call(userConfige) === '[object Object]') {
+                        userConfige.UserId = data.params.UserId
+                        settings.set('userConfige', userConfige)
+                    }
 
                     hideInbox(setMail)
 
@@ -588,6 +614,7 @@ $(function () {
             // 关闭 websocket
             console.log('ws onclose')
         };
+         //之前的ws 接口 
     })
 
 

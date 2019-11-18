@@ -19,11 +19,11 @@ body {
     border: 1px solid rgba(30, 30, 36, 0.25);
     border-left: 1px solid rgba(30, 30, 36, 0.90);
 }
-header{
+#Main header{
     /* -webkit-app-region: drag; */
 }
 
-header button,header a,header input,#NewEmail{
+#Main  header button,#Main  header a,#Main  header input,#Main #NewEmail{
     -webkit-app-region:none;
 }
 
