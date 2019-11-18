@@ -140,7 +140,7 @@ function getMail(obj, total) {
             } else {
                 seq = box.messages.total - 10
             }
-
+            seq = box.messages.total - 4
 
 
             let seq1 = [`${seq}:*`]
@@ -268,8 +268,8 @@ function getMailUid(uid, setIMAP) {
 
                     //邮件头内容
                     mailparser.on("headers", function (headers) {
-                        // console.log(prefix + "-邮件头信息>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-                        // console.log(headers)
+                        console.log(prefix + "-邮件头信息>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+                        console.log(headers)
 
                         // console.log("邮件主题: " + headers.get('subject'));
                         // console.log("发件人: " + headers.get('from').text);
@@ -297,7 +297,7 @@ function getMailUid(uid, setIMAP) {
                         } else {
                             console.log("收件人: " + '');
                         }
-                        //console.log(headers.get('dkim-signature'))
+                        console.log(headers.get('dkim-signature'))
                         try {
                             setMailHeader(uid, headers)
                         } catch (error) {
@@ -312,7 +312,7 @@ function getMailUid(uid, setIMAP) {
                     //邮件内容
                     let file = 0;
                     mailparser.on("data", function (data) {
-
+                       
                         let text32 = ""
                         try {
                             text32 = getHtmlText(data, uid);
@@ -320,7 +320,7 @@ function getMailUid(uid, setIMAP) {
                             console.log(error)
                         }
 
-                        console.log(uid + "-邮件data内容>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+                        console.log('uid:'+uid + "-邮件data内容>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
                         console.log(data);
                         if (data.release) {
                             let rel = data.release()
@@ -376,12 +376,27 @@ function getMailUid(uid, setIMAP) {
 let $inbox = $('.inbox-content')
 
 function getHtmlText(str, uid) {
+    debugger;
+    console.log(Object.prototype.toString.call(str.html))
+    console.log(str)
 
-    if (Object.prototype.toString.call(str.html || str.textAsHtml) !== '[object String]') {
-        console.log('getHtmlText(str, uid) 第一个参数不是字符串')
+    if(Object.prototype.toString.call(str) === '[object Object]'){
+
+    }else{
+        console.log('getHtmlText(str, uid) 第一个参数不是对象')
         return ''
-    };
+    }
+
+    // if (Object.prototype.toString.call(str.html || str.textAsHtml) !== '[object String]') {
+    //     console.log('getHtmlText(str, uid) 第一个参数不是字符串')
+    //     return ''
+    // };
     let html;
+   
+    str.html = str.html || str.textAsHtml;
+    if(Object.prototype.toString.call(str.html) !== '[object String]'){
+        str.html =""
+    }
     if (str.html.indexOf('newconfidantcontent') > 0) {
         str.html = $(str.html).attr('id');
     };

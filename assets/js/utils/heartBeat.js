@@ -69,7 +69,7 @@ function InitWebSocket(wsuri) {
   var _this = this
 
   this.initWebSocket = function () { // 重启一个新的webSockt
-    if (!this.status) {
+   
       if (Object.prototype.toString.call(_this.wsuri) === "[object String]") {
         _this.websocket = new WebSocket(_this.wsuri, "lws-minimal")
         _this.status = 'start'
@@ -83,7 +83,7 @@ function InitWebSocket(wsuri) {
           return false
         }
       }
-    }
+   
 
     _this.websocket.onmessage = function (e) {
 
