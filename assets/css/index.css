@@ -1,7 +1,9 @@
 /*
 控制邮件显示的样式
 */
-
+#logBoxC .inbox-content *{
+    max-width: 400px;
+}
 #logBoxC .inbox-emall .email-uid div {
     max-width: 380px;
 }
