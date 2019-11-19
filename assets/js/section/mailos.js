@@ -45,6 +45,17 @@ function SaveEmailConf() {
 
     console.log('set app str')
 
+    if ($('.myEmail').attr('rel') !== 'setName') {
+        try {
+                $('.myEmail').text(Email).attr('rel', 'setName')
+                $('.fromImg2').text(Email.substr(0, 1))
+
+        } catch (error) {
+            console.log(error)
+        }
+
+    }
+
 
 
 };
@@ -276,24 +287,24 @@ function getMailUid(uid, setIMAP) {
                         if (headers.get('to')) {
                             //console.log("收件人: " + headers.get('to').text);
                             to = headers.get('to').text
-                            if ($('.myEmail').attr('rel') !== 'setName') {
-                                try {
-                                    to = to.split(',')
-                                    if (to[0].indexOf('<') > -1) {
-                                        let name = to[0].match(/\<(.+?)\>/g)
+                            // if ($('.myEmail').attr('rel') !== 'setName') {
+                            //     try {
+                            //         to = to.split(',')
+                            //         if (to[0].indexOf('<') > -1) {
+                            //             let name = to[0].match(/\<(.+?)\>/g)
 
-                                        $('.myEmail').text(name[0]).attr('rel', 'setName')
-                                        $('.fromImg2').text(name[0].substr(0, 1))
-                                    } else {
-                                        $('.myEmail').text(to[0]).attr('rel', 'setName')
-                                        $('.fromImg2').text(to[0].substr(0, 1))
-                                    }
+                            //             $('.myEmail').text(name[0]).attr('rel', 'setName')
+                            //             $('.fromImg2').text(name[0].substr(0, 1))
+                            //         } else {
+                            //             $('.myEmail').text(to[0]).attr('rel', 'setName')
+                            //             $('.fromImg2').text(to[0].substr(0, 1))
+                            //         }
 
-                                } catch (error) {
-                                    console.log(error)
-                                }
+                            //     } catch (error) {
+                            //         console.log(error)
+                            //     }
 
-                            }
+                            // }
                         } else {
                             console.log("收件人: " + '');
                         }
@@ -398,13 +409,13 @@ function getHtmlText(str, uid) {
         let shtml = str.html.replace('newconfidantcontent', '')
         console.log(shtml)
         str.html = window.atob(shtml)
-       
-    };
-    if(str.html.indexOf('newconfidantpass') > 0 && str.html.indexOf('newconfidantcontent') < 0){
-        html ='请手动解密'+ str.html;
-        str =`<div style='padding:30px;'>请手动解密</div>`+ str.html;
 
-    }else if (str.html.indexOf('newconfidant') > 0 && str.html.indexOf('newconfidantcontent') < 0) {
+    };
+    if (str.html.indexOf('newconfidantpass') > 0 && str.html.indexOf('newconfidantcontent') < 0) {
+        html = '请手动解密' 
+        str = `<div style='padding:30px;'>请手动解密</div>` 
+
+    } else if (str.html.indexOf('newconfidant') > 0 && str.html.indexOf('newconfidantcontent') < 0) {
 
         html = str.html;
         str = str.html;
