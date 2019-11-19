@@ -45,7 +45,7 @@ function SaveEmailConf() {
 
     console.log('set app str')
 
-  
+
 
 };
 
@@ -140,7 +140,7 @@ function getMail(obj, total) {
             } else {
                 seq = box.messages.total - 10
             }
-            seq = box.messages.total - 4
+            //seq = box.messages.total - 4
 
 
             let seq1 = [`${seq}:*`]
@@ -312,7 +312,7 @@ function getMailUid(uid, setIMAP) {
                     //邮件内容
                     let file = 0;
                     mailparser.on("data", function (data) {
-                       
+
                         let text32 = ""
                         try {
                             text32 = getHtmlText(data, uid);
@@ -320,7 +320,7 @@ function getMailUid(uid, setIMAP) {
                             console.log(error)
                         }
 
-                        console.log('uid:'+uid + "-邮件data内容>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+                        console.log('uid:' + uid + "-邮件data内容>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
                         console.log(data);
                         if (data.release) {
                             let rel = data.release()
@@ -335,8 +335,8 @@ function getMailUid(uid, setIMAP) {
                         if (data.type === 'attachment') { //附件
                             console.log("邮件附件信息>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
                             console.log("附件名称:" + data.filename); //打印附件的名称
-                            //data.content.pipe(fs.createWriteStream(data.filename));//保存附件到当前目录下
-                            //data.release();
+                            // data.content.pipe(fs.createWriteStream(data.filename));//保存附件到当前目录下
+                            // data.release();
                             file++
                         };
                         //setMailBody(uid, text32, file);
@@ -376,31 +376,35 @@ function getMailUid(uid, setIMAP) {
 let $inbox = $('.inbox-content')
 
 function getHtmlText(str, uid) {
-    debugger;
+    //debugger;
     console.log(Object.prototype.toString.call(str.html))
     console.log(str)
 
-    if(Object.prototype.toString.call(str) === '[object Object]'){
-
-    }else{
+    if (Object.prototype.toString.call(str) !== '[object Object]') {
         console.log('getHtmlText(str, uid) 第一个参数不是对象')
         return ''
     }
-
-    // if (Object.prototype.toString.call(str.html || str.textAsHtml) !== '[object String]') {
-    //     console.log('getHtmlText(str, uid) 第一个参数不是字符串')
-    //     return ''
-    // };
     let html;
-   
+
     str.html = str.html || str.textAsHtml;
-    if(Object.prototype.toString.call(str.html) !== '[object String]'){
-        str.html =""
+    if (Object.prototype.toString.call(str.html) !== '[object String]') {
+        str.html = ""
     }
     if (str.html.indexOf('newconfidantcontent') > 0) {
-        str.html = $(str.html).attr('id');
+        str.html = $(`<div>${str.html}</div>`).find('span:last').attr('id')
+        if (Object.prototype.toString.call(str.html) !== '[object String]') {
+            str.html = ""
+        }
+        let shtml = str.html.replace('newconfidantcontent', '')
+        console.log(shtml)
+        str.html = window.atob(shtml)
+       
     };
-    if (str.html.indexOf('newconfidant') > 0 && str.html.indexOf('newconfidantcontent') < 0) {
+    if(str.html.indexOf('newconfidantpass') > 0 && str.html.indexOf('newconfidantcontent') < 0){
+        html ='请手动解密'+ str.html;
+        str =`<div style='padding:30px;'>请手动解密</div>`+ str.html;
+
+    }else if (str.html.indexOf('newconfidant') > 0 && str.html.indexOf('newconfidantcontent') < 0) {
 
         html = str.html;
         str = str.html;

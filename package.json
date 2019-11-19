@@ -9,13 +9,15 @@
       "target": [
         "dmg",
         "zip"
-      ]
+      ],
+      "icon":"assets/app-icon/mac/app.icns"
     },
     "win": {
       "target": [
         "nsis",
         "zip"
-      ]
+      ],
+      "icon":"assets/app-icon/win/app.ico"
     }
   },
   "scripts": {
