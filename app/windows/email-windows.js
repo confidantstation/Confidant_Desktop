@@ -1,4 +1,5 @@
 $(function () {
+    let debug = 1
     const {
         BrowserWindow
     } = require('electron').remote
@@ -40,6 +41,7 @@ $(function () {
         let subject =$em.find('.subject').text()
         let date =$em.find('.date').text()
         let html = $(`.emHtml${uid}`).parent().html()
+        //debugger;
         let obj = {
            to,
            from,
@@ -56,7 +58,10 @@ $(function () {
 
         win.show()
         //关掉窗口调试功能  回复邮件
-        //win.webContents.openDevTools();
+        if(debug){
+            win.webContents.openDevTools();
+        }
+        
 
         win.on('information-dialog-selection', () => {
             win = null
@@ -104,7 +109,9 @@ $(function () {
 
         win.show()
         //关掉窗口调试功能 写邮件
-        //win.webContents.openDevTools();
+        if(debug){
+            win.webContents.openDevTools();
+        }
 
         win.on('information-dialog-selection', () => {
             win = null

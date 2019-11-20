@@ -1,14 +1,23 @@
 <link rel="stylesheet" href="../../assets/css/reset.css">
 <style>
   body {
-    background-color: #8aba87;
     overflow: hidden;
   }
 
   .nui-scroll::-webkit-scrollbar {
-    overflow-y:auto;
     width: 5px;
     height: 5px;
+  }
+
+  header {
+    -webkit-app-region: drag;
+  }
+
+  header button,
+  header a,
+  header input,
+  #NewEmail {
+    -webkit-app-region: none;
   }
 
   /*正常情况下滑块的样式*/
@@ -54,7 +63,10 @@
     transform: translateX(-50%);
     font-size: 12px;
     text-decoration: none;
+    -webkit-app-region: none;
+    cursor: pointer;
   }
+
 
   #emailSendPage {
     width: 760px;
@@ -76,14 +88,14 @@
   }
 
   #emailSendPage header {
-    width: 760px;
+    width: 556px;
     height: 48px;
   }
 
   #emailSendPage section {
     height: 164px;
     box-sizing: border-box;
-    width: 760px;
+    width: 556px;
   }
 
   #emailSendPage section p {
@@ -102,6 +114,7 @@
 
   }
 
+  #emailSendPage article {}
 
 
 
@@ -123,6 +136,7 @@
     border: 1px solid rgba(204, 204, 204, 1);
     float: right;
     margin: 8px;
+    color: #000;
   }
 
   .emailTitleLabel b {
@@ -137,7 +151,7 @@
   }
 
   .emailSendPageA {
-    width: 760px;
+    width: 556px;
     height: 600px;
   }
 
@@ -145,6 +159,7 @@
     height: 600px;
 
     outline: 0px solid #cccccc;
+    overflow: hidden;
   }
 
   #emailSendPage aside {
@@ -250,7 +265,7 @@
     height: 40px;
     float: left;
     outline: 0px solid #ccc;
-
+    -webkit-app-region: none;
   }
 
   .dotA {
@@ -261,6 +276,7 @@
     background: #FF554C;
     margin: 16px 0 0 8px;
     float: left;
+    cursor: pointer;
   }
 
   .dotB {
@@ -282,9 +298,23 @@
     margin: 16px 0 0 8px;
     float: left;
   }
+
+  #emailSendPage article {
+    overflow: auto;
+    height: 420px;
+  }
+
+  #content,
+  #content2 {
+    widows: 556px;
+    height: 420px;
+    background: #e6e6e6;
+  }
+
+  #emailSendPage article {
+    overflow: auto;
+  }
 </style>
-
-
 
 <div id='emailSendPage'>
   <div class="emailSendPageA">
@@ -303,15 +333,14 @@
       <p><label class="emailTitleLabel"><b>Subject</b><input type="text" id='Subject'></label></p>
     </section>
     <article class="nui-scroll">
-      <div class="emailSendPageText" id='content2' contenteditable="true">
-        <div class="emailSendPageText" id='content'>
+
+      <div class="emailSendPageText" id='content' contenteditable="true">
+        <div class="emailSendPageText" id='content2'>
         </div>
-        <div class="emailSendPageAttachment">
-          <a id="close" href="javascript:window.close()">Close this Window</a>
-        </div>
+
     </article>
   </div>
-  <!-- <div class="emailSendPageB">
+  <div class="emailSendPageB">
     <aside>
       <div class="headerTitle">Contacts</div>
       <div class="list-search"><input type='text' placeholder="Search" /></div>
@@ -319,40 +348,45 @@
         Recent contacts
       </div>
       <div class="userlistDiv nui-scroll">
-        <div class="userlist">
-            <div class="userlistA">
-            </div>
-            <div class="userlistB">
-              <p>Abby Moran</p>
-              <p class="font12">user@example.com</p>
-            </div>
+        <!-- <div class="userlist">
+          <div class="userlistA">
           </div>
+          <div class="userlistB">
+            <p>Abby Moran</p>
+            <p class="font12">user@example.com</p>
+          </div>
+        </div> -->
       </div>
 
     </aside>
-  
-  </div> -->
-</div>
+  </div>
 
-  <script>window.$ = window.jQuery = require('jquery');</script>
-  <script src='../../assets/js/utils/base.js'></script>
-  <script>
-    const {
-      ipcRenderer
-    } = require('electron')
-    const nodemailer = require('nodemailer')
-    const settings = require('electron-settings');
-    let AES = new aesjs();
-    let userlist;
+
+
+</div>
+<script>window.$ = window.jQuery = require('jquery');</script>
+<script src='../../assets/js/utils/base.js'></script>
+<script>
+  const {
+    ipcRenderer
+  } = require('electron')
+  const nodemailer = require('nodemailer')
+  const settings = require('electron-settings');
+  let AES = new aesjs();
+  let userlist;
+  $(function () {
+
+    $('.dotA').click(function () {
+      window.close()
+    })
+
+    let ck = "t+INmZg96TCvt7w1Rt9Q+iToWFwdT2hCq6ck1sUwxR4="
 
     ipcRenderer.on('Reply', function (event, message) { // 监听父页面定义的端口
-
-      let d = JSON.parse(message)
-      $('#To').val(d.to)
-      $('#Subject').val(d.subject)
-
-      $('#content').html(d.html)
       console.table(message)
+      let contentHtml = JSON.parse(message)
+      $('#content2').html(contentHtml.html)
+
       userlist = settings.get('userlist')
       console.log(userlist)
       let html = `<div class="userlist">
@@ -383,28 +417,267 @@
         })
         $('.userlistDiv').html(str)
       }
+
     });
 
+    $(document).on('click', '.userlist', function () {
+      let from = $(this).find('.to').html()
 
+      let val = $('#To').val()
+      if (val) {
+        $('#To').val(val + " " + from)
+      } else {
+        $('#To').val(from)
+      }
 
-    $(function () {
-
-      $('.dotA').click(function () {
-        window.close()
-      })
-
-      $('#SendBtn').click(function () {
-        let to = $('#To').val()
-        let subject = $('#Subject').val()
-        let cc = $('#Cc').val()
-        let bcc = $('#Bcc').val()
-        let html = $('#content').html()
-        let html2 = $('#content2').html()
-        html = html + html2
-
-      })
     })
 
 
-  //alert(location.href)
-  </script>
+    //new RegExp(strS,'g')
+    $('.emailTitleLabel input').bind('input propertychange', function () {
+      let val = $(this).val()
+      let exp = new RegExp(val, 'g')
+      let str = ['"拉勾网" <lagou@mail.lagoujobs.com>', '"慕课网" <imooc@dm.mukewang.com>']
+      let s = str[0].match(exp)
+      let s1 = str[1].match(exp)
+      console.log(s)
+      console.log(s1)
+    })
+
+    $('#SendBtn').click(function () {
+
+      let data = settings.get('wsdata') || 0
+
+      if (data) {
+        ws = new WebSocket(`wss://${data.ServerHost}:${data.ServerPort}`, "lws-minimal");
+      } else {
+
+        console.log('wsdata 不存在！')
+      }
+
+
+      let to = $('#To').val()
+      to = to.split(',')
+      let subject = $('#Subject').val()
+      let cc = $('#Cc').val()
+      let bcc = $('#Bcc').val()
+      let html = $('#content').html()
+      let IMAP = settings.get('IMAP')
+      const setIMAP = {
+        Email,
+        Password,
+        host
+      } = settings.get('IMAP')
+      let service = settings.get('mailConfigre').nodemailerService
+      if (!to && !Email) {
+        alert('请输入收件人')
+        return false
+      }
+
+      let transporter = nodemailer.createTransport({
+        // host: 'smtp.ethereal.email',
+        service, // 使用了内置传输发送邮件 查看支持列表：https://nodemailer.com/smtp/well-known/
+        port: 465, // SMTP 端口
+        secureConnection: true, // 使用了 SSL
+        auth: {
+          user: Email,
+          // 这里密码不是qq密码，是你设置的smtp授权码
+          pass: Password,
+        }
+      });
+
+      let mailOptions = {
+        from: `${Email}`, // sender address
+        to, // list of receivers
+        subject, // Subject line
+        // 发送text或者html格式
+        // text: 'Hello world?', // plain text body
+        html,
+      };
+      if (cc) {
+        mailOptions.cc = cc
+      }
+      if (bcc) {
+        mailOptions.bcc = bcc
+      }
+      console.log('------mailOptions-------')
+      console.log(mailOptions)
+
+      ws.onopen = function () {
+        sendMail(to, ws)
+      }
+      ws.onmessage = function (evt) {
+
+
+        console.log('接收消息成功...', evt)
+        console.log('data...', evt.data)
+        let data = JSON.parse(evt.data)
+        console.log('data', data)
+
+        if (data.params) {
+          let params = data.params
+          if (params.Action === "CheckmailUkey") {
+            console.log(params.Action)
+            let arr = params.Payload
+            let keyNub = 0, arrNub = 0
+            if (Object.prototype.toString.call(arr) === "[object Array]") {
+              for (let i in arr) {
+                let PubKey = arr[i]['PubKey']
+                try {
+                  if (Object.prototype.toString.call(PubKey) === "[object String]" && PubKey.length > 3) {
+                    keyNub++
+                  }
+                } catch (error) {
+                  console.log(error)
+                }
+                arrNub++
+              }
+
+              if (keyNub !== 0 && keyNub === arrNub) {
+                mailOptions.html = sendMailEncrypt(arr, html)
+              }
+
+
+            } else {
+              mailOptions.html = html
+            }
+
+
+            transporter.sendMail(mailOptions, (error, info) => {
+
+              if (error) {
+                return console.log(error);
+              }
+              const log2 = notif({
+                title: '你好，' + Email,
+                body: '你的邮件发送成功'
+              })
+              setTimeout(() => window.close(), 500)
+
+              console.log('Message sent: %s', info.messageId);
+              // Message sent: <04ec7731-cc68-1ef6-303c-61b0f796b78f@qq.com>
+            });
+          }
+        }
+
+      }
+
+      ws.onclose = function () {
+        // 关闭 websocket
+        console.log('ws onclose')
+      };
+
+    })
+
+    //alert(location.href)
+  })
+
+
+
+  function mailNameArraytoBase64(to) {
+
+    if (Object.prototype.toString.call(to) === '[object Array]') {
+      let tob = to.map(function (v) {
+        return window.btoa(v)
+      })
+      return tob.join(',')
+    } else {
+      return false
+    }
+  }
+
+  function sendMail(To, ws) {
+
+    let sodiumKey = settings.get('sodium')
+    //可测试的邮件地址 345632828@qq.com,kuangzihui@163.com
+    let str = {
+      Action: "CheckmailUkey",
+      Unum: To.length,
+      Users: mailNameArraytoBase64(To),
+      Type: 1
+    }
+
+    console.log(getUnit8SKPK(sodiumKey.privateKey))
+
+    let app = {
+      appid: 'MIFI',
+      timestamp: new Date().getTime(),
+      apiversion: 6,
+      msgid: settings.get('msgid') + 1,
+      offset: 0,
+      more: 0
+    }
+
+    let tp = AES.sodium(app.timestamp, getUnit8SKPK(sodiumKey.privateKey))
+
+    app.Sign = tobase64(tp)
+    app.params = str
+    app = JSON.stringify(app)
+    ws.send(app)
+  }
+
+
+  //加密邮件 字符拼接函数
+  function toNewconfidantHtml(text, key, uid) {
+    /* 返回加密后的html
+     *
+     * @param  {text}       
+     * @param  {key} 
+     * @param  {uid} 
+     * @return {html}           
+     */
+    let keys = toNewconfidantkeyString(key)
+
+
+    let html = `${text}<span style='display:none' id='newconfidantkey${keys}'></span><span style='display:none' id='newconfidantuserid${uid}'></span><div newmyconfidantbegin=''><br /><br /><br /><span>Sent from MyConfidant, the app for encrypted email.</span></div>`
+    return html
+  }
+
+  //加密邮件 主函数
+  function sendMailEncrypt(arr, html) {
+
+    let rand = randomPassword(32)
+    let text = AES.Encrypt(html, rand.substr(0, 16))
+    let PubKey = toPrivateKey(arr[0].PubKey)
+    // rand =''
+    let uid = settings.get('UserId')
+    let std = AES.crypto_box_seal(rand, PubKey)
+    std = tobase64(std)
+
+    let keyArr = arr.map((x) => {
+      let key = AES.crypto_box_seal(rand, toPrivateKey(x.PubKey))
+      console.log(key)
+
+      key = tobase64(key)
+      let name = x.User
+      return { name, key }
+
+    })
+    console.log(keyArr)
+    // let keys = toNewconfidantkeyString(keyArr)
+
+
+    let NewconfidantHtml = toNewconfidantHtml(text, keyArr, uid);
+
+    // let ks = AES.sodiumGet(NewconfidantHtml, rand)
+    // let en = AES.Decrypt(text, ks.substr(0, 16))
+    console.log('NewconfidantHtml', NewconfidantHtml)
+    return NewconfidantHtml
+  }
+
+  //加密邮件 字符拼接函数二
+  function toNewconfidantkeyString(arr) {
+    let str = ''
+    for (let i in arr) {
+      let s = `${arr[i].name}&&${arr[i].key}`
+      if (str === '') {
+        str = str + s
+      } else {
+        str = str + '##' + s
+      }
+    }
+    return str
+  }
+
+
+</script>

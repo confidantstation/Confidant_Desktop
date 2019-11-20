@@ -1,10 +1,8 @@
 <link rel="stylesheet" href="../../assets/css/reset.css">
 <style>
   body {
-    background-color: #8aba87;
     overflow: hidden;
   }
-
 
   .nui-scroll::-webkit-scrollbar {
     width: 5px;
@@ -65,7 +63,10 @@
     transform: translateX(-50%);
     font-size: 12px;
     text-decoration: none;
+    -webkit-app-region: none;
+    cursor: pointer;
   }
+
 
   #emailSendPage {
     width: 760px;
@@ -135,6 +136,7 @@
     border: 1px solid rgba(204, 204, 204, 1);
     float: right;
     margin: 8px;
+    color: #000;
   }
 
   .emailTitleLabel b {
@@ -262,7 +264,7 @@
     height: 40px;
     float: left;
     outline: 0px solid #ccc;
-
+    -webkit-app-region: none;
   }
 
   .dotA {
@@ -273,6 +275,7 @@
     background: #FF554C;
     margin: 16px 0 0 8px;
     float: left;
+    cursor: pointer;
   }
 
   .dotB {
@@ -294,6 +297,19 @@
     margin: 16px 0 0 8px;
     float: left;
   }
+
+  #content,
+  #content2 {
+    widows: 556px;
+    height: 420px;
+    background: #e6e6e6;
+  }
+
+  #emailSendPage article {
+    overflow: auto;
+  }
+
+  
 </style>
 
 <div id='emailSendPage'>
@@ -312,13 +328,11 @@
       <p><label class="emailTitleLabel"><b>Bcc</b><input type="text" id='Bcc'></label></p>
       <p><label class="emailTitleLabel"><b>Subject</b><input type="text" id='Subject'></label></p>
     </section>
-    <article>
+    <article class="nui-scroll">
       <div class="emailSendPageText" id='content' contenteditable="true">
 
       </div>
-      <div class="emailSendPageAttachment">
-        <a id="close" href="javascript:window.close()">Close this Window</a>
-      </div>
+
     </article>
   </div>
   <div class="emailSendPageB">
@@ -400,7 +414,7 @@
 
     $(document).on('click', '.userlist', function () {
       let from = $(this).find('.to').html()
-      //alert(from)
+
       let val = $('#To').val()
       if (val) {
         $('#To').val(val + " " + from)
@@ -430,6 +444,7 @@
         ws = new WebSocket(`wss://${data.ServerHost}:${data.ServerPort}`, "lws-minimal");
       } else {
         alert('wsdata 不存在！')
+
       }
 
 
@@ -450,7 +465,7 @@
         alert('请输入收件人')
         return false
       }
-     
+
       let transporter = nodemailer.createTransport({
         // host: 'smtp.ethereal.email',
         service, // 使用了内置传输发送邮件 查看支持列表：https://nodemailer.com/smtp/well-known/
@@ -525,7 +540,11 @@
               if (error) {
                 return console.log(error);
               }
-              alert('邮件发送成功.')
+
+              const log2 = notif({
+                title: '你好，' + Email,
+                body: '你的邮件发送成功'
+              })
               setTimeout(() => window.close(), 500)
 
               console.log('Message sent: %s', info.messageId);
@@ -543,7 +562,7 @@
 
     })
 
-    //alert(location.href)
+
   })
 
 
