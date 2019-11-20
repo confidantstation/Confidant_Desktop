@@ -5,6 +5,13 @@ body {
     height: 600px;
 }
 
+/* #box {
+    不要定义 #box以免和其它object 加载的文件冲突
+    width: 100%;
+    height: 100%;
+    display: none;
+} */
+
 #logBox,
 #logBoxA,
 #logBoxB,
@@ -198,12 +205,7 @@ body {
     color: #EFEFF2;
 }
 
-#box {
-    width: 100%;
-    height: 100%;
-    background: #666;
-    display: none;
-}
+
 
 #logBoxC .content {
     width: 760px;

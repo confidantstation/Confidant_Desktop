@@ -53,6 +53,8 @@ function SaveEmailConf(conf) {
     // } catch (error) {
     //     console.log(error)
     // }
+    // 配置主用户头像
+    $('.fromImg2,.userLogoMenu').text(Email.substr(0, 1))
 
     let obj = settings.get('db_email') || {}
 
@@ -82,18 +84,24 @@ function SaveEmailConf(conf) {
     let ul = ''
 
     for (let i in obj) {
-
+        obj[i] = obj[i].replace('<img src="assets/img/tabbar_hook.png">',"")
+       
+    }
+    
+    for (let i in obj) {
+        if (i == nowEmail) {
+            obj[Email] = li2
+        }
         ul += obj[i]
     }
 
-
-
     $('#db_listEmail').html(ul)
+
     settings.set('db_email', obj)
     hideInbox('setEmailHtmlLogin')
 };
 
-function getMail(obj, total, setTotal,notifNub) {
+function getMail(obj, total, setTotal, notifNub) {
     /**
  * Requests a URL, returning a promise.
  *
@@ -143,26 +151,29 @@ function getMail(obj, total, setTotal,notifNub) {
         //settings.set('mail_status', 'ready')
 
         //保存配置邮箱参数
-        if(notifNub==1){
+        if (notifNub == 1) {
             const log1 = notif({
-                title: '你好，'+Email,
+                title: '你好，' + Email,
                 body: '邮件已切换'
             })
         }
-        if(notifNub==2){
+        if (notifNub == 2) {
             const log2 = notif({
-                title: '你好，'+Email,
+                title: '你好，' + Email,
                 body: '邮件配置成功'
             })
         }
-      
+
 
         if (nowEmail) {
             settings.set('nowEmail', nowEmail)
             $('#db_listEmail').attr('now', nowEmail)
+        }else{
+          nowEmail  = Email
         }
+        
 
-        settings.set('IMAP', { Email, Password, host, status: 'ready' })
+        settings.set('IMAP', { Email, Password, host, status: 'ready', nowEmail })
 
         //判断用户是否配置过邮箱
         SaveEmailConf({ Email, Password, host, nowEmail })
@@ -246,7 +257,7 @@ function getMail(obj, total, setTotal,notifNub) {
                 // $('.error').find('error-text').text()
                 // $('.error').show()
                 // console.log('Fetch error: ' + err);
-               
+
                 // alert('邮箱异常登录，请稍后重试')
 
             });
@@ -445,6 +456,7 @@ let $inbox = $('.inbox-content')
 
 function getHtmlText(str, uid) {
 
+    // html 用来返回邮件文本内容的文本，在邮件列表栏，一般显示前16个字符
     console.log(Object.prototype.toString.call(str.html))
     console.log(str)
 
@@ -511,6 +523,7 @@ function getHtmlText(str, uid) {
 
     uid = uid || "";
     str = str || "";
+
 
     //let instr = `<div class="email-uid emHtml${uid}" uid="${uid}">${str}</div>`;
     let inhtml = `<object type="text/html" data="${'_uid' + uid + window.btoa(uid)}.html"  class="email-uid emHtml${uid}" uid="${uid}">${str}</object>`

@@ -1,14 +1,10 @@
+<link rel="stylesheet" href="../../assets/css/reset.css">
 <style>
   body {
     background-color: #8aba87;
     overflow: hidden;
   }
 
-  * {
-    margin: 0;
-    outline: 0;
-    padding: 0;
-  }
 
   .nui-scroll::-webkit-scrollbar {
     width: 5px;
@@ -454,7 +450,7 @@
         alert('请输入收件人')
         return false
       }
-      debugger
+     
       let transporter = nodemailer.createTransport({
         // host: 'smtp.ethereal.email',
         service, // 使用了内置传输发送邮件 查看支持列表：https://nodemailer.com/smtp/well-known/
