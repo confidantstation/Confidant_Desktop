@@ -280,7 +280,7 @@
                     <section>
 
                         <p class="mailLoginTitle">Email</p>
-                        <p><input class="mailLoginInput" id='setMailFormInputEmail'  type="input"
+                        <p><input class="mailLoginInput" id='setMailFormInputEmail' type="input"
                                 value="345632828@qq.com" placeholder="example@gmail.com">
                         </p>
                         <p class="mailLoginTitle">Password</p>
@@ -347,11 +347,11 @@
 
 
     $(function () {
-        
+
         const settings = require('electron-settings');
         //新增配置邮件 New-Account
         $(document).on('click', '.newAccountBtn,.newAccountBtnImg,.New-Account', function () {
-           
+
             $('.newAccountDiv,.max-modal').show()
         })
 
@@ -396,6 +396,11 @@
 
             }
             $('.mailLogin,.max-modal').hide()
+            const notificaton = {
+                title: '错误提示',
+                body: '邮箱异常登录，请稍后重试'
+            }
+            const log = new window.Notification(notificaton.title, notificaton)
 
         })
 
@@ -406,7 +411,7 @@
             obj = JSON.parse(obj)
             obj.nowEmail = obj.Email
             $('#section-scrollDiv').html('')
-            getMail(obj,null,10)
+            getMail(obj, null, 10)
         })
 
 

@@ -1,6 +1,6 @@
 let nub = 0;
 function SaveEmailConf(conf) {
-    //debugger
+   
     let wsdata = settings.get('wsdata') || 0
     console.log(WinAES)
 
@@ -112,13 +112,6 @@ function getMail(obj, total, setTotal) {
     //let MailParser = require("mailparser").MailParser
     //let fs = require("fs")
 
-    // settings.set('IMAP', {
-    //     Email: "18670723672@163.com",
-    //     Password: "operactionwall3",
-    //     host: "imap.163.com"
-    // })
-
-
     const setIMAP = {
         Email,
         Password,
@@ -126,17 +119,6 @@ function getMail(obj, total, setTotal) {
         nowEmail
     } = obj || settings.get('IMAP')
 
-
-    // let imap = new Imap({
-    //     user: Email || '345632828@qq.com',
-    //     password: Password || 'cjdfhabfwwaicbbd',
-    //     host: host || 'imap.qq.com',
-    //     port: 993, //邮箱服务器的端口地址
-    //     tls: true, //使用安全传输协议
-    //     tlsOptions: {
-    //         rejectUnauthorized: false
-    //     } //禁用对证书有效性的检查
-    // });
     let imap = new Imap({
         user: Email,
         password: Password,
@@ -160,13 +142,11 @@ function getMail(obj, total, setTotal) {
         //settings.set('mail_status', 'ready')
 
         //保存配置邮箱参数
-        //debugger;
+       
         if (nowEmail) {
             settings.set('nowEmail', nowEmail)
             $('#db_listEmail').attr('now', nowEmail)
         }
-
-
 
         settings.set('IMAP', { Email, Password, host, status: 'ready' })
 
@@ -186,7 +166,7 @@ function getMail(obj, total, setTotal) {
         openInbox(function (err, box) {
             if (err) throw err;
             //拉取最新 10条邮件
-            debugger;
+           
             let seq;
             // if(settings.get('messagesTotal')){
             //     seq = settings.get('messagesTotal') -1
@@ -200,10 +180,10 @@ function getMail(obj, total, setTotal) {
                 let n = settings.get('total').Email
                 seq = box.messages.total - n
 
-            } else if(setTotal) {
+            } else if (setTotal) {
                 let n = settings.get('total').Email
                 seq = box.messages.total - n
-            }else{
+            } else {
                 seq = box.messages.total - 10
             }
             //seq = box.messages.total - 4
@@ -254,11 +234,19 @@ function getMail(obj, total, setTotal) {
                 console.log('Fetch error: ' + err);
                 $('.mailLogin').hide()
                 // alert('邮箱异常登录，请稍后重试')
-                const notificaton = {
+
+                const log = notif({
                     title: '错误提示',
                     body: '邮箱异常登录，请稍后重试'
-                }
-                const log = new window.Notificaton(notificaton.title, notificaton.body)
+                })
+
+                // const notificaton = {
+                //     title: '错误提示',
+                //     body: '邮箱异常登录，请稍后重试'
+                // }
+                // const log = new window.Notification(notificaton.title, notificaton)
+                
+              
             });
             f.once('end', function () {
                 settings.set('mail_status', 'f end')
@@ -449,7 +437,7 @@ function getMailUid(uid, setIMAP) {
 let $inbox = $('.inbox-content')
 
 function getHtmlText(str, uid) {
-    //debugger;
+  
     console.log(Object.prototype.toString.call(str.html))
     console.log(str)
 
@@ -668,4 +656,14 @@ function getBLen(str) {
         }
     }
     return len;
+}
+
+function notif(obj){
+    
+    const notificaton = {
+        title:obj.title|| '错误提示',
+        body:obj.body|| '邮箱异常登录，请稍后重试'
+    }
+    const log = new window.Notification(notificaton.title, notificaton)
+    return log
 }
