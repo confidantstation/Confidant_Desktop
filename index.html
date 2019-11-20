@@ -281,7 +281,7 @@
 
                         <p class="mailLoginTitle">Email</p>
                         <p><input class="mailLoginInput" id='setMailFormInputEmail'  type="input"
-                                value="" placeholder="example@gmail.com">
+                                value="345632828@qq.com" placeholder="example@gmail.com">
                         </p>
                         <p class="mailLoginTitle">Password</p>
                         <p><input class="mailLoginInput" type="password" pattern='.{6,20}'
@@ -347,20 +347,11 @@
 
 
     $(function () {
-        // alert(typeof getGBK32)
+        
         const settings = require('electron-settings');
         //新增配置邮件 New-Account
         $(document).on('click', '.newAccountBtn,.newAccountBtnImg,.New-Account', function () {
-            // let html = `<section>
-            //             <p class="mailLoginTitle">Email</p>
-            //             <p><input class="mailLoginInput" id='setMailFormInputEmail' type="input"
-            //                     value="345632828@qq.com" placeholder="example@gmail.com">
-            //             </p>
-            //             <p class="mailLoginTitle">Password</p>
-            //             <p><input class="mailLoginInput" type="password" pattern='.{6,20}'
-            //                     placeholder="Password/Authorization code" value='cjdfhabfwwaicbbd'></p>
-            //             </section>`
-            // $('#setMailForm section').html(html)
+           
             $('.newAccountDiv,.max-modal').show()
         })
 
@@ -395,8 +386,6 @@
 
         $('.mailLoginBtn').click(function () {
 
-            console.log(1)
-
             let $mailLoginInput = $('.mailLoginInput')
             let Email = $mailLoginInput.eq(0).val()
             let Password = $mailLoginInput.eq(1).val()
@@ -416,8 +405,8 @@
             let obj = $(this).attr('data')
             obj = JSON.parse(obj)
             obj.nowEmail = obj.Email
-
-            getMail(obj)
+            $('#section-scrollDiv').html('')
+            getMail(obj,null,10)
         })
 
 

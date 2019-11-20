@@ -80,9 +80,9 @@ function SaveEmailConf(conf) {
 
     obj[Email] = li
     let ul = ''
-   
+
     for (let i in obj) {
-        
+
         ul += obj[i]
     }
 
@@ -93,7 +93,14 @@ function SaveEmailConf(conf) {
     hideInbox('setEmailHtmlLogin')
 };
 
-function getMail(obj, total) {
+function getMail(obj, total, setTotal) {
+    /**
+ * Requests a URL, returning a promise.
+ *
+ * @param  {object} obj  保存邮件账号密码等信息
+ * @param  {number} total  用于指定滚动时拉取的邮件和函数外定义的nub配合使用
+ * @param {number} setTotal 设置需要拉取多少封邮件,设置此参数时请把total设置成null
+ */
     // tag 默认值为Inbox  取值范围 = 'Inbox Node Starred Drafts Sent Spam Trash'
     // 获取最新十封邮件
     let Imap = require('imap')
@@ -154,12 +161,12 @@ function getMail(obj, total) {
 
         //保存配置邮箱参数
         //debugger;
-        if(nowEmail){
-            settings.set('nowEmail',nowEmail)
+        if (nowEmail) {
+            settings.set('nowEmail', nowEmail)
             $('#db_listEmail').attr('now', nowEmail)
         }
-       
-        
+
+
 
         settings.set('IMAP', { Email, Password, host, status: 'ready' })
 
@@ -170,12 +177,16 @@ function getMail(obj, total) {
             // $('.mailLogin,.max-modal').show();
         }
         if (total) {
-            nub = nub + 10
+            nub = nub + total
             settings.set('total', { Email: nub })
+        }
+        if (setTotal) {
+            settings.set('total', { Email: setTotal })
         }
         openInbox(function (err, box) {
             if (err) throw err;
             //拉取最新 10条邮件
+            debugger;
             let seq;
             // if(settings.get('messagesTotal')){
             //     seq = settings.get('messagesTotal') -1
@@ -189,7 +200,10 @@ function getMail(obj, total) {
                 let n = settings.get('total').Email
                 seq = box.messages.total - n
 
-            } else {
+            } else if(setTotal) {
+                let n = settings.get('total').Email
+                seq = box.messages.total - n
+            }else{
                 seq = box.messages.total - 10
             }
             //seq = box.messages.total - 4
@@ -239,18 +253,18 @@ function getMail(obj, total) {
                 $('.error').show()
                 console.log('Fetch error: ' + err);
                 $('.mailLogin').hide()
-               // alert('邮箱异常登录，请稍后重试')
-               const notificaton = {
-                   title:'错误提示',
-                   body:'邮箱异常登录，请稍后重试'
-               }
-               const log =new window.Notificaton(notificaton.title,notificaton.body)
+                // alert('邮箱异常登录，请稍后重试')
+                const notificaton = {
+                    title: '错误提示',
+                    body: '邮箱异常登录，请稍后重试'
+                }
+                const log = new window.Notificaton(notificaton.title, notificaton.body)
             });
             f.once('end', function () {
                 settings.set('mail_status', 'f end')
                 console.log('Done fetching all messages!');
                 imap.end();
-               
+
             });
         });
     });
