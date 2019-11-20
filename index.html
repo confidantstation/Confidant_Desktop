@@ -396,11 +396,11 @@
 
             }
             $('.mailLogin,.max-modal').hide()
-            const notificaton = {
-                title: '错误提示',
-                body: '邮箱异常登录，请稍后重试'
-            }
-            const log = new window.Notification(notificaton.title, notificaton)
+            // const notificaton = {
+            //     title: '错误提示',
+            //     body: '邮箱异常登录，请稍后重试'
+            // }
+            // const log = new window.Notification(notificaton.title, notificaton)
 
         })
 
@@ -411,7 +411,7 @@
             obj = JSON.parse(obj)
             obj.nowEmail = obj.Email
             $('#section-scrollDiv').html('')
-            getMail(obj, null, 10)
+            getMail(obj, null, 10,1)
         })
 
 

@@ -563,12 +563,12 @@ function saveEmail(emObj) {
     let { Email, Password, host } = emObj
     let lastImap = settings.get('IMAP')
     if (!lastImap) {
-        getMail({ Email, Password, host });
+        getMail({ Email, Password, host },null,null,2);
         //$('#setMailForm')[0].reset()  
 
     } else if (lastImap.Email !== Email) {
 
-        getMail({ Email, Password, host })
+        getMail({ Email, Password, host },null,null,2)
        // $('#setMailForm')[0].reset()
 
     } else {

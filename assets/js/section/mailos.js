@@ -1,6 +1,6 @@
 let nub = 0;
 function SaveEmailConf(conf) {
-   
+
     let wsdata = settings.get('wsdata') || 0
     console.log(WinAES)
 
@@ -93,13 +93,14 @@ function SaveEmailConf(conf) {
     hideInbox('setEmailHtmlLogin')
 };
 
-function getMail(obj, total, setTotal) {
+function getMail(obj, total, setTotal,notifNub) {
     /**
  * Requests a URL, returning a promise.
  *
  * @param  {object} obj  保存邮件账号密码等信息
  * @param  {number} total  用于指定滚动时拉取的邮件和函数外定义的nub配合使用
- * @param {number} setTotal 设置需要拉取多少封邮件,设置此参数时请把total设置成null
+ * @param {number} setTotal 设置需要拉取多少封邮件,设置此参数时请把total设置成null,同时控制正确登录时候系统提示的内容
+ * @param  {number} notifNub  用于指定需要弹出的提示
  */
     // tag 默认值为Inbox  取值范围 = 'Inbox Node Starred Drafts Sent Spam Trash'
     // 获取最新十封邮件
@@ -142,7 +143,20 @@ function getMail(obj, total, setTotal) {
         //settings.set('mail_status', 'ready')
 
         //保存配置邮箱参数
-       
+        if(notifNub==1){
+            const log1 = notif({
+                title: '你好，'+Email,
+                body: '邮件已切换'
+            })
+        }
+        if(notifNub==2){
+            const log2 = notif({
+                title: '你好，'+Email,
+                body: '邮件配置成功'
+            })
+        }
+      
+
         if (nowEmail) {
             settings.set('nowEmail', nowEmail)
             $('#db_listEmail').attr('now', nowEmail)
@@ -166,7 +180,7 @@ function getMail(obj, total, setTotal) {
         openInbox(function (err, box) {
             if (err) throw err;
             //拉取最新 10条邮件
-           
+
             let seq;
             // if(settings.get('messagesTotal')){
             //     seq = settings.get('messagesTotal') -1
@@ -228,25 +242,13 @@ function getMail(obj, total, setTotal) {
                 });
             });
             f.once('error', function (err) {
-                settings.set('mail_status', 'f error')
-                $('.error').find('error-text').text()
-                $('.error').show()
-                console.log('Fetch error: ' + err);
-                $('.mailLogin').hide()
+                // settings.set('mail_status', 'f error')
+                // $('.error').find('error-text').text()
+                // $('.error').show()
+                // console.log('Fetch error: ' + err);
+               
                 // alert('邮箱异常登录，请稍后重试')
 
-                const log = notif({
-                    title: '错误提示',
-                    body: '邮箱异常登录，请稍后重试'
-                })
-
-                // const notificaton = {
-                //     title: '错误提示',
-                //     body: '邮箱异常登录，请稍后重试'
-                // }
-                // const log = new window.Notification(notificaton.title, notificaton)
-                
-              
             });
             f.once('end', function () {
                 settings.set('mail_status', 'f end')
@@ -263,6 +265,11 @@ function getMail(obj, total, setTotal) {
         // $('.error').show()
         //alert('邮件账号或密码不正确，请重新配置')
         console.log(err);
+        $('.mailLogin').hide()
+        const logs = notif({
+            title: '错误提示',
+            body: '邮箱异常登录，请输入正确的用户名和密码'
+        })
     });
 
     imap.once('end', function () {
@@ -437,7 +444,7 @@ function getMailUid(uid, setIMAP) {
 let $inbox = $('.inbox-content')
 
 function getHtmlText(str, uid) {
-  
+
     console.log(Object.prototype.toString.call(str.html))
     console.log(str)
 
@@ -658,11 +665,10 @@ function getBLen(str) {
     return len;
 }
 
-function notif(obj){
-    
+function notif(obj) {
     const notificaton = {
-        title:obj.title|| '错误提示',
-        body:obj.body|| '邮箱异常登录，请稍后重试'
+        title: obj.title || '错误提示',
+        body: obj.body || 'notif配置参数不正确请,请看文档配置'
     }
     const log = new window.Notification(notificaton.title, notificaton)
     return log
