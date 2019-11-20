@@ -13,66 +13,66 @@
 
 <body>
     <div id='Main'>
-    <div id="logBox" class="logBoxStyle">
-        <header class="loginHeader">
-            <img class="logo" src="assets/img/logo.png" />
-        </header>
-        <section class="loginSection">
-            <button class="ImportBtn ImportBtnAccount">导入账户</button>
-            <div style="display: none;">
-                <canvas id="logBoxCanvas" width="400" height="400"></canvas>
-                <input id="upload" name="file" accept="image/*" type="file" />
-            </div>
-        </section>
-        <footer class="loginFooter">
-            <p class="footerp1">导入Private Key QR Cod</p>
-            <p class="footerp2">My Confidant 需要导入你的手机 Confidant 私钥二维码</p>
-        </footer>
-    </div>
-    <div id="logBoxA" class="logBoxStyle">
-        <header class="loginHeader">
-            <img class="logo" src="assets/img/logo.png" style="margin-top:47px;" />
-            <p class="helloP">
-                Hello <span class="usernameSpan">world</span>
-            </p>
-            <p class="helloP">
-                Welcome back!
-            </p>
-        </header>
-        <section class="loginSection">
-            <button class="ImportBtn ImportBtnCircle">导入圈子</button>
-            <div style="display: none;">
-                <canvas id="logBoxCanvasA" width="400" height="400"></canvas>
-                <input id="uploadA" name="file" accept="image/*" type="file" />
-            </div>
-        </section>
-        <footer class="loginFooter">
-            <p class="footerp1">导入Private Key QR Cod</p>
-            <p class="footerp2">My Confidant 需要导入你的手机 Confidant 私钥二维码</p>
-            <p class="footerp3">
-                <span class="footerQuit">退 出</span>
-            </p>
-        </footer>
-    </div>
-    <div id="logBoxB" class="logBoxStyle">
-        <header class="loginHeader">
-            <img class="logo" src="assets/img/logo.png" style="margin-top:47px;" />
-            <p class="helloP">
-                Hello <span class="usernameSpan">world</span>
-            </p>
-            <p class="helloP">
-                Welcome back!
-            </p>
-        </header>
-        <section class="loginSection">
-            <div class="mt">
-                <span class="mt-text">MT’s Power Station</span>
-                <span class="mt-tabbar_arrow_lower">
-                    <img src="assets/img/tabbar_arrow_lower.png">
-                </span>
-            </div>
-            <div class="modalMt nui-scroll">
-                <!-- <p usn='1'>MT’s Power Station1</p>
+        <div id="logBox" class="logBoxStyle">
+            <header class="loginHeader">
+                <img class="logo" src="assets/img/logo.png" />
+            </header>
+            <section class="loginSection">
+                <button class="ImportBtn ImportBtnAccount">导入账户</button>
+                <div style="display: none;">
+                    <canvas id="logBoxCanvas" width="400" height="400"></canvas>
+                    <input id="upload" name="file" accept="image/*" type="file" />
+                </div>
+            </section>
+            <footer class="loginFooter">
+                <p class="footerp1">导入Private Key QR Cod</p>
+                <p class="footerp2">My Confidant 需要导入你的手机 Confidant 私钥二维码</p>
+            </footer>
+        </div>
+        <div id="logBoxA" class="logBoxStyle">
+            <header class="loginHeader">
+                <img class="logo" src="assets/img/logo.png" style="margin-top:47px;" />
+                <p class="helloP">
+                    Hello <span class="usernameSpan">world</span>
+                </p>
+                <p class="helloP">
+                    Welcome back!
+                </p>
+            </header>
+            <section class="loginSection">
+                <button class="ImportBtn ImportBtnCircle">导入圈子</button>
+                <div style="display: none;">
+                    <canvas id="logBoxCanvasA" width="400" height="400"></canvas>
+                    <input id="uploadA" name="file" accept="image/*" type="file" />
+                </div>
+            </section>
+            <footer class="loginFooter">
+                <p class="footerp1">导入Private Key QR Cod</p>
+                <p class="footerp2">My Confidant 需要导入你的手机 Confidant 私钥二维码</p>
+                <p class="footerp3">
+                    <span class="footerQuit">退 出</span>
+                </p>
+            </footer>
+        </div>
+        <div id="logBoxB" class="logBoxStyle">
+            <header class="loginHeader">
+                <img class="logo" src="assets/img/logo.png" style="margin-top:47px;" />
+                <p class="helloP">
+                    Hello <span class="usernameSpan">world</span>
+                </p>
+                <p class="helloP">
+                    Welcome back!
+                </p>
+            </header>
+            <section class="loginSection">
+                <div class="mt">
+                    <span class="mt-text">MT’s Power Station</span>
+                    <span class="mt-tabbar_arrow_lower">
+                        <img src="assets/img/tabbar_arrow_lower.png">
+                    </span>
+                </div>
+                <div class="modalMt nui-scroll">
+                    <!-- <p usn='1'>MT’s Power Station1</p>
                 <p usn='2'>MT’s Power Station2</p>
                 <p usn='3'>MT’s Power Station3</p>
                 <p usn='4'>MT’s Power Station4</p>
@@ -80,56 +80,59 @@
                 <p>MT’s Power Station</p>
                 <p>MT’s Power Station</p>
                 <p>MT’s Power Station</p> -->
-            </div>
+                </div>
 
-            <button class="ImportBtn ImportBtnLogin" style="margin-top:38px;">Login</button>
-        </section>
-        <footer class="loginFooter">
-            <p class="footerp3">
-                <span class="footerQuit">退 出</span>
-                <span class="footerImpor">导入圈子</span>
-            </p>
-            <!-- <p class="ImportBtnLogin" rel='setEmailHtml'>配置邮箱</p> -->
-        </footer>
-    </div>
-
-    <!-- 邮件客户端主页 -->
-    <div id="logBoxC" class="logBoxStyle">
-        <div id='menu'>
-            <header>
-                <img class="userLogo" src="assets/img/user/9.jpg" width="44" height="44">
-            </header>
-            <section>
-                <ul class="nav">
-                    <li><img src="assets/img/nav/navibar_me_email.png"> </li>
-                    <li><img src="assets/img/nav/navibar_chats_unselected.png"> </li>
-                    <li><img src="assets/img/nav/navibar_files_unselected.png"> </li>
-                    <li><img src="assets/img/nav/navibar_contacts_unselected.png"> </li>
-                </ul>
+                <button class="ImportBtn ImportBtnLogin" style="margin-top:38px;">Login</button>
             </section>
-            <footer>
-                <img class="settingImg" src="assets/img/navibar_files_settings.png" width="24" height="24">
+            <footer class="loginFooter">
+                <p class="footerp3">
+                    <span class="footerQuit">退 出</span>
+                    <span class="footerImpor">导入圈子</span>
+                </p>
+                <!-- <p class="ImportBtnLogin" rel='setEmailHtml'>配置邮箱</p> -->
             </footer>
         </div>
-        <div class="index">
-            <div id='new-emall'>
-                <header class="jusCenter">
-                    <div class="new-email" id='NewEmail'>
-                        <img class="newTag" src="assets/img/email_icon_other_n.png"> New Email
+
+        <!-- 邮件客户端主页 -->
+        <div id="logBoxC" class="logBoxStyle">
+            <div id='menu'>
+                <header>
+                    <!-- <img class="userLogo" src="assets/img/user/9.jpg" width="44" height="44"> -->
+                    <div class="userLogo userLogoMenu" style="color: #fff;text-align: center;">
+                        <!-- <img class="newTag userLogo" src="assets/img/user/1.jpg"> -->
                     </div>
                 </header>
                 <section>
-                    <ul class="emall-card">
-                        <li>
-                            <div class="spanA">
-                                <div class="centerDiv fromImg2" style="color: #fff;">
-                                    <!-- <img class="newTag userLogo" src="assets/img/user/1.jpg"> -->
+                    <ul class="nav">
+                        <li><img src="assets/img/nav/navibar_me_email.png"> </li>
+                        <li><img src="assets/img/nav/navibar_chats_unselected.png"> </li>
+                        <li><img src="assets/img/nav/navibar_files_unselected.png"> </li>
+                        <li><img src="assets/img/nav/navibar_contacts_unselected.png"> </li>
+                    </ul>
+                </section>
+                <footer>
+                    <img class="settingImg" src="assets/img/navibar_files_settings.png" width="24" height="24">
+                </footer>
+            </div>
+            <div class="index">
+                <div id='new-emall'>
+                    <header class="jusCenter">
+                        <div class="new-email" id='NewEmail'>
+                            <img class="newTag" src="assets/img/email_icon_other_n.png"> New Email
+                        </div>
+                    </header>
+                    <section>
+                        <ul class="emall-card" id='db_listEmail'>
+                            <!-- <li>
+                                <div class="spanA">
+                                    <div class="centerDiv fromImg2" style="color: #fff;">
+                                        
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="spanB myEmail"></div>
-                            <div class="spanC"><img src="assets/img/tabbar_hook.png"></div>
-                        </li>
-                        <!-- <li>
+                                <div class="spanB myEmail"></div>
+                                <div class="spanC"><img src="assets/img/tabbar_hook.png"></div>
+                            </li> -->
+                            <!-- <li>
                             <div class="spanA">
                                 <div class="centerDiv"><img class="newTag" src="assets/img/email_icon_qqmailbox_n.png">
                                 </div>
@@ -137,167 +140,171 @@
                             <div class="spanB">chenkai@example.com</div>
                             <div class="spanC"></div>
                         </li> -->
-                        <li>
-                            <div class="spanA">
-                                <div class="centerDiv"><img class="newTag" src="assets/img/email_icon_addemail.png">
-                                </div>
-                            </div>
-                            <div class="spanB New-Account">New Account</div>
-                            <div class="spanC"></div>
-                        </li>
-                    </ul>
-                </section>
-                <footer>
-                    <ul class="emall-card emall-card2">
-                        <li rel='Inbox'>
-                            <div class="spanA">
-                                <div class="centerDiv"><img class="newTag"
-                                        src="assets/img/newEmail/tabbar_inbox_selected.png">
-                                </div>
-                            </div>
-                            <div class="spanB">Inbox</div>
-                            <div class="spanC"></div>
-                        </li>
-                        <li rel='Node'>
-                            <div class="spanA">
-                                <div class="centerDiv"><img class="newTag"
-                                        src="assets/img/newEmail/tabbar_backups_selected.png">
-                                </div>
-                            </div>
-                            <div class="spanB">Node backed up</div>
-                            <div class="spanC"></div>
-                        </li>
-                        <li rel='Starred'>
-                            <div class="spanA">
-                                <div class="centerDiv"><img class="newTag"
-                                        src="assets/img/newEmail/tabbar_attach_selected.png">
-                                </div>
-                            </div>
-                            <div class="spanB">Starred</div>
-                            <div class="spanC"></div>
-                        </li>
-                        <li rel='Drafts'>
-                            <div class="spanA">
-                                <div class="centerDiv"><img class="newTag"
-                                        src="assets/img/newEmail/tabbar_drafts_selected.png">
-                                </div>
-                            </div>
-                            <div class="spanB">Drafts</div>
-                            <div class="spanC"></div>
-                        </li>
-                        <li rel='Sent'>
-                            <div class="spanA">
-                                <div class="centerDiv"><img class="newTag"
-                                        src="assets/img/newEmail/tabbar_sent_selected.png">
-                                </div>
-                            </div>
-                            <div class="spanB">Sent</div>
-                            <div class="spanC"></div>
-                        </li>
 
-                        <li rel='Spam'>
-                            <div class="spanA">
-                                <div class="centerDiv"><img class="newTag"
-                                        src="assets/img/newEmail/tabbar_trash_selected.png">
+
+                        </ul>
+                        <ul class="emall-card">
+                            <li>
+                                <div class="spanA">
+                                    <div class="centerDiv"><img class="newTag" src="assets/img/email_icon_addemail.png">
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="spanB">Spam</div>
-                            <div class="spanC"></div>
-                        </li>
-                        <li rel='Trash'>
-                            <div class="spanA">
-                                <div class="centerDiv"><img class="newTag"
-                                        src="assets/img/newEmail/tabbar_deleted_selected.png">
+                                <div class="spanB New-Account">New Account</div>
+                                <div class="spanC"></div>
+                            </li>
+                        </ul>
+                    </section>
+                    <footer>
+                        <ul class="emall-card emall-card2">
+                            <li rel='Inbox'>
+                                <div class="spanA">
+                                    <div class="centerDiv"><img class="newTag"
+                                            src="assets/img/newEmail/tabbar_inbox_selected.png">
+                                    </div>
                                 </div>
-                            </div>
-                            <!-- <div class="spanB"><a href="https://nodejs.org/dist/v13.1.0/node-v13.1.0-x64.msi">Trash</a></div> -->
-                            <!-- <div class="spanB"><input type="file" style="width:120px;" > </div> -->
-                            <div class="spanB">Trash</div>
-                            <div class="spanC"></div>
-                        </li>
+                                <div class="spanB">Inbox</div>
+                                <div class="spanC"></div>
+                            </li>
+                            <li rel='Node'>
+                                <div class="spanA">
+                                    <div class="centerDiv"><img class="newTag"
+                                            src="assets/img/newEmail/tabbar_backups_selected.png">
+                                    </div>
+                                </div>
+                                <div class="spanB">Node backed up</div>
+                                <div class="spanC"></div>
+                            </li>
+                            <li rel='Starred'>
+                                <div class="spanA">
+                                    <div class="centerDiv"><img class="newTag"
+                                            src="assets/img/newEmail/tabbar_attach_selected.png">
+                                    </div>
+                                </div>
+                                <div class="spanB">Starred</div>
+                                <div class="spanC"></div>
+                            </li>
+                            <li rel='Drafts'>
+                                <div class="spanA">
+                                    <div class="centerDiv"><img class="newTag"
+                                            src="assets/img/newEmail/tabbar_drafts_selected.png">
+                                    </div>
+                                </div>
+                                <div class="spanB">Drafts</div>
+                                <div class="spanC"></div>
+                            </li>
+                            <li rel='Sent'>
+                                <div class="spanA">
+                                    <div class="centerDiv"><img class="newTag"
+                                            src="assets/img/newEmail/tabbar_sent_selected.png">
+                                    </div>
+                                </div>
+                                <div class="spanB">Sent</div>
+                                <div class="spanC"></div>
+                            </li>
 
-                    </ul>
-                </footer>
-            </div>
-            <div class="content"></div>
-            <!-- end logBoxC -->
-        </div>
+                            <li rel='Spam'>
+                                <div class="spanA">
+                                    <div class="centerDiv"><img class="newTag"
+                                            src="assets/img/newEmail/tabbar_trash_selected.png">
+                                    </div>
+                                </div>
+                                <div class="spanB">Spam</div>
+                                <div class="spanC"></div>
+                            </li>
+                            <li rel='Trash'>
+                                <div class="spanA">
+                                    <div class="centerDiv"><img class="newTag"
+                                            src="assets/img/newEmail/tabbar_deleted_selected.png">
+                                    </div>
+                                </div>
+                                <!-- <div class="spanB"><a href="https://nodejs.org/dist/v13.1.0/node-v13.1.0-x64.msi">Trash</a></div> -->
+                                <!-- <div class="spanB"><input type="file" style="width:120px;" > </div> -->
+                                <div class="spanB">Trash</div>
+                                <div class="spanC"></div>
+                            </li>
 
-        <!-- modal -->
-
-        <div class="max-modal"></div>
-        <div class="newAccountDiv" style="display: none;">
-            <div class="newAccountHead">New Account</div>
-            <section>
-                <div class="newAccount">
-                    <div class="newAccountList">
-                        <i class="ia"><img rel='QQMailbox' src="./assets/img/mails/email_icon_qqmailbox.png"></i>
-                        <i class="ib">QQMailbox</i>
-                    </div>
-                    <div class="newAccountList">
-                        <i class="ia"><img rel='QQMail' src="./assets/img/mails/email_icon_qq.png"></i>
-                        <i class="ib">QQMail</i>
-                    </div>
-                    <div class="newAccountList">
-                        <i class="ia"><img rel='163Mail' src="./assets/img/mails/email_icon_163.png"></i>
-                        <i class="ib">163Mail</i>
-                    </div>
-                    <div class="newAccountList">
-                        <i class="ia"><img rel='Gmail' src="./assets/img/mails/email_icon_google.png"></i>
-                        <i class="ib">Gmail</i>
-                    </div>
-                    <div class="newAccountList">
-                        <i class="ia"><img rel='Outlook' src="./assets/img/mails/email_icon_outlook.png"></i>
-                        <i class="ib">Outlook, Hotmail, live</i>
-                    </div>
-                    <div class="newAccountList">
-                        <i class="ia"><img rel='iCloud' src="./assets/img/mails/email_icon_icloud.png"></i>
-                        <i class="ib">iCloud</i>
-                    </div>
-                    <div class="newAccountList">
-                        <i class="ia"><img rel='Other' src="./assets/img/mails/email_icon_other.png"></i>
-                        <i class="ib">Other (IMAP)</i>
-                    </div>
-                    <div class="newAccountFooter">
-                        <button class="newAccountCancel">Cancel</button>
-                    </div>
+                        </ul>
+                    </footer>
                 </div>
-            </section>
-        </div>
-        <!--modal-->
-        <div class="mailLogin" style="display: none;margin-left:-110px;">
-            <form action="" id='setMailForm' onsubmit="return false">
+                <div class="content"></div>
+                <!-- end logBoxC -->
+            </div>
+
+            <!-- modal -->
+
+            <div class="max-modal"></div>
+            <div class="newAccountDiv" style="display: none;">
+                <div class="newAccountHead">New Account</div>
+                <section>
+                    <div class="newAccount">
+                        <div class="newAccountList">
+                            <i class="ia"><img rel='QQMailbox' src="./assets/img/mails/email_icon_qqmailbox.png"></i>
+                            <i class="ib">QQMailbox</i>
+                        </div>
+                        <div class="newAccountList">
+                            <i class="ia"><img rel='QQMail' src="./assets/img/mails/email_icon_qq.png"></i>
+                            <i class="ib">QQMail</i>
+                        </div>
+                        <div class="newAccountList">
+                            <i class="ia"><img rel='163Mail' src="./assets/img/mails/email_icon_163.png"></i>
+                            <i class="ib">163Mail</i>
+                        </div>
+                        <div class="newAccountList">
+                            <i class="ia"><img rel='Gmail' src="./assets/img/mails/email_icon_google.png"></i>
+                            <i class="ib">Gmail</i>
+                        </div>
+                        <div class="newAccountList">
+                            <i class="ia"><img rel='Outlook' src="./assets/img/mails/email_icon_outlook.png"></i>
+                            <i class="ib">Outlook, Hotmail, live</i>
+                        </div>
+                        <div class="newAccountList">
+                            <i class="ia"><img rel='iCloud' src="./assets/img/mails/email_icon_icloud.png"></i>
+                            <i class="ib">iCloud</i>
+                        </div>
+                        <div class="newAccountList">
+                            <i class="ia"><img rel='Other' src="./assets/img/mails/email_icon_other.png"></i>
+                            <i class="ib">Other (IMAP)</i>
+                        </div>
+                        <div class="newAccountFooter">
+                            <button class="newAccountCancel">Cancel</button>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <!--modal-->
+            <div class="mailLogin" style="display: none;margin-left:-110px;">
+                <form action="" id='setMailForm' onsubmit="return false">
+                    <header>
+                        <img id='mailLoginImg' src="./assets/img/mails/email_icon_163_n.png">
+                    </header>
+                    <section>
+
+                        <p class="mailLoginTitle">Email</p>
+                        <p><input class="mailLoginInput" id='setMailFormInputEmail'  type="input"
+                                value="" placeholder="example@gmail.com">
+                        </p>
+                        <p class="mailLoginTitle">Password</p>
+                        <p><input class="mailLoginInput" type="password" pattern='.{6,20}'
+                                placeholder="Password/Authorization code" value='cjdfhabfwwaicbbd'></p>
+                    </section>
+                    <footer>
+                        <button class="mailLoginBtn" onclick="check();">Login</button>
+                    </footer>
+                </form>
+
+            </div>
+            <div class="error">
                 <header>
-                    <img id='mailLoginImg' src="./assets/img/mails/email_icon_163_n.png">
+                    <h3>消息提示</h3>
                 </header>
                 <section>
-
-                    <p class="mailLoginTitle">Email</p>
-                    <p><input class="mailLoginInput" id='setMailFormInputEmail' type="email" value="345632828@qq.com" 
-                            placeholder="example@gmail.com">
-                    </p>
-                    <p class="mailLoginTitle">Password</p>
-                    <p><input class="mailLoginInput" type="password" pattern='.{6,20}'
-                            placeholder="Password/Authorization code" value='cjdfhabfwwaicbbd'></p>
+                    <p class="error-text"></p>
                 </section>
                 <footer>
-                    <button class="mailLoginBtn">Login</button>
+                    <button class="index-mailLoginBtn error-button">确定</button>
                 </footer>
-            </form>
-
+            </div>
         </div>
-        <div class="error">
-            <header>
-                <h3>消息提示</h3>
-            </header>
-            <section>
-                <p class="error-text"></p>
-            </section>
-            <footer>
-                <button class="index-mailLoginBtn error-button">确定</button>
-            </footer>
-        </div>
-    </div>
 
     </div>
 
@@ -312,7 +319,22 @@
 
     //    require('./assets/js/section/base.js');
 
+    function check() {
+        var reg = /^\w+((.\w+)|(-\w+))@[A-Za-z0-9]+((.|-)[A-Za-z0-9]+).[A-Za-z0-9]+$/; //正则表达式
+        var obj = document.getElementById("setMailFormInputEmail"); //要验证的对象
+        if (obj.value === "") { //输入不能为空
+            console.log("输入不能为空!");
+            return false;
+        } else if (!reg.test(obj.value)) { //正则验证不通过，格式不对
+            console.log("验证不通过!");
+            return false;
+        } else {
+            console.log("通过！");
+            return true;
+        }
 
+
+    }
     const { remote } = require('electron');
     const remoteObj = remote.app.getRemoteObject();
 
@@ -327,19 +349,37 @@
     $(function () {
         // alert(typeof getGBK32)
         const settings = require('electron-settings');
+        //新增配置邮件 New-Account
         $(document).on('click', '.newAccountBtn,.newAccountBtnImg,.New-Account', function () {
+            // let html = `<section>
+            //             <p class="mailLoginTitle">Email</p>
+            //             <p><input class="mailLoginInput" id='setMailFormInputEmail' type="input"
+            //                     value="345632828@qq.com" placeholder="example@gmail.com">
+            //             </p>
+            //             <p class="mailLoginTitle">Password</p>
+            //             <p><input class="mailLoginInput" type="password" pattern='.{6,20}'
+            //                     placeholder="Password/Authorization code" value='cjdfhabfwwaicbbd'></p>
+            //             </section>`
+            // $('#setMailForm section').html(html)
             $('.newAccountDiv,.max-modal').show()
         })
 
+        // $('#setMailFormInputEmail').focus(function(){
+        //     alert(1)
+        // })
+        // New-Account 取消
         $('.newAccountCancel').click(function () {
             $('.newAccountDiv,.max-modal').hide()
         })
+
         $('.newAccountList').hover(function () {
             $(this).css({ 'background': "#6646F7", 'color': '#fff' })
         }, function () {
             $(this).css({ 'background': "#fff", 'color': '#000' })
         })
+
         let rel = ''
+        // 选择配置邮箱类型
         $('.newAccountList').click(function () {
             let _this = $(this)
             let val = _this.find('.ib').text()
@@ -352,13 +392,43 @@
             $('.mailLogin,.max-modal').show().attr('rel', rel)
         })
 
-       
-        $('.error-button').click(function () {
-          $('.error').hide()
+
+        $('.mailLoginBtn').click(function () {
+
+            console.log(1)
+
+            let $mailLoginInput = $('.mailLoginInput')
+            let Email = $mailLoginInput.eq(0).val()
+            let Password = $mailLoginInput.eq(1).val()
+            let rel = $('.mailLogin').attr('rel')
+            if (Email && Password) {
+                let host = getHost(rel)
+                saveEmail({ Email, Password, host, rel })
+
+            }
+            $('.mailLogin,.max-modal').hide()
+
         })
 
-        $('.settingImg').click(function(){
-            
+        $('#db_listEmail').on('click', 'li', function () {
+
+            // $(this).find('.spanC').html(`<img id="db_listEmail_img" src="assets/img/tabbar_hook.png">`)
+            let obj = $(this).attr('data')
+            obj = JSON.parse(obj)
+            obj.nowEmail = obj.Email
+
+            getMail(obj)
+        })
+
+
+
+
+        $('.error-button').click(function () {
+            $('.error').hide()
+        })
+
+        $('.settingImg').click(function () {
+
         })
 
     })

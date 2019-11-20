@@ -563,27 +563,23 @@ function saveEmail(emObj) {
     let { Email, Password, host } = emObj
     let lastImap = settings.get('IMAP')
     if (!lastImap) {
-
         getMail({ Email, Password, host });
-        hideInbox('setEmailHtmlLogin')
         //$('#setMailForm')[0].reset()  
 
     } else if (lastImap.Email !== Email) {
 
-
         getMail({ Email, Password, host })
-        hideInbox('setEmailHtmlLogin')
-        $('#setMailForm')[0].reset()
+       // $('#setMailForm')[0].reset()
 
-        $('.myEmail').text(Email)
-        $('.fromImg2').text(Email.substr(0, 1))
     } else {
 
-        hideInbox('setEmailHtmlLogin')
-        alert('请忽重复配置邮箱')
+
+        //alert('请忽重复配置邮箱')
         console.log('mailLoginBtn click,请忽重复配置邮箱')
     }
+    
 }
+
 
 
 function mailNameArraytoBase64(to) {

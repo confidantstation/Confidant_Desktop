@@ -26,7 +26,6 @@
     padding: 5px 5px 5px 5px;
     box-sizing: border-box;
     display: none;
-    z-index: 999;
     position: relative;
 }
 
@@ -555,6 +554,7 @@ footer .emall-card .newTag {
     left: 50%;
     box-sizing: border-box;
     padding: 50px 30px 30px;
+    z-index: 999;
 }
 
 .error{

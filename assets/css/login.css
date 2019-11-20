@@ -23,6 +23,8 @@ body {
     -webkit-app-region: drag;
 }
 
+
+
 #Main  header button,#Main  header a,#Main  header input,#Main #NewEmail{
     -webkit-app-region:none;
 }

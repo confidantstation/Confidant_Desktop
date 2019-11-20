@@ -1,5 +1,5 @@
 let nub = 0;
-function SaveEmailConf() {
+function SaveEmailConf(conf) {
     //debugger
     let wsdata = settings.get('wsdata') || 0
     console.log(WinAES)
@@ -9,10 +9,10 @@ function SaveEmailConf() {
     console.log(tobase64(sodium.publicKey, 'get'))
 
     const config = settings.get('mailConfigre');
-    const { Email } = settings.get('IMAP');
+    const { Email, Password, host } = conf;
 
     if (!config) {
-        alert('mailConfigre undefined')
+        //alert('mailConfigre undefined')
         return 'mailConfigre undefined'
     }
 
@@ -45,19 +45,52 @@ function SaveEmailConf() {
 
     console.log('set app str')
 
-    if ($('.myEmail').attr('rel') !== 'setName') {
-        try {
-                $('.myEmail').text(Email).attr('rel', 'setName')
-                $('.fromImg2').text(Email.substr(0, 1))
 
-        } catch (error) {
-            console.log(error)
-        }
+    // try {
+    //     $('.myEmail').text(Email)
+    //     $('.fromImg2,.userLogoMenu').text(Email.substr(0, 1))
 
+    // } catch (error) {
+    //     console.log(error)
+    // }
+
+    let obj = settings.get('db_email') || {}
+
+    let data = JSON.stringify(conf)
+
+
+    let li = `<li id='db_${Email}' data='${data}'>
+                <div class="spanA">
+                    <div class="centerDiv fromImg2" style="color: #fff;">
+                    ${Email.substr(0, 1)}
+                    </div>
+                </div>
+                <div class="spanB myEmail">${Email}</div>
+                <div class="spanC" style="display:none"><img src="assets/img/tabbar_hook.png"></div>
+            </li>`
+    let li2 = `<li id='db_${Email}' data='${data}'>
+                    <div class="spanA">
+                        <div class="centerDiv fromImg2" style="color: #fff;">
+                        ${Email.substr(0, 1)}
+                        </div>
+                    </div>
+                    <div class="spanB myEmail">${Email}</div>
+                    <div class="spanC"><img src="assets/img/tabbar_hook.png"></div>
+                </li>`
+
+    obj[Email] = li
+    let ul = ''
+   
+    for (let i in obj) {
+        
+        ul += obj[i]
     }
 
 
 
+    $('#db_listEmail').html(ul)
+    settings.set('db_email', obj)
+    hideInbox('setEmailHtmlLogin')
 };
 
 function getMail(obj, total) {
@@ -82,7 +115,8 @@ function getMail(obj, total) {
     const setIMAP = {
         Email,
         Password,
-        host
+        host,
+        nowEmail
     } = obj || settings.get('IMAP')
 
 
@@ -116,14 +150,21 @@ function getMail(obj, total) {
 
 
     imap.once('ready', function () {
-        settings.set('mail_status', 'ready')
+        //settings.set('mail_status', 'ready')
 
         //保存配置邮箱参数
+        //debugger;
+        if(nowEmail){
+            settings.set('nowEmail',nowEmail)
+            $('#db_listEmail').attr('now', nowEmail)
+        }
+       
+        
 
-        settings.set('IMAP', { Email, Password, host })
+        settings.set('IMAP', { Email, Password, host, status: 'ready' })
 
         //判断用户是否配置过邮箱
-        SaveEmailConf({ Email, Password, host })
+        SaveEmailConf({ Email, Password, host, nowEmail })
 
         if (obj) {
             // $('.mailLogin,.max-modal').show();
@@ -197,12 +238,19 @@ function getMail(obj, total) {
                 $('.error').find('error-text').text()
                 $('.error').show()
                 console.log('Fetch error: ' + err);
-                alert('邮箱异常登录，请稍后重试')
+                $('.mailLogin').hide()
+               // alert('邮箱异常登录，请稍后重试')
+               const notificaton = {
+                   title:'错误提示',
+                   body:'邮箱异常登录，请稍后重试'
+               }
+               const log =new window.Notificaton(notificaton.title,notificaton.body)
             });
             f.once('end', function () {
                 settings.set('mail_status', 'f end')
                 console.log('Done fetching all messages!');
                 imap.end();
+               
             });
         });
     });
@@ -211,7 +259,7 @@ function getMail(obj, total) {
         // settings.set('mail_status', 'error')
         // $('.error').find('.error-text').text('f error')
         // $('.error').show()
-        alert('邮件账号或密码不正确，请重新配置')
+        //alert('邮件账号或密码不正确，请重新配置')
         console.log(err);
     });
 
@@ -412,8 +460,8 @@ function getHtmlText(str, uid) {
 
     };
     if (str.html.indexOf('newconfidantpass') > 0 && str.html.indexOf('newconfidantcontent') < 0) {
-        html = '请手动解密' 
-        str = `<div style='padding:30px;'>请手动解密</div>` 
+        html = '请手动解密'
+        str = `<div style='padding:30px;'>请手动解密</div>`
 
     } else if (str.html.indexOf('newconfidant') > 0 && str.html.indexOf('newconfidantcontent') < 0) {
 
@@ -520,7 +568,7 @@ function setMailHeader(uid, headers) {
     console.log("邮件主题: " + headers.get('subject'));
     console.log("发件人: " + headers.get('from').text);
     console.log("收件人: " + headers.get('to').text);
-    let date = moment(headers.get('date')).format('MM-DD');
+    let date = moment(headers.get('date')).format('MM-DD HH:mm:ss');
     console.log("发件日期: " + date);
 
     let fromObj = headers.get('from');
