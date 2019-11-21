@@ -234,7 +234,14 @@
 
             <div class="max-modal"></div>
             <div class="newAccountDiv" style="display: none;">
-                <div class="newAccountHead">New Account</div>
+                <div class="newAccountHead">
+                    New Account
+                    <div class="dot">
+                        <span class="dotA"></span>
+                        <span class="dotB"></span>
+                        <span class="dotC"></span>
+                    </div>
+                </div>
                 <section>
                     <div class="newAccount">
                         <div class="newAccountList">
@@ -276,11 +283,16 @@
                 <form action="" id='setMailForm' onsubmit="return false">
                     <header>
                         <img id='mailLoginImg' src="./assets/img/mails/email_icon_163_n.png">
+                        <div class="dot">
+                            <span class="dotA"></span>
+                            <span class="dotB"></span>
+                            <span class="dotC"></span>
+                        </div>
                     </header>
                     <section>
 
                         <p class="mailLoginTitle">Email</p>
-                        <p><input class="mailLoginInput" id='setMailFormInputEmail' type="input"
+                        <p><input class="mailLoginInput" id='setMailFormInputEmail' type="email"
                                 value="345632828@qq.com" placeholder="example@gmail.com">
                         </p>
                         <p class="mailLoginTitle">Password</p>
@@ -288,20 +300,20 @@
                                 placeholder="Password/Authorization code" value='cjdfhabfwwaicbbd'></p>
                     </section>
                     <footer>
-                        <button class="mailLoginBtn" onclick="check();">Login</button>
+                        <button class="mailLoginBtn">Login</button>
                     </footer>
-                </form>
+
 
             </div>
             <div class="error">
                 <header>
-                    <h3>消息提示</h3>
+                    <h3 class="error-title"></h3>
                 </header>
                 <section>
                     <p class="error-text"></p>
                 </section>
                 <footer>
-                    <button class="index-mailLoginBtn error-button">确定</button>
+                    <!-- <button  class="error-btn">确定</button> -->
                 </footer>
             </div>
         </div>
@@ -316,17 +328,38 @@
 <script src='assets/js/section/index.js'></script>
 
 <script>
+    //关闭窗口功能
+    $(document).on("click", '.dotA', function () {
+        //window.close()
+        $('.mailLogin,.newAccountDiv,.max-modal').hide()
+    })
 
     //    require('./assets/js/section/base.js');
 
-    function check() {
+    function check(val) {
         var reg = /^\w+((.\w+)|(-\w+))@[A-Za-z0-9]+((.|-)[A-Za-z0-9]+).[A-Za-z0-9]+$/; //正则表达式
-        var obj = document.getElementById("setMailFormInputEmail"); //要验证的对象
-        if (obj.value === "") { //输入不能为空
+        let log = ''
+        let xy = $('#setMailFormInputEmail').offset()
+        debugger
+        let $error = $('.error')
+        if (val === "") { //输入不能为空
             console.log("输入不能为空!");
+
+            $error.css({ left: xy.left, top: xy.top+45 }).show().find('.error-text').text('邮箱错误，请输入正确的邮箱格式')
+            setTimeout(() => {
+                $error.hide()
+            }, 1000);
+
             return false;
-        } else if (!reg.test(obj.value)) { //正则验证不通过，格式不对
+        } else if (!reg.test(val)) { //正则验证不通过，格式不对
             console.log("验证不通过!");
+
+            $error.css({ left: xy.left, top: xy.top+45 }).show().find('.error-text').text('邮箱错误，请输入正确的邮箱格式')
+
+            setTimeout(() => {
+                $error.hide()
+            }, 1000);
+
             return false;
         } else {
             console.log("通过！");
@@ -342,6 +375,8 @@
     $("#logBox").click(function () {
         console.log(remote.app.getRemoteObject())
     })
+
+
 
     // 邮箱首页弹窗
 
@@ -390,12 +425,19 @@
             let Email = $mailLoginInput.eq(0).val()
             let Password = $mailLoginInput.eq(1).val()
             let rel = $('.mailLogin').attr('rel')
+
+            let ck = check(Email)
+            if (!ck) {
+                return false
+            }
+            $('.mailLogin,.max-modal').hide()
             if (Email && Password) {
                 let host = getHost(rel)
                 saveEmail({ Email, Password, host, rel })
 
             }
-            $('.mailLogin,.max-modal').hide()
+
+
             // const notificaton = {
             //     title: '错误提示',
             //     body: '邮箱异常登录，请稍后重试'
@@ -406,12 +448,12 @@
 
         $('#db_listEmail').on('click', 'li', function () {
 
-           
+
             let obj = $(this).attr('data')
             obj = JSON.parse(obj)
             obj.nowEmail = obj.Email
             $('#section-scrollDiv').html('')
-            getMail(obj, null, 10,1)
+            getMail(obj, null, 10, 1)
         })
 
 

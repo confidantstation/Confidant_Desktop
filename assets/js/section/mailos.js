@@ -178,16 +178,16 @@ function getMail(obj, total, setTotal, notifNub) {
         //判断用户是否配置过邮箱
         SaveEmailConf({ Email, Password, host, nowEmail })
 
-        if (obj) {
-            // $('.mailLogin,.max-modal').show();
-        }
+      
         if (total) {
             nub = nub + total
             settings.set('total', { Email: nub })
         }
         if (setTotal) {
             settings.set('total', { Email: setTotal })
-        }
+        };
+
+        // end  ready
         openInbox(function (err, box) {
             if (err) throw err;
             //拉取最新 10条邮件

@@ -374,6 +374,16 @@
   const settings = require('electron-settings');
   let AES = new aesjs();
   let userlist;
+
+  function notif(obj) {
+    const notificaton = {
+      title: obj.title || '错误提示',
+      body: obj.body || 'notif配置参数不正确请,请看文档配置'
+    }
+    const log = new window.Notification(notificaton.title, notificaton)
+    return log
+  }
+
   $(function () {
 
     $('.dotA').click(function () {
@@ -549,7 +559,7 @@
                 return console.log(error);
               }
               const log2 = notif({
-                title: '你好，' + Email,
+                title: '最新消息',
                 body: '你的邮件发送成功'
               })
               setTimeout(() => window.close(), 500)
