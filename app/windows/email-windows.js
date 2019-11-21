@@ -14,12 +14,18 @@ $(function () {
     // })
 
     // 回复邮件
-    $('#sendEmail').click(function () {
-
+    $('#sendEmail,#Forward').click(function () {
+        
         let uid = $(this).parent().attr('uid')
         settings.set('emuid', uid)
-
-        const modalPath = path.join('file://', __dirname, '../../html/windows/Reply.html?a=1&b=2')
+        let modalPath
+        let rel = $(this).attr('rel')
+        if(rel =='Forward'){
+            modalPath = path.join('file://', __dirname, '../../html/windows/Forward.html')
+        }else{
+            modalPath = path.join('file://', __dirname, '../../html/windows/Reply.html?a=1&b=2')
+        }
+       
         ipcRenderer.send('open-information-dialog')
         let win = new BrowserWindow({
             width: 760,
@@ -62,6 +68,11 @@ $(function () {
         if(debug){
             win.webContents.openDevTools();
         }
+
+        win.on('close',function(){
+            obj = {}
+        })
+       
         
 
         win.on('information-dialog-selection', () => {

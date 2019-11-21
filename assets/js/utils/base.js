@@ -525,10 +525,12 @@ function hideInbox(id) {
     if (id === 'setEmailHtml') {
         settings.set('status', 'setEmailHtml')
         hideMenu('.nav')
+        $('#logBoxC').css({'display':'flex'})
         $(`#${id},#logBoxC`).show()
 
     } else if (id === 'loginHtml') {
         settings.set('status', 'loginHtml')
+        $('#logBoxC').css({'display':'flex'})
         $(`#${id},#logBoxC,#emailHtml,#new-emall`).show()
         getMail();
 

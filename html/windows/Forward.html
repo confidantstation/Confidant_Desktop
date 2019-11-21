@@ -414,8 +414,8 @@
       let contentHtml = JSON.parse(message)
       console.table(contentHtml)
       $('#content2').html(contentHtml.html)
-      $('#To').val(contentHtml.to)
-
+      //$('#To').val(contentHtml.to)
+      $('#To').val("")
       $('#Subject').val(contentHtml.subject)
 
       userlist = settings.get('userlist')
@@ -574,7 +574,7 @@
               mailOptions.html = html
             }
 
-           
+
             transporter.sendMail(mailOptions, (error, info) => {
 
               if (error) {

@@ -601,6 +601,7 @@ function setMailHeader(uid, headers) {
     console.log("邮件主题: " + headers.get('subject'));
     console.log("发件人: " + headers.get('from').text);
     console.log("收件人: " + headers.get('to').text);
+    console.log("收件人: " + headers);
     let date = moment(headers.get('date')).format('MM-DD HH:mm:ss');
     console.log("发件日期: " + date);
 

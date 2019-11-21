@@ -77,11 +77,15 @@
 
 .index {
     width: 960px;
-    float: left;
+    
     height: 100%;
     background: #E6E6E6;
     box-sizing: border-box;
     overflow: hidden;
+    display: flex;
+    border-top:1px solid #e6e6e6;
+    border-bottom:1px solid #e6e6e6;
+    box-sizing: border-box;
 }
 
 #menu .userLogo {
@@ -90,7 +94,7 @@
 
 #menu {
     width: 70px;
-    float: left;
+  
     height: 100%;
     background: #1E1E24;
     box-sizing: border-box;
@@ -142,7 +146,7 @@
 #new-emall {
     width: 200px;
     height: 100%;
-    float: left;
+    
     z-index: 999;
     background: #E6E6E6;
 }
@@ -168,6 +172,8 @@
     background: #fff;
     float: left;
     z-index: 999;
+    box-sizing: border-box;
+    border-right:1px solid #e6e6e6 ;
 }
 
 .inbox-emall {
@@ -266,6 +272,8 @@
 #list-emall header {
     width: 310px;
     height: 48px;
+    
+    border-bottom:1px solid #e6e6e6 ;
 }
 
 .list-search input {
@@ -376,18 +384,41 @@
     text-align: right;
 }
 
+#logBoxC .inbox-content-head{
+    width: 435px;
+    height: 128px;
+    border: 1px solid rgba(232, 231, 233, 1);
+    box-sizing: border-box;
+    padding: 12px 20px;
+    background: #fff;
+}
+.inbox-section-userHead{
+    
+}
+
+#logBoxC .inbox-content-head p{
+    line-height: 24px;
+    margin:5px;
+}
+#logBoxC #inbox-section{
+    flex-direction: column;
+    padding-top: 10px;
+    box-sizing: border-box;
+}
+
 #logBoxC .inbox-content {
-    position: relative;
-    top: 7px;
+    /* position: relative;
+    top: 7px; */
     width: 435px;
     height: 504px;
     background: rgba(255, 255, 255, 1);
     border-radius: 2px;
     border: 1px solid rgba(232, 231, 233, 1);
+    border-top:0;
     overflow-x: hidden;
     overflow-y: auto;
     box-sizing: border-box;
-
+    padding-left: 6px;
     background: url('../img/emailLogo.png') center center no-repeat;
 
 }

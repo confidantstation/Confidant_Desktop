@@ -12,6 +12,11 @@ body {
     display: none;
 } */
 
+#new-emall li{
+  padding: 0; 
+  margin: 0; 
+}
+
 #logBox,
 #logBoxA,
 #logBoxB,
@@ -212,7 +217,7 @@ body {
 
 #logBoxC .content {
     width: 760px;
-    float: left;
+    
 }
 
 .html {
