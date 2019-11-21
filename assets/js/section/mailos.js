@@ -691,7 +691,7 @@ function getGBK32(str) {
 }
 
 function getBLen(str) {
-    if(!objcall(str,'str')) return 0;
+  
     var len = 0;
     for (var i = 0; i < str.length; i++) {
         if (str.charCodeAt(i) > 127 || str.charCodeAt(i) == 94) {
