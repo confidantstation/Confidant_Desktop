@@ -457,6 +457,7 @@
     })
 
     $('#SendBtn').click(function () {
+    
 
       let data = settings.get('wsdata') || 0
 
@@ -519,8 +520,8 @@
       console.log(mailOptions)
 
       ws.onopen = function () {
-       
-        sendMail(toArr, ws)
+        
+        sendMail(to, ws)
       }
       ws.onmessage = function (evt) {
 
@@ -558,7 +559,7 @@
               mailOptions.html = html
             }
 
-            debugger;
+      
             transporter.sendMail(mailOptions, (error, info) => {
 
             

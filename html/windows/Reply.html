@@ -547,7 +547,7 @@
         console.log('wsdata 不存在！')
       }
 
-
+     
       let to = $('#To').val()
       to = to.split(',')
       let subject = $('#Subject').val()
@@ -587,17 +587,20 @@
         // text: 'Hello world?', // plain text body
         html,
       };
+      let toArr = to
       if (cc) {
         mailOptions.cc = cc
+        toArr.push(cc.split(','))
       }
       if (bcc) {
         mailOptions.bcc = bcc
+        toArr.push(bcc.split(','))
       }
       console.log('------mailOptions-------')
       console.log(mailOptions)
 
       ws.onopen = function () {
-        sendMail(to, ws)
+        sendMail(toArr, ws)
       }
       ws.onmessage = function (evt) {
 

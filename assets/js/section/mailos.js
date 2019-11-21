@@ -499,11 +499,11 @@ function getHtmlText(str, uid) {
 
         html = str.html;
         str = str.html;
-        console.log('html-=-=-=-==');
-        console.log(html);
+        // console.log('html-=-=-=-==');
+        // console.log(html);
         let n = html.indexOf('<span');
         let strAes = html.substr(0, n);
-        console.log('strAes', strAes);
+        // console.log('strAes', strAes);
 
         let ks = WinAES.sodiumGet(html);
         let ka = strAes;
@@ -511,7 +511,7 @@ function getHtmlText(str, uid) {
 
         str = en || str
 
-        console.log('str', str)
+        // console.log('str', str)
         console.log('END sodiumGet---->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>-----')
     } else {
         if (str.html) {
@@ -568,7 +568,7 @@ function setMailBody(uid, text, file) {
         str = `<p class="font12">${getGBK32(text) || ""}</p>`
     }
     console.log('setMailBody--------------')
-    console.log(html)
+    //console.log(html)
     html.each(function () {
         let _this = $(this)
         let id = _this.attr('uid')
@@ -601,6 +601,7 @@ function setMailHeader(uid, headers) {
     console.log("邮件主题: " + headers.get('subject'));
     console.log("发件人: " + headers.get('from').text);
     console.log("收件人: " + headers.get('to').text);
+    console.log("收件人: " + headers.get('to').value);
     console.log("收件人: " + headers);
     let date = moment(headers.get('date')).format('MM-DD HH:mm:ss');
     console.log("发件日期: " + date);
@@ -690,6 +691,7 @@ function getGBK32(str) {
 }
 
 function getBLen(str) {
+    if(!objcall(str,'str')) return 0;
     var len = 0;
     for (var i = 0; i < str.length; i++) {
         if (str.charCodeAt(i) > 127 || str.charCodeAt(i) == 94) {
