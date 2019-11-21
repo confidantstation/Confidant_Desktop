@@ -25,6 +25,7 @@ $(function () {
             width: 760,
             height: 600,
             frame: false,
+            // resizable: false,
             webPreferences: {
                 nodeIntegration: true
             }
@@ -89,6 +90,7 @@ $(function () {
             width: 760,
             height: 600,
             frame: false,
+           // resizable: false,
             webPreferences: {
                 nodeIntegration: true
             }

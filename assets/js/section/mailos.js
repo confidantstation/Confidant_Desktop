@@ -84,10 +84,10 @@ function SaveEmailConf(conf) {
     let ul = ''
 
     for (let i in obj) {
-        obj[i] = obj[i].replace('<img src="assets/img/tabbar_hook.png">',"")
-       
+        obj[i] = obj[i].replace('<img src="assets/img/tabbar_hook.png">', "")
+
     }
-    
+
     for (let i in obj) {
         if (i == nowEmail) {
             obj[Email] = li2
@@ -103,13 +103,13 @@ function SaveEmailConf(conf) {
 
 function getMail(obj, total, setTotal, notifNub) {
     /**
- * Requests a URL, returning a promise.
- *
- * @param  {object} obj  保存邮件账号密码等信息
- * @param  {number} total  用于指定滚动时拉取的邮件和函数外定义的nub配合使用
- * @param {number} setTotal 设置需要拉取多少封邮件,设置此参数时请把total设置成null,同时控制正确登录时候系统提示的内容
- * @param  {number} notifNub  用于指定需要弹出的提示
- */
+     * getMail, returning null.
+     *
+     * @param  {object} obj  保存邮件账号密码等信息
+     * @param  {number} total  用于指定滚动时拉取的邮件和函数外定义的nub配合使用
+     * @param  {number} setTotal 设置需要拉取多少封邮件,设置此参数时请把total设置成null,同时控制正确登录时候系统提示的内容
+     * @param  {number} notifNub  用于指定需要弹出的提示
+     */
     // tag 默认值为Inbox  取值范围 = 'Inbox Node Starred Drafts Sent Spam Trash'
     // 获取最新十封邮件
     let Imap = require('imap')
@@ -143,7 +143,18 @@ function getMail(obj, total, setTotal, notifNub) {
 
 
     function openInbox(cb) {
-        imap.openBox('INBOX', true, cb);
+        let flags = 0
+        // debugger
+        if (objcall(obj, 'obj')) {
+            if (obj.flags) {
+                flags = obj.flags
+            }
+        }
+        if (flags) {
+            imap.getBoxes('INBOX', true, cb);
+        } else {
+            imap.openBox('INBOX', true, cb);
+        }
     }
 
 
@@ -168,17 +179,17 @@ function getMail(obj, total, setTotal, notifNub) {
         if (nowEmail) {
             settings.set('nowEmail', nowEmail)
             $('#db_listEmail').attr('now', nowEmail)
-        }else{
-          nowEmail  = Email
+        } else {
+            nowEmail = Email
         }
-        
+
 
         settings.set('IMAP', { Email, Password, host, status: 'ready', nowEmail })
 
         //判断用户是否配置过邮箱
         SaveEmailConf({ Email, Password, host, nowEmail })
 
-      
+
         if (total) {
             nub = nub + total
             settings.set('total', { Email: nub })
@@ -579,7 +590,7 @@ function setMailBody(uid, text, file) {
 }
 
 // 设置邮箱列表（导航) .section-scroll
-
+let $sectionScrollDiv = $('#section-scrollDiv')
 function setMailHeader(uid, headers) {
     /*
     JSON.stringify(from) == {"value":[{"address":"lagou@mail.lagoujobs.com","name":"拉勾网"}],"html":""
@@ -623,6 +634,17 @@ function setMailHeader(uid, headers) {
     </div>`
     // 排序显示
 
+    // html2 用于向 $(`.emuid${uid}`) 重新插入列表
+    let html2 = `<div class="emallDivA jusCenter">
+        <div class="fromImg">${fromImg}</div>
+    </div>
+        <div class="emallDivB">
+            <p class="font12"><span class="from">${from}</span><span class="time date">${date}</span></p>
+            <p class="font12"><span class='subject'>${subject}</span><span class="to" style="display:none">${to}</span></p>
+            <p class="font12"><span class="annex" style="display:none"><em></em><img src="assets/img/Search/tabbar_attach_unselected.png"></span></p>
+        <p class="font12"></p>
+        </div>`
+
 
     userlist.push({
         from,
@@ -633,9 +655,9 @@ function setMailHeader(uid, headers) {
 
     let $uid = $(`.emuid${uid}`)
     if ($uid.length > 0) {
-        $(`.emuid${uid}`).html(html)
+        $(`.emuid${uid}`).html(html2)
     } else {
-        $('#section-scrollDiv').prepend(html)
+        $sectionScrollDiv.prepend(html)
     }
 
 

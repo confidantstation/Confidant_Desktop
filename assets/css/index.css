@@ -279,16 +279,28 @@
 .list-emallDiv {
     width: 310px;
     height: 80px;
-    background: rgba(230, 230, 230, 1);
+    /* background: rgba(230, 230, 230, 1); */
+    background: #fff;
     box-shadow: 0px 0px 0px 0px rgba(230, 230, 230, 1);
     display: flex;
-    border-bottom: 1px solid #e6e6e6;
+    border-bottom: 1px dashed  #e6e6e6;
     cursor: pointer;
 }
 
-.list-emallDiv:nth-of-type(even) {
-    background: #FFFFFF;
+.list-emallDivAdd{
+    background: rgba(230, 230, 230, 1);
 }
+
+.list-emallDiv:active{
+    background: rgba(230, 230, 230, 1);
+}
+.list-emallDiv:focus{
+    background: rgba(230, 230, 230, 1);
+}
+
+/* .list-emallDiv:nth-of-type(even) {
+    background: #FFFFFF;
+} */
 
 .emallDivA {
     flex: 1;
@@ -328,19 +340,25 @@
     line-height: 24px;
     display: flex;
 }
-
+.inbox-emall-userHead{
+    width:395px;
+    height:128px;
+    background:rgba(255,255,255,1);
+    outline: 1px solid red;
+    box-sizing: border-box;
+}
 
 .inboxEmallA {
     line-height: 48px;
     text-indent: 1em;
-    flex: 2;
+    flex: 1;
 }
 
 .inboxEmallB {
     line-height: 60px;
     text-align: right;
     margin-right: 12px;
-    flex: 1;
+    width: 200px;
 }
 
 .inbox-emall section {

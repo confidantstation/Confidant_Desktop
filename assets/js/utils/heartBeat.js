@@ -164,3 +164,22 @@ function InitWebSocket(wsuri) {
   return this
 };
 
+function objcall(val,str){
+
+  let type =  Object.prototype.toString.call(val)
+  if(!str){
+    return type
+  }
+  if(Object.prototype.toString.call(str)==="[object String]"){
+    str = str.charAt(0).toUpperCase() + str.slice(1)
+  }else{
+    console.log( '第二个参数必须是字符串')
+    return '第二个参数必须是字符串'
+  }
+  type = type.slice(7)
+  if(type.indexOf(str)>0){
+    return true
+  }
+  return false
+}
+

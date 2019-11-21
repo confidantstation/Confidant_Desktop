@@ -12,10 +12,8 @@
 
         </div>
         <div class='inbox-emall'>
-            <header>
-                <div class="inboxEmallA">
-                    Inbox
-                </div>
+            <header style="display: flex;height: 48px;">
+                <div class="inboxEmallA">Inbox</div>
                 <div class="inboxEmallB">
                     <img class="userLogo" src="assets/img/inbox/statusbar_delete.png">
                     <img class="userLogo" src="assets/img/inbox/statusbar_download_node.png">
@@ -35,7 +33,7 @@
 
     </div>
     <script>
-       
+
         require('./app/windows/email-windows');
         let loading = false;
         function loadData() {
@@ -81,40 +79,41 @@
 
             //查看邮件
             $(document).on('click', '.list-emallDiv', function () {
+                $(this).parent().find('.list-emallDivAdd').removeClass('list-emallDivAdd')
+               
+                $(this).addClass('list-emallDivAdd')
+                // let data = settings.get('wsdata') || 0
+                // let ws
+                // if (data) {
+                //     ws = new WebSocket(`wss://${data.ServerHost}:${data.ServerPort}`, "lws-minimal");
+                // } else {
+                //     alert('wsdata 不存在！')
+                //     return false
+                // }
 
+                // ws.onopen = function () {
+                //     sendMailAES('345632828@qq.com', ws)
+                // }
+                // ws.onmessage = function (evt) {
+                //     //alert('接收消息成功...')
+                //     console.log('接收消息成功...', evt)
+                //     console.log('data...', evt.data)
+                //     let data = JSON.parse(evt.data)
+                //     console.log('data', data)
+                //     if (data.params) {
+                //         let params = data.params
+                //         if (params.Action === "CheckmailUkey") {
+                //             settings.set('CheckmailUkey', data);
+                //         }
 
-                let data = settings.get('wsdata') || 0
-                let ws
-                if (data) {
-                    ws = new WebSocket(`wss://${data.ServerHost}:${data.ServerPort}`, "lws-minimal");
-                } else {
-                    alert('wsdata 不存在！')
-                    return false
-                }
+                //     }
 
-                ws.onopen = function () {
-                    sendMailAES('345632828@qq.com', ws)
-                }
-                ws.onmessage = function (evt) {
-                    //alert('接收消息成功...')
-                    console.log('接收消息成功...', evt)
-                    console.log('data...', evt.data)
-                    let data = JSON.parse(evt.data)
-                    console.log('data', data)
-                    if (data.params) {
-                        let params = data.params
-                        if (params.Action === "CheckmailUkey") {
-                            settings.set('CheckmailUkey', data);
-                        }
+                // }
 
-                    }
-
-                }
-
-                ws.onclose = function () {
-                    // 关闭 websocket
-                    console.log('ws onclose')
-                };
+                // ws.onclose = function () {
+                //     // 关闭 websocket
+                //     console.log('ws onclose')
+                // };
 
                 let uid = $(this).attr('uid')
                 console.log('list uid', uid)
@@ -163,6 +162,14 @@
             $('.emall-card2 li').click(function () {
                 let tag = $(this).attr('rel')
                 console.log(tag)
+                let conf = settings.get('IMAP')
+                let type = objcall(conf, 'obj')
+                if (type) {
+                    conf.flags  = tag.toUpperCase()
+                    $('#section-scrollDiv').html('')
+                    getMail(conf, null, 10, 1)
+                }
+                console.log(conf)
                 $('#Search')[0].focus()
             })
 

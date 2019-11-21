@@ -83,19 +83,19 @@
   article,
   footer {
     width: 100%;
-    background: #e6e6e6;
-
   }
 
   #emailSendPage header {
     width: 556px;
     height: 48px;
+    background: #E6E6E6;
   }
 
   #emailSendPage section {
     height: 164px;
     box-sizing: border-box;
     width: 556px;
+    background: #E6E6E6;
   }
 
   #emailSendPage section p {
@@ -113,8 +113,6 @@
     outline: 0;
 
   }
-
-  #emailSendPage article {}
 
 
 
@@ -304,15 +302,29 @@
     height: 420px;
   }
 
+  #content {
+    min-height: 420px;
+  }
+
   #content,
   #content2 {
-    widows: 556px;
-    height: 420px;
-    background: #e6e6e6;
+    width: 556px;
+    background: #fff;
+    box-sizing: border-box;
+  }
+
+  #content2 * {
+    max-width: 556px;
+  }
+
+  #content * {
+    max-width: 556px;
   }
 
   #emailSendPage article {
-    overflow: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: 400px;
   }
 </style>
 
@@ -335,7 +347,7 @@
     <article class="nui-scroll">
 
       <div class="emailSendPageText" id='content' contenteditable="true">
-        <div class="emailSendPageText" id='content2'>
+        <div class="emailSendPageText" id='content2' contenteditable="true">
         </div>
 
     </article>
