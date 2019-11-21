@@ -24,7 +24,10 @@ body {
     border-radius: 5px;
     overflow: hidden;
     border: 1px solid rgba(30, 30, 36, 0.25);
+}
+#logBoxC {
     border-left: 1px solid rgba(30, 30, 36, 0.90);
+    border: 0;
 }
 #Main header{
     -webkit-app-region: drag;
