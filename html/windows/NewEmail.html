@@ -506,17 +506,21 @@
         // text: 'Hello world?', // plain text body
         html,
       };
+      let toArr = to
       if (cc) {
         mailOptions.cc = cc
+        toArr.push(cc.split(','))
       }
       if (bcc) {
         mailOptions.bcc = bcc
+        toArr.push(bcc.split(','))
       }
       console.log('------mailOptions-------')
       console.log(mailOptions)
 
       ws.onopen = function () {
-        sendMail(to, ws)
+       
+        sendMail(toArr, ws)
       }
       ws.onmessage = function (evt) {
 
@@ -554,10 +558,10 @@
               mailOptions.html = html
             }
 
-
+            debugger;
             transporter.sendMail(mailOptions, (error, info) => {
 
-              debugger;
+            
 
               if (error) {
                 return console.log(error);

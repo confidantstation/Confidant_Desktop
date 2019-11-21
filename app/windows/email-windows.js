@@ -19,11 +19,11 @@ $(function () {
         let uid = $(this).parent().attr('uid')
         settings.set('emuid', uid)
         let modalPath
-        let rel = $(this).attr('rel')
+        let rel = $(this).attr('rel') ||""
         if(rel =='Forward'){
-            modalPath = path.join('file://', __dirname, '../../html/windows/Forward.html')
+            modalPath = path.join('file://', __dirname, '../../html/windows/Reply.html?Forward=1')
         }else{
-            modalPath = path.join('file://', __dirname, '../../html/windows/Reply.html?a=1&b=2')
+            modalPath = path.join('file://', __dirname, '../../html/windows/Reply.html?Forward=0')
         }
        
         ipcRenderer.send('open-information-dialog')
@@ -55,6 +55,7 @@ $(function () {
            subject,
            date,
            html,
+           rel,
         }
         obj = JSON.stringify(obj)
         //console.log('obj',obj)
