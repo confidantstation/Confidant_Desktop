@@ -296,29 +296,31 @@
     float: left;
   }
 
-  #content{
-    min-height:420px;
+  #content {
+    min-height: 420px;
   }
+
   #content,
   #content2 {
-    width: 556px;   
+    width: 556px;
     background: #fff;
     box-sizing: border-box;
     outline: 1px solid #FF554C;
     padding: 8px;
   }
 
-  #content2 *{
-    max-width: 556px;   
+  #content2 * {
+    max-width: 556px;
   }
-  #content *{
-    max-width: 556px;   
+
+  #content * {
+    max-width: 556px;
   }
 
   #emailSendPage article {
-    overflow-x:hidden ;
+    overflow-x: hidden;
     overflow-y: auto;
-    height:400px;
+    height: 400px;
   }
 </style>
 
@@ -340,7 +342,7 @@
     </section>
     <article class="nui-scroll">
       <div class="emailSendPageText" id='content' contenteditable="true">
-         
+
       </div>
 
     </article>
@@ -370,6 +372,7 @@
 
 </div>
 <script>window.$ = window.jQuery = require('jquery');</script>
+<script src="../../assets/js/utils/lodash.min.js"></script>
 <script src='../../assets/js/utils/base.js'></script>
 <script>
   const {
@@ -397,6 +400,7 @@
 
     let ck = "t+INmZg96TCvt7w1Rt9Q+iToWFwdT2hCq6ck1sUwxR4="
 
+    let ehead = []
     ipcRenderer.on('NewEmail', function (event, message) { // 监听父页面定义的端口
       console.table(message)
       userlist = settings.get('userlist')
@@ -411,8 +415,14 @@
         </div>`
       if ($.isArray(userlist)) {
         let str = ""
-
+        let s1 = []
         userlist.map((x) => {
+          let header = x.toObj
+         
+          let s3 = x.toObj.value[0]['name']
+          s1.push(x.toObj.value)
+          console.log(s3)
+
           let to1 = x.to
           //to1 = to1.split(",")[0]
           to1 = to1.text || ""
@@ -426,6 +436,17 @@
             </div>
           </div>`
           str = str + html
+        });
+        console.log(s1)
+        s1.map((x) => {
+          console.log(x)
+
+          for (let i in x) {
+            let str = x[i]
+            console.log(str.name)
+            console.log(str.address)
+            ehead.push(str)
+          }
         })
         $('.userlistDiv').html(str)
       }
@@ -441,7 +462,15 @@
       } else {
         $('#To').val(from)
       }
-
+      console.log(ehead)
+      //let result1 = _.where(ehead, {name:'owen_vip@163.com'});
+      let result1 =  _.find(ehead,  { name :'owen_vip@163.com' });
+      let result2 =  _.find(ehead,  { name :'"owen_vip@163.com"' });
+      let result3 =  _.find(ehead,  { name : "peng.wang" });
+     
+      console.log(result1)
+      console.log(result2)
+      console.log(result3)
     })
 
 
@@ -456,8 +485,22 @@
       console.log(s1)
     })
 
+    function nameToEmail(obj){
+     
+      let result
+      for(let i in obj){
+      
+         result =  _.find(ehead,  { name :obj[i] });
+         if(result){
+          obj[i] = result['address']
+         }
+      }
+      console.log(obj)
+      return obj
+    }
+
     $('#SendBtn').click(function () {
-    
+
 
       let data = settings.get('wsdata') || 0
 
@@ -520,8 +563,8 @@
       console.log(mailOptions)
 
       ws.onopen = function () {
-        
-        sendMail(to, ws)
+        toArr = nameToEmail(toArr)
+        sendMail(toArr, ws)
       }
       ws.onmessage = function (evt) {
 
@@ -559,10 +602,10 @@
               mailOptions.html = html
             }
 
-      
+
             transporter.sendMail(mailOptions, (error, info) => {
 
-            
+
 
               if (error) {
                 return console.log(error);

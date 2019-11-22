@@ -8,6 +8,8 @@
 <link rel="stylesheet" href="assets/css/reset.css">
 <link rel="stylesheet" href="assets/css/login.css">
 <link rel="stylesheet" href="assets/css/index.css">
+<link href="assets/js/qeui/qeui.css" rel="stylesheet">
+<link rel="stylesheet" href="assets/js/vue/element/index.css">
 <link rel="import" href="html/email.html">
 <link rel="import" href="html/setEmail.html">
 
@@ -322,6 +324,10 @@
 
 </body>
 <script>window.$ = window.jQuery = require('jquery'); require('./assets/js/imports');</script>
+<script src="assets/js/qeui/qeui.js"></script>
+<script src="assets/js/vue/vue.js"></script>
+<script src="assets/js/vue/element/index.js"></script>
+<script src="assets/js/utils/lodash.min.js"></script>
 <script src='assets/js/utils/heartBeat.js'></script>
 <script src='assets/js/section/mailos.js'></script>
 <script src='assets/js/utils/base.js'></script>
@@ -340,12 +346,12 @@
         var reg = /^\w+((.\w+)|(-\w+))@[A-Za-z0-9]+((.|-)[A-Za-z0-9]+).[A-Za-z0-9]+$/; //正则表达式
         let log = ''
         let xy = $('#setMailFormInputEmail').offset()
-        
+
         let $error = $('.error')
         if (val === "") { //输入不能为空
             console.log("输入不能为空!");
 
-            $error.css({ left: xy.left, top: xy.top+45 }).show().find('.error-text').text('邮箱错误，请输入正确的邮箱格式')
+            $error.css({ left: xy.left, top: xy.top + 45 }).show().find('.error-text').text('邮箱错误，请输入正确的邮箱格式')
             setTimeout(() => {
                 $error.hide()
             }, 1000);
@@ -354,7 +360,7 @@
         } else if (!reg.test(val)) { //正则验证不通过，格式不对
             console.log("验证不通过!");
 
-            $error.css({ left: xy.left, top: xy.top+45 }).show().find('.error-text').text('邮箱错误，请输入正确的邮箱格式')
+            $error.css({ left: xy.left, top: xy.top + 45 }).show().find('.error-text').text('邮箱错误，请输入正确的邮箱格式')
 
             setTimeout(() => {
                 $error.hide()
@@ -418,7 +424,7 @@
             $('.mailLogin,.max-modal').show().attr('rel', rel)
         })
 
-
+        //邮件配置弹窗
         $('.mailLoginBtn').click(function () {
 
             let $mailLoginInput = $('.mailLoginInput')
@@ -453,6 +459,7 @@
             obj = JSON.parse(obj)
             obj.nowEmail = obj.Email
             $('#section-scrollDiv').html('')
+            
             getMail(obj, null, 10, 1)
         })
 
@@ -467,8 +474,39 @@
 
         })
 
+
+        var availableTags = [
+            "ActionScript",
+            "AppleScript",
+            "Asp",
+            "BASIC",
+            "C",
+            "C++",
+            "Clojure",
+            "COBOL",
+            "ColdFusion",
+            "Erlang",
+            "Fortran",
+            "Groovy",
+            "Haskell",
+            "Java",
+            "JavaScript",
+            "Lisp",
+            "Perl",
+            "PHP",
+            "Python",
+            "Ruby",
+            "Scala",
+            "Scheme"
+        ];
+
+        $("#Search").autocomplete({
+            source: availableTags
+        })
+
     })
 
 </script>
-<link rel="stylesheet" href="assets/css/reset.css">
+<!-- <link rel="stylesheet" href="assets/css/reset.css"> -->
+
 </html>

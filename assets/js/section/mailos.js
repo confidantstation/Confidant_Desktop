@@ -542,7 +542,7 @@ function getHtmlText(str, uid) {
 
     let $emHtml = $inbox.find(`.emHtml${uid}`)
     if ($emHtml.length) {
-        $emHtml.html(`${str}`)
+        $emHtml.html(str)
     } else {
         $inbox.append(inhtml);
     };
@@ -591,6 +591,7 @@ function setMailBody(uid, text, file) {
 
 // 设置邮箱列表（导航) .section-scroll
 let $sectionScrollDiv = $('#section-scrollDiv')
+let $inboxSection = $('#inbox-section')
 function setMailHeader(uid, headers) {
     /*
     JSON.stringify(from) == {"value":[{"address":"lagou@mail.lagoujobs.com","name":"拉勾网"}],"html":""
@@ -608,12 +609,12 @@ function setMailHeader(uid, headers) {
 
     let fromObj = headers.get('from');
     let toObj = headers.get('to');
-    if (Object.prototype.toString.call(toObj) === "[object Object]") {
-        toObj = JSON.stringify(toObj)
-    }
-    if (Object.prototype.toString.call(fromObj) === "[object Object]") {
-        fromObj = JSON.stringify(fromObj)
-    }
+    // if (Object.prototype.toString.call(toObj) === "[object Object]") {
+    //     toObj = JSON.stringify(toObj)
+    // }
+    // if (Object.prototype.toString.call(fromObj) === "[object Object]") {
+    //     fromObj = JSON.stringify(fromObj)
+    // }
 
     let from = headers.get('from').text
     if (from.length) {
@@ -649,15 +650,17 @@ function setMailHeader(uid, headers) {
 
 
     userlist.push({
+        toObj,
         from,
         date,
         subject,
         to
     })
 
-    let $uid = $(`.emuid${uid}`)
+    let $uid = $inboxSection.find(`.emuid${uid}`)
+  
     if ($uid.length > 0) {
-        $(`.emuid${uid}`).html(html2)
+        $uid.html(html2)
     } else {
         $sectionScrollDiv.prepend(html)
     }
