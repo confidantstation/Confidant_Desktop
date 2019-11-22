@@ -148,7 +148,7 @@
     width: 200px;
     height: 100%;
     
-    z-index: 999;
+   
     background: #E6E6E6;
 }
 
@@ -172,7 +172,7 @@
     height: 100%;
     background: #fff;
     float: left;
-    z-index: 999;
+    
     box-sizing: border-box;
     border-right:1px solid #e6e6e6 ;
 }
@@ -181,7 +181,7 @@
     width: 450px;
     height: 100vh;
     float: left;
-    z-index: 999;
+   
     background: rgba(245, 246, 247, 1);
 
 }
@@ -613,7 +613,7 @@ footer .emall-card .newTag {
     left: 50%;
     box-sizing: border-box;
     padding: 50px 30px 30px;
-    z-index: 999;
+    z-index: 100;
 }
 
 .error{
@@ -626,7 +626,7 @@ footer .emall-card .newTag {
     box-sizing: border-box;
     padding: 15px;
     display: none;
-    z-index: 9999;
+    z-index: 990;
     background-color: #fff1f0;
     border: 1px solid #ffa39e;
 }
