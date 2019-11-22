@@ -458,7 +458,7 @@
             let obj = $(this).attr('data')
             obj = JSON.parse(obj)
             obj.nowEmail = obj.Email
-            $('#section-scrollDiv').html('')
+            //$('#section-scrollDiv').html('')
             
             getMail(obj, null, 10, 1)
         })
@@ -502,6 +502,12 @@
 
         $("#Search").autocomplete({
             source: availableTags
+        })
+
+        $('.settingImg').click(function(){
+           let emhead =  settings.get('emhead')
+           console.log(emhead)
+           //$('#logBoxC').shCircleLoader();
         })
 
     })

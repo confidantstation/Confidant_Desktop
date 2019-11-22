@@ -556,6 +556,7 @@
       let bcc = $('#Bcc').val()
       let html = $('#content').html()
       html = html +$('#content2').html()
+      console.log('html',html)
       let IMAP = settings.get('IMAP')
       const setIMAP = {
         Email,
@@ -588,7 +589,9 @@
         // text: 'Hello world?', // plain text body
         html,
       };
-      let toArr = to
+
+      
+      let toArr = to;
       if (cc) {
         mailOptions.cc = cc
         toArr.push(cc.split(','))

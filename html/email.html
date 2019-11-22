@@ -62,7 +62,7 @@
                 let h = 534 || $(window).height();
                 let scrollHeight = $('#section-scrollDiv').height();
                 let totalHeight = parseFloat(h) + parseFloat(t);
-                console.table({ scrollHeight, totalHeight, h, t, val: scrollHeight - totalHeight })
+                //console.table({ scrollHeight, totalHeight, h, t, val: scrollHeight - totalHeight })
                 if (scrollHeight < totalHeight + range) {
                     if (loading) return;
                     loading = true;
@@ -74,8 +74,8 @@
                     $(this).scrollTop(t - th);
                     loadData();
                 }
-                console.log($('.section-scroll').height())
-                console.log($(this).scrollTop())
+                // console.log($('.section-scroll').height())
+                // console.log($(this).scrollTop())
             })
 
             //查看邮件
@@ -167,7 +167,7 @@
                 let type = objcall(conf, 'obj')
                 if (type) {
                     conf.flags  = tag.toUpperCase()
-                    $('#section-scrollDiv').html('')
+                    //$('#section-scrollDiv').html('')
                     getMail(conf, null, 10, 1)
                 }
                 console.log(conf)
