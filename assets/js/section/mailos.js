@@ -1,4 +1,8 @@
 let nub = 0;
+// 设置邮箱列表（导航) .section-scroll
+let $sectionScrollDiv = $('#section-scrollDiv')
+let $inboxSection = $('#inbox-section')
+
 function SaveEmailConf(conf) {
 
     let wsdata = settings.get('wsdata') || 0
@@ -9,7 +13,11 @@ function SaveEmailConf(conf) {
     console.log(tobase64(sodium.publicKey, 'get'))
 
     const config = settings.get('mailConfigre');
-    const { Email, Password, host } = conf;
+    const {
+        Email,
+        Password,
+        host
+    } = conf;
 
     if (!config) {
         //alert('mailConfigre undefined')
@@ -101,12 +109,12 @@ function SaveEmailConf(conf) {
     hideInbox('setEmailHtmlLogin')
 };
 
-function imapSearch(imap){}
+function imapSearch(imap) {}
 
-function setmax(max,min){
-    let s = max -min
+function setmax(max, min) {
+    let s = max - min
     let arr = []
-    for(let i=0;i+min<=max;i++){
+    for (let i = 0; i + min <= max; i++) {
         let x = min + i
         arr.push(x)
     }
@@ -114,6 +122,7 @@ function setmax(max,min){
 }
 
 let userlist = []
+let noRepeat = {}
 let emhead = {}
 let emlist = {}
 let seps = []
@@ -129,21 +138,20 @@ function getMail(obj, total, setTotal, notifNub) {
      */
     // tag 默认值为Inbox  取值范围 = 'Inbox Node Starred Drafts Sent Spam Trash'
     // 获取最新十封邮件
-    let Imap = require('imap')
-    let inspect = require('util').inspect;
-    let MailParser = require("mailparser").MailParser
+    const Imap = require('imap')
+    const fs = require("fs")    
+    const inspect = require('util').inspect;
+    const MailParser = require("mailparser").MailParser
     const settings = require('electron-settings');
-
-    let uidList = {} || settings.get('uidList')
-    //let MailParser = require("mailparser").MailParser
-    //let fs = require("fs")    
 
     const setIMAP = {
         Email,
         Password,
         host,
         nowEmail
-    } = obj || settings.get('IMAP')
+    } =  settings.get('IMAP') || obj
+
+
 
     let imap = new Imap({
         user: Email,
@@ -156,28 +164,12 @@ function getMail(obj, total, setTotal, notifNub) {
         } //禁用对证书有效性的检查
     });
 
-
-
-
     function openInbox(cb) {
-        let flags = 0
-        // debugger
-        if (objcall(obj, 'obj')) {
-            if (obj.flags) {
-                flags = obj.flags
-            }
-        }
-        if (flags) {
-            imap.getBoxes('INBOX', true, cb);
-        } else {
             imap.openBox('INBOX', true, cb);
-        }
     }
 
 
     imap.once('ready', function () {
-
-      
 
         //保存配置邮箱参数
         if (notifNub == 1) {
@@ -200,21 +192,36 @@ function getMail(obj, total, setTotal, notifNub) {
             nowEmail = Email
         }
 
-        settings.set('IMAP', { Email, Password, host, status: 'ready', nowEmail })
+        settings.set('IMAP', {
+            Email,
+            Password,
+            host,
+            status: 'ready',
+            nowEmail
+        })
         //判断用户是否配置过邮箱
-        SaveEmailConf({ Email, Password, host, nowEmail })
+        SaveEmailConf({
+            Email,
+            Password,
+            host,
+            nowEmail
+        })
         if (total) {
             nub = nub + total
-            settings.set('total', { Email: nub })
+            settings.set('total', {
+                Email: nub
+            })
         }
         if (setTotal) {
-            settings.set('total', { Email: setTotal })
+            settings.set('total', {
+                Email: setTotal
+            })
         };
 
         openInbox(function (err, box) {
 
             console.log("打开邮箱")
-            $('.max-modal2').show()
+            //$('.max-modal2').show()
             console.log('max-modal.show()')
             if (err) throw err;
 
@@ -233,10 +240,13 @@ function getMail(obj, total, setTotal, notifNub) {
                 seq = box.messages.total - 10
                 ntl = 10
             }
-            seq = box.messages.total
-
-
            
+
+            //seq = box.messages.total - 4
+
+            let seq1 = [`${seq}:*`]
+            console.log('seq1', seq1)
+
             // let f = imap.seq.fetch(seq1, {
             //     bodies: ['HEADER.FIELDS (FROM TO SUBJECT DATE)', 'TEXT'],
             //     struct: true
@@ -245,76 +255,92 @@ function getMail(obj, total, setTotal, notifNub) {
 
             let k = 0;
             console.log('box.messages.total', box.messages.total)
-            imap.search(['ALL'], function (err, results) {//搜寻2017-05-20以后未读的邮件
+            //imap.search(['ALL'], function (err, results) {//搜寻2017-05-20以后未读的邮件
 
-                console.log(results)
-                console.log(results.pop() )
-                let max = results.pop()  // 邮件最大值
-                let seq1 = [`${seq}:*`]  // 邮件最小值
-                if (err) throw err;
-                let xm = setmax(max,box.messages.total)
-                xm = xm.slice(-10)
-               
-                var f = imap.fetch(xm, { bodies: '' });//抓取邮件（默认情况下邮件服务器的邮件是未读状态）
+            // console.log(results)
+            // console.log(results.pop() )
+            // let max = results.pop()  // 邮件最大值
+            // let seq1 = [`${seq}:*`]  // 邮件最小值
+            // if (err) throw err;
+            // let xm = setmax(max,box.messages.total)
+            // xm = xm.slice(-10)
+           
+            if(total){
+                seq1 = [seq]
+            }
+            if(Object.prototype.toString.call(obj)==="[object Number]"){
+                seq1 = [obj]
+            }
+            let f = imap.seq.fetch(seq1, {
+                bodies: ''
+              
+            });
 
 
-                f.on('message', function (msg, seqno) {
+            f.on('message', function (msg, seqno) {
 
-                    var mailparser = new MailParser();
+                var mailparser = new MailParser();
 
-                    msg.on('body', function (stream, info) {
+                msg.on('body', function (stream, info) {
 
-                        stream.pipe(mailparser);//将为解析的数据流pipe到mailparser
+                    stream.pipe(mailparser); //将为解析的数据流pipe到mailparser
 
-                        //邮件头内容
-                        mailparser.on("headers", function (headers) {
-                            console.log("邮件头信息>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-                            //console.log(headers)
-                            // console.log("邮件主题: " + headers.get('subject'));
-                            // console.log("发件人: " + headers.get('from').text);
-                            // console.log("收件人: " + headers.get('to').text);
+                    //邮件头内容
+                    mailparser.on("headers", function (headers) {
+                        console.log(info.seqno)
+                       
+                        if (!noRepeat[info.seqno]) {
                             try {
-                                setMailHeader(info.seqno, headers)
+                                console.log('setMailHeader', info.seqno)
+                                setMailHeader(info.seqno, headers,total)
                             } catch (error) {
 
                             }
-                        });
+                        }
+                        noRepeat[info.seqno] = 1
+                    });
 
-                        //邮件内容
+                    //邮件内容
 
-                        mailparser.on("data", function (data) {
+                    mailparser.on("data", function (data) {
+
+                        
+
+                        if (data.type === 'text') { //邮件正文
+                            console.log("邮件内容信息>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+                            //console.log("邮件内容: " + data.html);
                             try {
                                 let text32 = getHtmlText(data, info.seqno);
                             } catch (error) {
-
+    
                             }
-
-                            if (data.type === 'text') {//邮件正文
-                                console.log("邮件内容信息>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-                                //console.log("邮件内容: " + data.html);
-                            }
-                            // if (data.type === 'attachment') {//附件
-                            //     console.log("邮件附件信息>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-                            //     console.log("附件名称:"+data.filename);//打印附件的名称
-                            //     data.content.pipe(fs.createWriteStream(data.filename));//保存附件到当前目录下
-                            //     data.release();
-                            // }
-                        });
-
+                        }
+                        // if (data.type === 'attachment') {//附件
+                        //     console.log("邮件附件信息>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+                        //     console.log("附件名称:"+data.filename);//打印附件的名称
+                        //     data.content.pipe(fs.createWriteStream(data.filename));//保存附件到当前目录下
+                        //     data.release();
+                        // }
                     });
-                    msg.once('end', function () {
-                        console.log(seqno + '完成');
-                    });
+
                 });
-                f.once('error', function (err) {
-                    console.log('抓取出现错误: ' + err);
-                });
-                f.once('end', function () {
-                    console.log('所有邮件抓取完成!');
-                    $('.max-modal2').hide()
-                    imap.end();
+                msg.once('end', function () {
+                    // console.log(seqno + '完成');
+                    // let emarr = settings.get('emhead', emhead)
+                    // console.log(emarr[seqno])
                 });
             });
+            f.once('error', function (err) {
+                console.log('抓取出现错误: ' + err);
+            });
+            f.once('end', function () {
+                console.log('所有邮件抓取完成!');
+                //$('.max-modal2').hide()
+                // let emarr = settings.get('emhead', emhead)
+                // console.log(emarr)
+                imap.end();
+            });
+            //});
         });
     });
 
@@ -337,378 +363,19 @@ function getMail(obj, total, setTotal, notifNub) {
     imap.connect();
 }
 
-function getMail2(obj, total, setTotal, notifNub) {
-    /**
-     * getMail, returning null.
-     *
-     * @param  {object} obj  保存邮件账号密码等信息
-     * @param  {number} total  用于指定滚动时拉取的邮件和函数外定义的nub配合使用
-     * @param  {number} setTotal 设置需要拉取多少封邮件,设置此参数时请把total设置成null,同时控制正确登录时候系统提示的内容
-     * @param  {number} notifNub  用于指定需要弹出的提示
-     */
-    // tag 默认值为Inbox  取值范围 = 'Inbox Node Starred Drafts Sent Spam Trash'
-    // 获取最新十封邮件
-    let Imap = require('imap')
-    let inspect = require('util').inspect;
 
-    const settings = require('electron-settings');
 
-    let uidList = {} || settings.get('uidList')
-    //let MailParser = require("mailparser").MailParser
-    //let fs = require("fs")
 
-    const setIMAP = {
-        Email,
-        Password,
-        host,
-        nowEmail
-    } = obj || settings.get('IMAP')
-
-    let imap = new Imap({
-        user: Email,
-        password: Password,
-        host: host,
-        port: 993, //邮箱服务器的端口地址
-        tls: true, //使用安全传输协议
-        tlsOptions: {
-            rejectUnauthorized: false
-        } //禁用对证书有效性的检查
-    });
-
-
-
-
-    function openInbox(cb) {
-        let flags = 0
-        // debugger
-        if (objcall(obj, 'obj')) {
-            if (obj.flags) {
-                flags = obj.flags
-            }
-        }
-        if (flags) {
-            imap.getBoxes('INBOX', true, cb);
-        } else {
-            imap.openBox('INBOX', true, cb);
-        }
-    }
-
-
-    imap.once('ready', function () {
-        //settings.set('mail_status', 'ready')
-
-        //保存配置邮箱参数
-        if (notifNub == 1) {
-            const log1 = notif({
-                title: '你好，' + Email,
-                body: '邮件已切换'
-            })
-        }
-        if (notifNub == 2) {
-            const log2 = notif({
-                title: '你好，' + Email,
-                body: '邮件配置成功'
-            })
-        }
-
-
-        if (nowEmail) {
-            settings.set('nowEmail', nowEmail)
-            $('#db_listEmail').attr('now', nowEmail)
-        } else {
-            nowEmail = Email
-        }
-
-
-        settings.set('IMAP', { Email, Password, host, status: 'ready', nowEmail })
-
-        //判断用户是否配置过邮箱
-        SaveEmailConf({ Email, Password, host, nowEmail })
-
-
-        if (total) {
-            nub = nub + total
-            settings.set('total', { Email: nub })
-        }
-        if (setTotal) {
-            settings.set('total', { Email: setTotal })
-        };
-
-        // end  ready
-        openInbox(function (err, box) {
-            if (err) throw err;
-            //拉取最新 10条邮件
-
-            let seq;
-
-            let ntl
-            if (total) {
-                ntl = settings.get('total').Email
-                seq = box.messages.total - ntl
-
-            } else if (setTotal) {
-                ntl = settings.get('total').Email
-                seq = box.messages.total - ntl
-            } else {
-                seq = box.messages.total - 10
-                ntl = 10
-            }
-            //seq = box.messages.total - 4
-
-
-            let seq1 = [`${seq}:*`]
-            let f = imap.seq.fetch(seq1, {
-                bodies: ['HEADER.FIELDS (FROM TO SUBJECT DATE)', 'TEXT'],
-                struct: true
-            });
-            f.on('message', function (msg, seqno) {
-
-                console.log('Message #%d', seqno);
-                seps.push(seqno)
-                let prefix = '(#' + seqno + ') ';
-
-                // msg.on('body', function (stream, info) {
-                //     let buffer = '';
-                //     stream.on('data', function (chunk) {
-                //         buffer += chunk.toString('utf8');
-                //     });
-                //     stream.once('end', function () {
-                //         // console.log(prefix + 'Parsed header: %s', inspect(Imap.parseHeader(buffer)));
-                //     });
-
-                // });
-                msg.once('attributes', function (attrs) {
-                    let attr = inspect(attrs, false, 8)
-                    // console.log(prefix + 'Attributes: %s', attr);
-                    console.log('Message #%d', seqno);
-                    console.log(attrs.uid)
-                    // 获得指定UID的邮件
-                    //getMailUid(attrs.uid, setIMAP)
-
-                    let uid = attrs.uid
-                    if (!uidList[uid]) {
-                        uidList[uid] = uid
-                        settings.set('uidList', uidList)
-
-                        getMailUid(attrs.uid, setIMAP, ntl)
-
-                    }
-                });
-                msg.once('end', function () {
-                    // console.log(prefix + 'Finished');
-                });
-            });
-            f.once('error', function (err) {
-                // settings.set('mail_status', 'f error')
-                // $('.error').find('error-text').text()
-                // $('.error').show()
-                // console.log('Fetch error: ' + err);
-
-                // alert('邮箱异常登录，请稍后重试')
-
-            });
-            f.once('end', function () {
-
-                console.log('---=-=-=-=-============-=-=-=-================-=-=--------------')
-                console.log('Done fetching all messages!');
-                imap.end();
-
-            });
-        });
-    });
-
-    imap.once('error', function (err) {
-        // settings.set('mail_status', 'error')
-        // $('.error').find('.error-text').text('f error')
-        // $('.error').show()
-        //alert('邮件账号或密码不正确，请重新配置')
-        console.log(err);
-        $('.mailLogin').hide()
-        const logs = notif({
-            title: '错误提示',
-            body: '邮箱异常登录，请输入正确的用户名和密码'
-        })
-    });
-
-    imap.once('end', function () {
-
-
-
-        console.log('Connection ended');
-    });
-
-    imap.connect();
-
-
-
-}
-
-
-
-function getMailUid(uid, setIMAP, ntl) {
-    // 获取最新十封邮件
-    let Imap = require('imap')
-    let MailParser = require("mailparser").MailParser
-    let fs = require("fs")
-    let {
-        Email,
-        Password,
-        host
-    } = setIMAP
-
-    let imap = new Imap({
-        user: Email,
-        password: Password,
-        host: host,
-        port: 993,
-        tls: true, //使用安全传输协议
-        tlsOptions: {
-            rejectUnauthorized: false
-        } //禁用对证书有效性的检查
-    });
-
-    function openInbox(cb) {
-        imap.openBox('INBOX', true, cb);
-    }
-
-    imap.once('ready', function () {
-
-        openInbox(function (err, box) {
-
-            console.log("打开邮箱")
-
-            if (err) throw err;
-
-
-            if (err) throw err;
-
-            let f = imap.fetch(uid, {
-                bodies: ''
-            }); //抓取邮件（默认情况下邮件服务器的邮件是未读状态）
-
-            f.on('message', function (msg, seqno) {
-                let prefix = '#' + seqno;
-                let mailparser = new MailParser();
-
-                msg.on('body', function (stream, info) {
-
-                    stream.pipe(mailparser); //将为解析的数据流pipe到mailparser
-
-                    //邮件头内容
-                    mailparser.on("headers", function (headers) {
-                        console.log(prefix + "-邮件头信息>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-                        //console.log(headers)
-
-                        // console.log("邮件主题: " + headers.get('subject'));
-                        // console.log("发件人: " + headers.get('from').text);
-                        if (headers.get('to')) {
-                            //console.log("收件人: " + headers.get('to').text);
-                            to = headers.get('to').text
-                            // if ($('.myEmail').attr('rel') !== 'setName') {
-                            //     try {
-                            //         to = to.split(',')
-                            //         if (to[0].indexOf('<') > -1) {
-                            //             let name = to[0].match(/\<(.+?)\>/g)
-
-                            //             $('.myEmail').text(name[0]).attr('rel', 'setName')
-                            //             $('.fromImg2').text(name[0].substr(0, 1))
-                            //         } else {
-                            //             $('.myEmail').text(to[0]).attr('rel', 'setName')
-                            //             $('.fromImg2').text(to[0].substr(0, 1))
-                            //         }
-
-                            //     } catch (error) {
-                            //         console.log(error)
-                            //     }
-
-                            // }
-                        } else {
-                            console.log("收件人: " + '');
-                        }
-                        console.log(headers.get('dkim-signature'))
-                        try {
-                            setMailHeader(uid, headers, ntl)
-
-                        } catch (error) {
-                            console.log(error)
-                        }
-
-                        console.log(userlist)
-                        settings.set('userlist', userlist)
-
-
-                    });
-
-                    //邮件内容
-                    let file = 0;
-                    mailparser.on("data", function (data) {
-
-                        let text32 = ""
-                        try {
-                            text32 = getHtmlText(data, uid);
-                        } catch (error) {
-                            console.log(error)
-                        }
-
-                        // console.log('uid:' + uid + "-邮件data内容>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-                        // console.log(data);
-                        if (data.release) {
-                            let rel = data.release()
-                            console.table(rel)
-                        };
-                        if (data.type === 'text') { //邮件正文
-                            console.log(uid + "-邮件text内容信息>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-                            //console.log(data);
-                            //console.log("邮件内容: " + data.html);
-                            console.log('html->', text32)
-                        };
-                        if (data.type === 'attachment') { //附件
-                            console.log("邮件附件信息>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-                            console.log("附件名称:" + data.filename); //打印附件的名称
-                            // data.content.pipe(fs.createWriteStream(data.filename));//保存附件到当前目录下
-                            // data.release();
-                            file++
-                        };
-                        //setMailBody(uid, text32, file);
-
-                    });
-
-                });
-                msg.once('end', function () {
-                    console.log(seqno + '完成');
-                });
-            });
-            f.once('error', function (err) {
-
-                console.log('抓取出现错误: ' + err);
-            });
-            f.once('end', function () {
-                //console.log('所有邮件抓取完成!');
-
-                imap.end();
-            });
-
-        });
-    });
-
-    imap.once('error', function (err) {
-
-        console.log(err);
-    });
-
-    imap.once('end', function () {
-        console.log('关闭邮箱');
-    });
-
-    imap.connect();
-}
 
 //控制邮箱显示，及以取内容前32个字符 存储邮件
 let $inbox = $('.inbox-content')
 
 function getHtmlText(str, uid) {
 
-
+    if(uid === 658){
+        debugger
+    }
+   
     // html 用来返回邮件文本内容的文本，在邮件列表栏，一般显示前16个字符
     // console.log(Object.prototype.toString.call(str.html))
     // console.log(str)
@@ -759,13 +426,15 @@ function getHtmlText(str, uid) {
         if (str.html) {
             str = str.html;
             let $str = $(str);
+            if (str) {
+                html = str
+            }
 
-
-            if ($str.length === 0) {
-                return ''
-            } else {
-                html = $str.find('tr').text() || $(str).find('div').text() || $(str).find('p').text()
-            };
+            // if ($str.length === 0) {
+            //     return ''
+            // } else {
+            //     html = $str.find('tr').text() || $(str).find('div').text() || $(str).find('p').text()
+            // };
 
         } else {
             str = str.textAsHtml || str.text
@@ -782,6 +451,7 @@ function getHtmlText(str, uid) {
     let inhtml = `<object type="text/html" data="${'_uid' + uid + window.btoa(uid)}.html"  class="email-uid emHtml${uid}" uid="${uid}">${str}</object>`
     //$inbox.append(inhtml);
 
+    //$inbox.html(inhtml)
     let $emHtml = $inbox.find(`.emHtml${uid}`)
     if ($emHtml.length) {
         $emHtml.html(str)
@@ -831,21 +501,19 @@ function setMailBody(uid, text, file) {
     })
 }
 
-// 设置邮箱列表（导航) .section-scroll
-let $sectionScrollDiv = $('#section-scrollDiv')
-let $inboxSection = $('#inbox-section')
-function setMailHeader(uid, headers) {
+
+function setMailHeader(uid, headers,add) {
     /*
     JSON.stringify(from) == {"value":[{"address":"lagou@mail.lagoujobs.com","name":"拉勾网"}],"html":""
     */
 
 
-    // console.log(`setMailHeader-----------`)
-    // console.log("邮件主题: " + headers.get('subject'));
-    // console.log("发件人: " + headers.get('from').text);
-    // console.log("收件人: " + headers.get('to').text);
-    // console.log("收件人: " + headers.get('to').value);
-    // console.log("收件人: " + headers);
+    console.log(`setMailHeader-----------uid=` + uid)
+    console.log("邮件主题: " + headers.get('subject'));
+    console.log("发件人: " + headers.get('from').text);
+    console.log("收件人: " + headers.get('to').text);
+    console.log("收件人value: " + headers.get('to').value);
+    //console.log(headers);
     let date = moment(headers.get('date')).format('MM-DD HH:mm:ss');
     console.log("发件日期: " + date);
 
@@ -900,6 +568,7 @@ function setMailHeader(uid, headers) {
         to,
         setHtml: html
     });
+
     emhead[uid] = html;
     settings.set('emhead', emhead)
     let $uid = $inboxSection.find(`.emuid${uid}`);
@@ -907,16 +576,22 @@ function setMailHeader(uid, headers) {
     if ($uid.length > 0) {
         $uid.html(html2)
     } else {
-        $sectionScrollDiv.prepend(html)
+        if(add){
+            $sectionScrollDiv.append(html)
+        }else{
+            $sectionScrollDiv.prepend(html)
+        }
+       
 
     };
-
-
-
 }
 
 function sortEmail(html) {
 
+
+}
+
+function mailHtmlDecrypt(){
 
 }
 

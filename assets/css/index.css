@@ -26,7 +26,7 @@
 }
 
 #logBoxC  .email-uid {
-    display: block;
+    display: none;
     width: 100%;
     min-height: 502px;
     word-break: break-all;
@@ -34,7 +34,7 @@
     background: #fff;
     padding: 5px 5px 5px 5px;
     box-sizing: border-box;
-    display: none;
+    
     position: relative;
     line-height: 1.2em;
 }

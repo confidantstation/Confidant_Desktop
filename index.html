@@ -235,8 +235,8 @@
             <!-- modal -->
 
             <div class="max-modal"></div>
-            <div class="max-modal2 jusCenter">
-                        <div>邮件加载中...</div>
+            <div class="max-modal2">
+                <div class=" jusCenter">邮件加载中...</div>
             </div>
             <div class="newAccountDiv" style="display: none;">
                 <div class="newAccountHead">
@@ -462,7 +462,7 @@
             obj = JSON.parse(obj)
             obj.nowEmail = obj.Email
             //$('#section-scrollDiv').html('')
-            
+
             getMail(obj, null, 10, 1)
         })
 
@@ -507,10 +507,10 @@
             source: availableTags
         })
 
-        $('.settingImg').click(function(){
-           let emhead =  settings.get('emhead')
-           console.log(emhead)
-           //$('#logBoxC').shCircleLoader();
+        $('.settingImg').click(function () {
+            let emhead = settings.get('emhead')
+            console.log(emhead)
+            //$('#logBoxC').shCircleLoader();
         })
 
     })
