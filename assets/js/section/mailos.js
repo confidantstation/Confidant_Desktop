@@ -1,36 +1,60 @@
 let nub = 0;
 // 设置邮箱列表（导航) .section-scroll
+
 let $sectionScrollDiv = $('#section-scrollDiv')
 let $inboxSection = $('#inbox-section')
 
+const low = require('lowdb')
+const FileSync = require('lowdb/adapters/FileSync')
+const adapter = new FileSync('email.json')
+const emConfige = new FileSync('emConfige.json')
+const emConfigeDb = low(emConfige)
+
+if (!emConfigeDb.has('posts')) {
+    emConfigeDb.defaults({ posts: [], user: {}, now: {}, count: 0 }).write()
+}
+
+const db = low(adapter)
+let dbtest = db.has('posts').value()
+
+console.log(dbtest)
+
+if (!db.has('posts')) {
+    db.defaults({ posts: [], user: {}, count: 0 }).write()
+}
+let dbdata = []
+
+//db.set('posts', []).write()
+// dbdata = db.get('posts').value()
+// let union = _.unionBy(dbdata, 'uid')
+// db.set('posts', union).write()
+
+console.log(db.get('posts').value())
+
+dbdata = emConfigeDb.get('user').value()
+console.log(dbdata)
+
+
+//设置配置邮箱列表
+let setEmlist = {}
 function SaveEmailConf(conf) {
 
+    const config = settings.get('mailConfigre');
+    let obj = emConfigeDb.get('user').value()
+    let Email =  settings.get('nowEmail')  
+
+
     let wsdata = settings.get('wsdata') || 0
-    console.log(WinAES)
+    //console.log(WinAES)
 
     let sodium = settings.get('sodium');
-    console.log(sodium)
-    console.log(tobase64(sodium.publicKey, 'get'))
-
-    const config = settings.get('mailConfigre');
-    const {
-        Email,
-        Password,
-        host
-    } = conf;
-
-    if (!config) {
-        //alert('mailConfigre undefined')
-        return 'mailConfigre undefined'
-    }
-
-    let Type = config.type
-
+    //console.log(sodium)
+    // console.log(tobase64(sodium.publicKey, 'get'))
     let str = {
         Action: "SaveEmailConf",
         Version: 1,
         Caller: 0,
-        Type,
+        Type: 2,
         User: window.btoa(Email),
         Config: "test",
         Userkey: sodium.publicKeyString,
@@ -52,24 +76,11 @@ function SaveEmailConf(conf) {
     app.params = str
 
     console.log('set app str')
-
-
-    // try {
-    //     $('.myEmail').text(Email)
-    //     $('.fromImg2,.userLogoMenu').text(Email.substr(0, 1))
-
-    // } catch (error) {
-    //     console.log(error)
-    // }
+   
     // 配置主用户头像
     $('.fromImg2,.userLogoMenu').text(Email.substr(0, 1))
 
-    let obj = settings.get('db_email') || {}
-
-    let data = JSON.stringify(conf)
-
-
-    let li = `<li id='db_${Email}' data='${data}'>
+    let li = `<li id='db_${Email}'>
                 <div class="spanA">
                     <div class="centerDiv fromImg2" style="color: #fff;">
                     ${Email.substr(0, 1)}
@@ -78,7 +89,7 @@ function SaveEmailConf(conf) {
                 <div class="spanB myEmail">${Email}</div>
                 <div class="spanC" style="display:none"><img src="assets/img/tabbar_hook.png"></div>
             </li>`
-    let li2 = `<li id='db_${Email}' data='${data}'>
+    let li2 = `<li id='db_${Email}'>
                     <div class="spanA">
                         <div class="centerDiv fromImg2" style="color: #fff;">
                         ${Email.substr(0, 1)}
@@ -88,28 +99,35 @@ function SaveEmailConf(conf) {
                     <div class="spanC"><img src="assets/img/tabbar_hook.png"></div>
                 </li>`
 
-    obj[Email] = li
-    let ul = ''
+     let ul = ''
 
+    
     for (let i in obj) {
-        obj[i] = obj[i].replace('<img src="assets/img/tabbar_hook.png">', "")
+        //obj[i] = obj[i].replace('<img src="assets/img/tabbar_hook.png">', "")
+        let Email =i
+        let objstr = JSON.stringify(obj[i])
+        let li = `<li id='db_${Email}' data=${objstr}>
+                <div class="spanA">
+                    <div class="centerDiv fromImg2" style="color: #fff;">
+                    ${Email.substr(0, 1)}
+                    </div>
+                </div>
+                <div class="spanB myEmail">${Email}</div>
+                <div class="spanC" style="display:none"><img src="assets/img/tabbar_hook.png"></div>
+            </li>`
+        ul += li
 
     }
+    // // debugger
+  
 
-    for (let i in obj) {
-        if (i == nowEmail) {
-            obj[Email] = li2
-        }
-        ul += obj[i]
-    }
+     $('#db_listEmail').html(ul)
 
-    $('#db_listEmail').html(ul)
-
-    settings.set('db_email', obj)
+    settings.set('db_email', setEmlist)
     hideInbox('setEmailHtmlLogin')
 };
 
-function imapSearch(imap) {}
+function imapSearch(imap) { }
 
 function setmax(max, min) {
     let s = max - min
@@ -121,13 +139,28 @@ function setmax(max, min) {
     return arr
 }
 
+function setdb(obj) {
+    let setIMAP = {
+        Email,
+        headers,
+        html
+    } = obj
+    let list = settings.get('userlist')
+    db.get('posts')
+        .push(list)
+        .write()
+}
+
 let userlist = []
 let noRepeat = {}
+let noRepeatData = {}
 let emhead = {}
 let emlist = {}
 let seps = []
 
+
 function getMail(obj, total, setTotal, notifNub) {
+
     /**
      * getMail, returning null.
      *
@@ -138,18 +171,89 @@ function getMail(obj, total, setTotal, notifNub) {
      */
     // tag 默认值为Inbox  取值范围 = 'Inbox Node Starred Drafts Sent Spam Trash'
     // 获取最新十封邮件
+
     const Imap = require('imap')
-    const fs = require("fs")    
+    const fs = require("fs")
     const inspect = require('util').inspect;
     const MailParser = require("mailparser").MailParser
     const settings = require('electron-settings');
 
-    const setIMAP = {
-        Email,
-        Password,
-        host,
-        nowEmail
-    } =  settings.get('IMAP') || obj
+    //邮箱切换
+    let emdata = db.get('posts').value()
+    let otab = 0 // 切换其它邮件变动
+    let save = 0
+
+    if (Object.prototype.toString.call(obj) === "[object Object]") {
+        if (obj.tab) {
+            otab = obj.tab
+        }
+        if (obj.save) {
+            save = 1
+        }
+    }
+
+    if (!total) {
+        noRepeatData = {}
+        //noRepeat = {}
+    }
+
+    let setIMAP = {}
+    if (Object.prototype.toString.call(obj) === "[object Object]") {
+        setIMAP = {
+            Email,
+            Password,
+            host,
+            nowEmail
+        } = obj
+    } else {
+        setIMAP = {
+            Email,
+            Password,
+            host,
+            nowEmail
+        } = settings.get('IMAP')
+    }
+
+    if (setIMAP.Email && setIMAP.Password) {
+        emConfigeDb.set(`user.${emTostring(Email)}`, setIMAP)
+            .write()
+    }
+
+    //debugger
+    if (!total && !save) {
+        // setMailHeader(info.seqno, headers, total, Email)
+        //emdata = _.finder(emdata,{ email: Email })
+
+       
+        let now = settings.get('nowEmail')
+        SaveEmailConf()
+
+        let arr = []
+        for (let i in emdata) {
+            if (emdata[i].email == setIMAP.Email) {
+                arr.push(emdata[i])
+            }
+        }
+        if (arr) {
+            for (let i in arr) {
+                let d = arr[i]
+
+                let type = $inbox.find('.id' + d.id)
+                if ($inbox.find('.id' + d.id).length == 0) {
+                    $inbox.append(d.html);
+                }
+                let type2 = $inboxSection.find('.id' + d.id)
+                if ($sectionScrollDiv.find('.id' + d.id).length == 0) {
+
+                    $sectionScrollDiv.append(d.headHtml)
+                }
+
+            }
+            settings.set('emlist',arr)
+            return { type: 1, name: '邮箱切换' }
+        }
+
+    }
 
 
 
@@ -164,8 +268,10 @@ function getMail(obj, total, setTotal, notifNub) {
         } //禁用对证书有效性的检查
     });
 
+    let emstr = emTostring(Email)
+
     function openInbox(cb) {
-            imap.openBox('INBOX', true, cb);
+        imap.openBox('INBOX', true, cb);
     }
 
 
@@ -186,8 +292,8 @@ function getMail(obj, total, setTotal, notifNub) {
         }
 
         if (nowEmail) {
-            settings.set('nowEmail', nowEmail)
-            $('#db_listEmail').attr('now', nowEmail)
+            //settings.set('nowEmail', nowEmail)
+            //$('#db_listEmail').attr('now', nowEmail)
         } else {
             nowEmail = Email
         }
@@ -202,16 +308,17 @@ function getMail(obj, total, setTotal, notifNub) {
         //判断用户是否配置过邮箱
         SaveEmailConf({
             Email,
-            Password,
-            host,
             nowEmail
         })
+
+
         if (total) {
             nub = nub + total
             settings.set('total', {
                 Email: nub
             })
         }
+
         if (setTotal) {
             settings.set('total', {
                 Email: setTotal
@@ -240,7 +347,7 @@ function getMail(obj, total, setTotal, notifNub) {
                 seq = box.messages.total - 10
                 ntl = 10
             }
-           
+
 
             //seq = box.messages.total - 4
 
@@ -264,16 +371,16 @@ function getMail(obj, total, setTotal, notifNub) {
             // if (err) throw err;
             // let xm = setmax(max,box.messages.total)
             // xm = xm.slice(-10)
-           
-            if(total){
+
+            if (total) {
                 seq1 = [seq]
             }
-            if(Object.prototype.toString.call(obj)==="[object Number]"){
+            if (Object.prototype.toString.call(obj) === "[object Number]") {
                 seq1 = [obj]
             }
             let f = imap.seq.fetch(seq1, {
                 bodies: ''
-              
+
             });
 
 
@@ -288,32 +395,36 @@ function getMail(obj, total, setTotal, notifNub) {
                     //邮件头内容
                     mailparser.on("headers", function (headers) {
                         console.log(info.seqno)
-                       
-                        if (!noRepeat[info.seqno]) {
+
+                        if (!noRepeatData[info.seqno]) {
                             try {
                                 console.log('setMailHeader', info.seqno)
-                                setMailHeader(info.seqno, headers,total)
+                                setMailHeader(info.seqno, headers, total, Email)
                             } catch (error) {
 
                             }
                         }
-                        noRepeat[info.seqno] = 1
+                        noRepeatData[info.seqno] = 1
                     });
 
                     //邮件内容
 
                     mailparser.on("data", function (data) {
 
-                        
-
                         if (data.type === 'text') { //邮件正文
                             console.log("邮件内容信息>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
                             //console.log("邮件内容: " + data.html);
-                            try {
-                                let text32 = getHtmlText(data, info.seqno);
-                            } catch (error) {
-    
+
+                            if (!noRepeat[info.seqno]) {
+                                try {
+                                    console.log('getHtmlText', info.seqno)
+                                    let text32 = getHtmlText(data, info.seqno, Email);
+                                } catch (error) {
+
+                                }
                             }
+                            noRepeat[info.seqno] = 1
+
                         }
                         // if (data.type === 'attachment') {//附件
                         //     console.log("邮件附件信息>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
@@ -338,6 +449,13 @@ function getMail(obj, total, setTotal, notifNub) {
                 //$('.max-modal2').hide()
                 // let emarr = settings.get('emhead', emhead)
                 // console.log(emarr)
+
+                // let userlist = settings.get('userlist')
+                // console.log(userlist)
+                dbdata = db.get('posts').value()
+                let union = _.unionBy(dbdata, 'uid')
+                db.set('posts', union).write()
+                console.log(union)
                 imap.end();
             });
             //});
@@ -348,10 +466,10 @@ function getMail(obj, total, setTotal, notifNub) {
 
         console.log(err);
         $('.mailLogin').hide()
-        const logs = notif({
-            title: '错误提示',
-            body: '邮箱异常登录，请输入正确的用户名和密码'
-        })
+        // const logs = notif({
+        //     title: '错误提示',
+        //     body: '邮箱异常登录，请输入正确的用户名和密码'
+        // })
     });
 
     imap.once('end', function () {
@@ -370,12 +488,7 @@ function getMail(obj, total, setTotal, notifNub) {
 //控制邮箱显示，及以取内容前32个字符 存储邮件
 let $inbox = $('.inbox-content')
 
-function getHtmlText(str, uid) {
-
-    if(uid === 658){
-        debugger
-    }
-   
+function getHtmlText(str, uid, email) {
     // html 用来返回邮件文本内容的文本，在邮件列表栏，一般显示前16个字符
     // console.log(Object.prototype.toString.call(str.html))
     // console.log(str)
@@ -446,17 +559,23 @@ function getHtmlText(str, uid) {
     uid = uid || "";
     str = str || "";
 
-
+    let emstr = emTostring(email) + '_' + uid
     //let instr = `<div class="email-uid emHtml${uid}" uid="${uid}">${str}</div>`;
-    let inhtml = `<object type="text/html" data="${'_uid' + uid + window.btoa(uid)}.html"  class="email-uid emHtml${uid}" uid="${uid}">${str}</object>`
+    let inhtml = `<object type="text/html" data="${'uid_' + uid + '_' + email}.html"  class="email-uid id${emstr}" uid="${uid}" email="${email}">${str}</object>`
     //$inbox.append(inhtml);
 
     //$inbox.html(inhtml)
-    let $emHtml = $inbox.find(`.emHtml${uid}`)
+    let $emHtml = $inbox.find(`.id${emstr}`)
     if ($emHtml.length) {
         $emHtml.html(str)
     } else {
         $inbox.append(inhtml);
+
+        db.get('posts')
+            .find({ id: emstr })
+            .assign({ html: inhtml })
+            .write()
+
     };
 
     html = html.replace(/\s+/g, ' ');
@@ -501,13 +620,25 @@ function setMailBody(uid, text, file) {
     })
 }
 
+function emTostring(email) {
+    if (email) {
+        return email.replace('.', '_').replace('@', '_')
+    } else {
+        let email2 = settings.get('IMAP').Email
+        return email2.replace('.', '_').replace('@', '_')
+    }
 
-function setMailHeader(uid, headers,add) {
+}
+
+
+
+function setMailHeader(uid, headers, add, email) {
+
     /*
     JSON.stringify(from) == {"value":[{"address":"lagou@mail.lagoujobs.com","name":"拉勾网"}],"html":""
     */
 
-
+    let emstr = emTostring(email) + '_' + uid
     console.log(`setMailHeader-----------uid=` + uid)
     console.log("邮件主题: " + headers.get('subject'));
     console.log("发件人: " + headers.get('from').text);
@@ -535,7 +666,9 @@ function setMailHeader(uid, headers,add) {
     let subject = headers.get('subject')
     subject = getGBK32(subject)
 
-    let html = `<div class="list-emallDiv emuid${uid}" uid="${uid}">
+    let fromVal = headers.get('from').value
+
+    let html = `<div class="list-emallDiv id${emstr}" uid="${uid}" email="${email}">
     <div class="emallDivA jusCenter">
         <div class="fromImg">${fromImg}</div>
     </div>
@@ -561,27 +694,55 @@ function setMailHeader(uid, headers,add) {
 
 
     userlist.push({
+        email,
+        uid,
         toObj,
         from,
+        fromVal,
         date,
         subject,
         to,
-        setHtml: html
+        headHtml: html,
+        headers
     });
+
+
+
+    db.get('posts')
+        .push({
+            id: emstr,
+            email,
+            uid,
+            toObj,
+            from,
+            fromVal,
+            date,
+            subject,
+            to,
+            headHtml: html
+        }).set('user.' + emstr, email)
+        .write()
+
+
+    settings.set('userlist', userlist)
 
     emhead[uid] = html;
     settings.set('emhead', emhead)
-    let $uid = $inboxSection.find(`.emuid${uid}`);
+
+    let $uid = $inboxSection.find(`.id${emstr}`);
+    console.log($uid)
 
     if ($uid.length > 0) {
         $uid.html(html2)
     } else {
-        if(add){
+        if (add) {
             $sectionScrollDiv.append(html)
-        }else{
+        } else {
+            console.log(html)
+
             $sectionScrollDiv.prepend(html)
         }
-       
+
 
     };
 }
@@ -591,7 +752,7 @@ function sortEmail(html) {
 
 }
 
-function mailHtmlDecrypt(){
+function mailHtmlDecrypt() {
 
 }
 

@@ -14,9 +14,10 @@ $(function () {
     // })
 
     // 回复邮件
-    $('#sendEmail,#Forward').click(function () {
+    let $sectionScrollDiv = $('#section-scrollDiv')
+    $('#sendEmail,#Forward,#NewEmail').click(function () {
         
-        let uid = $(this).parent().attr('uid')
+        let uid =  settings.get('uid')
         settings.set('emuid', uid)
         let modalPath
         let rel = $(this).attr('rel') ||""
@@ -42,12 +43,15 @@ $(function () {
         })
         win.loadURL(modalPath)
 
-        let $em = $(`.emuid${uid}`)
+        let emstr = emTostring( settings.get('nowEmail'))
+        emstr = `.id${emstr}_${uid}`
+      
+        let $em =$sectionScrollDiv.find(emstr) 
         let to = $em.find('.to').text()
         let from =$em.find('.from').text()
         let subject =$em.find('.subject').text()
         let date =$em.find('.date').text()
-        let html = $(`.emHtml${uid}`).parent().html()
+        let html =$('#inbox-section').find(emstr).parent().html()
         //debugger;
         let obj = {
            to,
@@ -91,45 +95,45 @@ $(function () {
     })
 
 
-    $('#NewEmail').click(function () {
+    // $('#NewEmail').click(function () {
 
-        let uid = $(this).parent().attr('uid')
-        settings.set('uid', uid)
+    //     let uid = $(this).parent().attr('uid')
+    //     settings.set('uid', uid)
 
-        const modalPath = path.join('file://', __dirname, '../../html/windows/NewEmail.html?a=1&b=2')
+    //     const modalPath = path.join('file://', __dirname, '../../html/windows/NewEmail.html?a=1&b=2')
         
-        let win = new BrowserWindow({
-            width: 760,
-            height: 600,
-            frame: false,
-           // resizable: false,
-            webPreferences: {
-                nodeIntegration: true
-            }
-        })
+    //     let win = new BrowserWindow({
+    //         width: 760,
+    //         height: 600,
+    //         frame: false,
+    //        // resizable: false,
+    //         webPreferences: {
+    //             nodeIntegration: true
+    //         }
+    //     })
 
-        win.on('close', () => {
-            win = null
-        })
-        win.loadURL(modalPath)
-        let obj = {
-            a :1,
-            b:2,
-        }
-        obj = JSON.stringify(obj)
-        win.webContents.on('did-finish-load', function () {
-            win.webContents.send('NewEmail', obj);
-        });
+    //     win.on('close', () => {
+    //         win = null
+    //     })
+    //     win.loadURL(modalPath)
+    //     let obj = {
+    //         a :1,
+    //         b:2,
+    //     }
+    //     obj = JSON.stringify(obj)
+    //     win.webContents.on('did-finish-load', function () {
+    //         win.webContents.send('NewEmail', obj);
+    //     });
 
-        win.show()
-        //关掉窗口调试功能 写邮件
-        if(debug){
-            win.webContents.openDevTools();
-        }
+    //     win.show()
+    //     //关掉窗口调试功能 写邮件
+    //     if(debug){
+    //         win.webContents.openDevTools();
+    //     }
 
-        win.on('information-dialog-selection', () => {
-            win = null
-        })
+    //     win.on('information-dialog-selection', () => {
+    //         win = null
+    //     })
 
-    })
+    // })
 })

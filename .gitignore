@@ -4,3 +4,5 @@ npm-debug.log
 dist
 test.html
 *.htm
+email.json
+emConfige.json

@@ -565,17 +565,17 @@ function saveEmail(emObj) {
     let { Email, Password, host } = emObj
     let lastImap = settings.get('IMAP')
     if (!lastImap) {
-        getMail({ Email, Password, host }, null, null, 2);
+        getMail({ Email, Password, host,save:1 }, null, null, 2);
         //$('#setMailForm')[0].reset()  
 
     } else if (lastImap.Email !== Email) {
 
-        getMail({ Email, Password, host }, null, null, 2)
+        getMail({ Email, Password, host,save:1 }, null, null, 2)
         // $('#setMailForm')[0].reset()
 
     } else {
 
-        getMail({ Email, Password, host }, null, null, 2)
+        getMail({ Email, Password, host,save:1 }, null, null, 2)
         //alert('请忽重复配置邮箱')
         console.log('mailLoginBtn click,请忽重复配置邮箱')
     }

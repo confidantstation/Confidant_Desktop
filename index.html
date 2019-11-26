@@ -5,15 +5,9 @@
     <meta charset="UTF-8">
     <title>Confidant</title>
 </head>
-<link rel="stylesheet" href="assets/css/reset.css">
-<link rel="stylesheet" href="assets/css/login.css">
-<link rel="stylesheet" href="assets/css/index.css">
-<link href="assets/js/qeui/qeui.css" rel="stylesheet">
-<link rel="stylesheet" href="assets/js/vue/element/index.css">
-<link rel="import" href="html/email.html">
-<link rel="import" href="html/setEmail.html">
 
-<body>
+
+<body style="margin: 0;padding: 0;border: 0;outline: 0;">
     <div id='Main'>
         <div id="logBox" class="logBoxStyle">
             <header class="loginHeader">
@@ -105,7 +99,7 @@
                     </div>
                 </header>
                 <section>
-                    <ul class="nav">
+                    <ul class="nav" style="padding-left:0;">
                         <li><img src="assets/img/nav/navibar_me_email.png"> </li>
                         <li><img src="assets/img/nav/navibar_chats_unselected.png"> </li>
                         <li><img src="assets/img/nav/navibar_files_unselected.png"> </li>
@@ -119,12 +113,12 @@
             <div class="index">
                 <div id='new-emall'>
                     <header class="jusCenter">
-                        <div class="new-email" id='NewEmail'>
+                        <div class="new-email" id='NewEmail' rel='NewEmail'>
                             <img class="newTag" src="assets/img/email_icon_other_n.png"> New Email
                         </div>
                     </header>
                     <section>
-                        <ul class="emall-card" id='db_listEmail'>
+                        <ul class="emall-card" id='db_listEmail' style="padding-left:0;">
                             <!-- <li>
                                 <div class="spanA">
                                     <div class="centerDiv fromImg2" style="color: #fff;">
@@ -145,10 +139,10 @@
 
 
                         </ul>
-                        <ul class="emall-card">
+                        <ul class="emall-card" style="padding-left:0;">
                             <li>
                                 <div class="spanA">
-                                    <div class="centerDiv"><img class="newTag" src="assets/img/email_icon_addemail.png">
+                                    <div class="centerDiv"><img class="" src="assets/img/email_icon_addemail.png">
                                     </div>
                                 </div>
                                 <div class="spanB New-Account">New Account</div>
@@ -160,7 +154,7 @@
                         <ul class="emall-card emall-card2">
                             <li rel='Inbox'>
                                 <div class="spanA">
-                                    <div class="centerDiv"><img class="newTag"
+                                    <div class="centerDiv"><img class=""
                                             src="assets/img/newEmail/tabbar_inbox_selected.png">
                                     </div>
                                 </div>
@@ -169,7 +163,7 @@
                             </li>
                             <li rel='Node'>
                                 <div class="spanA">
-                                    <div class="centerDiv"><img class="newTag"
+                                    <div class="centerDiv"><img class=""
                                             src="assets/img/newEmail/tabbar_backups_selected.png">
                                     </div>
                                 </div>
@@ -178,7 +172,7 @@
                             </li>
                             <li rel='Starred'>
                                 <div class="spanA">
-                                    <div class="centerDiv"><img class="newTag"
+                                    <div class="centerDiv"><img class=""
                                             src="assets/img/newEmail/tabbar_attach_selected.png">
                                     </div>
                                 </div>
@@ -187,7 +181,7 @@
                             </li>
                             <li rel='Drafts'>
                                 <div class="spanA">
-                                    <div class="centerDiv"><img class="newTag"
+                                    <div class="centerDiv"><img class=""
                                             src="assets/img/newEmail/tabbar_drafts_selected.png">
                                     </div>
                                 </div>
@@ -196,7 +190,7 @@
                             </li>
                             <li rel='Sent'>
                                 <div class="spanA">
-                                    <div class="centerDiv"><img class="newTag"
+                                    <div class="centerDiv"><img class=""
                                             src="assets/img/newEmail/tabbar_sent_selected.png">
                                     </div>
                                 </div>
@@ -206,7 +200,7 @@
 
                             <li rel='Spam'>
                                 <div class="spanA">
-                                    <div class="centerDiv"><img class="newTag"
+                                    <div class="centerDiv"><img class=""
                                             src="assets/img/newEmail/tabbar_trash_selected.png">
                                     </div>
                                 </div>
@@ -215,7 +209,7 @@
                             </li>
                             <li rel='Trash'>
                                 <div class="spanA">
-                                    <div class="centerDiv"><img class="newTag"
+                                    <div class="centerDiv"><img class=""
                                             src="assets/img/newEmail/tabbar_deleted_selected.png">
                                     </div>
                                 </div>
@@ -326,10 +320,18 @@
     </div>
 
 </body>
+<link rel="stylesheet" href="assets/css/reset.css">
+<link rel="stylesheet" href="assets/css/login.css">
+<link rel="stylesheet" href="assets/css/index.css">
+<link href="assets/js/qeui/qeui.css" rel="stylesheet">
+<link rel="stylesheet" href="assets/js/vue/element/index.css">
+<link rel="import" href="html/email.html">
+<link rel="import" href="html/setEmail.html">
+
 <script>window.$ = window.jQuery = require('jquery'); require('./assets/js/imports');</script>
 <script src="assets/js/qeui/qeui.js"></script>
-<script src="assets/js/vue/vue.js"></script>
-<script src="assets/js/vue/element/index.js"></script>
+<!-- <script src="assets/js/vue/vue.js"></script>
+<script src="assets/js/vue/element/index.js"></script> -->
 <script src="assets/js/utils/lodash.min.js"></script>
 <script src='assets/js/utils/heartBeat.js'></script>
 <script src='assets/js/section/mailos.js'></script>
@@ -455,15 +457,26 @@
 
         })
 
+
+        // 邮箱切换 切换邮箱
         $('#db_listEmail').on('click', 'li', function () {
 
-
+           
             let obj = $(this).attr('data')
             obj = JSON.parse(obj)
             obj.nowEmail = obj.Email
-            //$('#section-scrollDiv').html('')
+            obj.tab = 1
 
-            getMail(obj, null, 10, 1)
+            settings.set('nowEmail',  obj.Email)
+            $('#db_listEmail').attr('now',  obj.Email)
+
+            console.log(settings.get('nowEmail'))
+
+            $('#section-scrollDiv').html('')
+            setTimeout(() => {
+                getMail(obj, null, 10, 1)
+            }, 100);
+           
         })
 
 

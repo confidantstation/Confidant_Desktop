@@ -26,7 +26,11 @@ settings.set('status', 0)
 settings.set('wsdata', 0)
 let testdata = settings.get('wsdata');
 console.log(testdata)
+//清除IMAP配置
 //settings.set('IMAP', "")
+
+//清除配置邮箱列表
+//settings.set('db_email',[])
 
 // settings.set('arr',[1,2,3,4,5,6])
 
@@ -36,7 +40,7 @@ console.log(testdata)
 
 // a1.push('jjjjj')
 // console.log(a1)
-
+console.log(settings.get('nowEmail'))
 
 $(function () {
     // 退出
@@ -601,8 +605,7 @@ $(function () {
                     remote.getCurrentWindow().setSize(1032, 600)
                     //remote.getCurrentWindow().maximize()
                     remote.getCurrentWindow().center()
-                  
-
+                    ws.close()
                 }
             }
 

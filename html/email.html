@@ -34,27 +34,21 @@
 
     </div>
     <script>
-
+      
         require('./app/windows/email-windows');
         let loading = false;
         function loadData() {
 
             setTimeout(function () {
                 $('#loading').hide();
-                getMail(null, 1);
+                getMail('pull', 3);
                 loading = false;
-            }, 2000)
+            }, 3000)
 
         }
+
+
         $(function () {
-
-            // let status = settings.get('status')
-            // if (status === 'loginHtml') {
-            //     getMail();
-            // } else if (status === 'setEmailHtml') {
-
-            // }
-
 
             $('.section-scroll').scroll(function () {
                 let range = 40;
@@ -79,9 +73,10 @@
             })
 
             //查看邮件
+            let inboxSectionDiv = $('#inbox-section')
             $(document).on('click', '.list-emallDiv', function () {
                 $(this).parent().find('.list-emallDivAdd').removeClass('list-emallDivAdd')
-               
+
                 $(this).addClass('list-emallDivAdd')
                 // let data = settings.get('wsdata') || 0
                 // let ws
@@ -115,21 +110,32 @@
                 //     // 关闭 websocket
                 //     console.log('ws onclose')
                 // };
+               
+                let emconfige = settings.get('mailConfigre')
+                
 
                 let uid = $(this).attr('uid')
                 console.log('list uid', uid)
-              
-                $('.inbox-emall footer').hide()
+                
+               
+                settings.set('uid',uid)
+                let emstr = emTostring( settings.get('nowEmail'))
+                emstr = `.id${emstr}_${uid}`
+                console.log('list emstr', emstr)
+                $('.inbox-emall footer').show()
                 $('.email-uid').hide()
-                $('.email-uid').each(function () {
-                    let id = $(this).attr('uid')
-                    if (id == uid) {
-                     
-                        $(this).show()
-                        $('.inbox-emall footer').show().attr('uid', uid)
-                        
-                    }
-                })
+                inboxSectionDiv.find(emstr).show().attr('emstr',emstr)
+              
+                console.log(inboxSectionDiv.find(emstr))
+                // $('.email-uid').each(function () {
+                //     let id = $(this).attr('uid')
+                //     if (id == uid) {
+
+                //         $(this).show()
+                //         $('.inbox-emall footer').show().attr('uid', uid)
+
+                //     }
+                // })
 
 
 
@@ -168,9 +174,10 @@
                 console.log(tag)
                 let conf = settings.get('IMAP')
                 let type = objcall(conf, 'obj')
+               
                 if (type) {
-                    conf.flags  = tag.toUpperCase()
-                    //$('#section-scrollDiv').html('')
+                    conf.flags = tag.toUpperCase()
+                    $('#section-scrollDiv').html('')
                     getMail(conf, null, 10, 1)
                 }
                 console.log(conf)

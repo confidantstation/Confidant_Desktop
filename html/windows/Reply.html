@@ -1,7 +1,59 @@
 <link rel="stylesheet" href="../../assets/css/reset.css">
+
+
+<div id='emailSendPage'>
+  <div class="emailSendPageA">
+    <header>
+      <div class="dot">
+        <span class="dotA"></span>
+        <span class="dotB"></span>
+        <span class="dotC"></span>
+      </div>
+      <button class="SaveDraftBtn">Save Draft</button><button class="SendBtn" id='SendBtn'>Send</button>
+    </header>
+    <section>
+      <p><label class="emailTitleLabel"><b>To</b><input type="text" id='To'></label></p>
+      <p><label class="emailTitleLabel"><b>Cc</b><input type="text" id='Cc'></label></p>
+      <p><label class="emailTitleLabel"><b>Bcc</b><input type="text" id='Bcc'></label></p>
+      <p><label class="emailTitleLabel"><b>Subject</b><input type="text" id='Subject'></label></p>
+    </section>
+    <article class="nui-scroll">
+
+      <div id='content' contenteditable="true"></div>
+      <div id='content2' contenteditable="true"></div>
+
+    </article>
+  </div>
+  <div class="emailSendPageB">
+    <aside>
+      <div class="headerTitle">Contacts</div>
+      <div class="list-search"><input type='text' placeholder="Search" /></div>
+      <div class="sideTitle">
+        Recent contacts
+      </div>
+      <div class="userlistDiv nui-scroll">
+        <!-- <div class="userlist">
+          <div class="userlistA">
+          </div>
+          <div class="userlistB">
+            <p>Abby Moran</p>
+            <p class="font12">user@example.com</p>
+          </div>
+        </div> -->
+      </div>
+
+    </aside>
+  </div>
+
+
+
+</div>
+
 <style>
   body {
     overflow: hidden;
+    padding: 0;
+    margin: 0;
   }
 
   .nui-scroll::-webkit-scrollbar {
@@ -102,9 +154,9 @@
     height: 40px;
     box-shadow: 0px 1px 0px 0px rgba(230, 230, 230, 1);
     border-bottom: 1px solid #ccc;
-    margin:0;
+    margin: 0;
     margin-left: 20px;
-    
+
   }
 
   .emailTitleLabel input {
@@ -333,54 +385,6 @@
     height: 400px;
   }
 </style>
-
-<div id='emailSendPage'>
-  <div class="emailSendPageA">
-    <header>
-      <div class="dot">
-        <span class="dotA"></span>
-        <span class="dotB"></span>
-        <span class="dotC"></span>
-      </div>
-      <button class="SaveDraftBtn">Save Draft</button><button class="SendBtn" id='SendBtn'>Send</button>
-    </header>
-    <section>
-      <p><label class="emailTitleLabel"><b>To</b><input type="text" id='To'></label></p>
-      <p><label class="emailTitleLabel"><b>Cc</b><input type="text" id='Cc'></label></p>
-      <p><label class="emailTitleLabel"><b>Bcc</b><input type="text" id='Bcc'></label></p>
-      <p><label class="emailTitleLabel"><b>Subject</b><input type="text" id='Subject'></label></p>
-    </section>
-    <article class="nui-scroll">
-
-      <div id='content' contenteditable="true"></div>
-      <div id='content2' contenteditable="true"></div>
-
-    </article>
-  </div>
-  <div class="emailSendPageB">
-    <aside>
-      <div class="headerTitle">Contacts</div>
-      <div class="list-search"><input type='text' placeholder="Search" /></div>
-      <div class="sideTitle">
-        Recent contacts
-      </div>
-      <div class="userlistDiv nui-scroll">
-        <!-- <div class="userlist">
-          <div class="userlistA">
-          </div>
-          <div class="userlistB">
-            <p>Abby Moran</p>
-            <p class="font12">user@example.com</p>
-          </div>
-        </div> -->
-      </div>
-
-    </aside>
-  </div>
-
-
-
-</div>
 <script>window.$ = window.jQuery = require('jquery');</script>
 <script src="../../assets/js/utils/lodash.min.js"></script>
 <script src='../../assets/js/utils/base.js'></script>
@@ -392,52 +396,63 @@
     var obj = {};
     // 如果没有传参，返回一个空对象
     if (!queryString) {
-        return obj;
+      return obj;
     }
     // stuff after # is not part of query string, so get rid of it
     queryString = queryString.split('#')[0];
     // 将参数分成数组
     var arr = queryString.split('&');
     for (var i = 0; i < arr.length; i++) {
-        // 分离成key:value的形式
-        var a = arr[i].split('=');
-        // 将undefined标记为true
-        var paramName = a[0];
-        var paramValue = typeof (a[1]) === 'undefined' ? true : a[1];
-        // 如果调用对象时要求大小写区分，可删除这两行代码
-        paramName = paramName.toLowerCase();
-        if (typeof paramValue === 'string') paramValue = paramValue.toLowerCase();
-        // 如果paramName以方括号结束, e.g. colors[] or colors[2]
-        if (paramName.match(/\[(\d+)?\]$/)) {
-            // 如果paramName不存在，则创建key
-            var key = paramName.replace(/\[(\d+)?\]/, '');
-            if (!obj[key]) obj[key] = [];
-            // 如果是索引数组 e.g. colors[2]
-            if (paramName.match(/\[\d+\]$/)) {
-                // 获取索引值并在对应的位置添加值
-                var index = /\[(\d+)\]/.exec(paramName)[1];
-                obj[key][index] = paramValue;
-            } else {
-                // 如果是其它的类型，也放到数组中
-                obj[key].push(paramValue);
-            }
+      // 分离成key:value的形式
+      var a = arr[i].split('=');
+      // 将undefined标记为true
+      var paramName = a[0];
+      var paramValue = typeof (a[1]) === 'undefined' ? true : a[1];
+      // 如果调用对象时要求大小写区分，可删除这两行代码
+      paramName = paramName.toLowerCase();
+      if (typeof paramValue === 'string') paramValue = paramValue.toLowerCase();
+      // 如果paramName以方括号结束, e.g. colors[] or colors[2]
+      if (paramName.match(/\[(\d+)?\]$/)) {
+        // 如果paramName不存在，则创建key
+        var key = paramName.replace(/\[(\d+)?\]/, '');
+        if (!obj[key]) obj[key] = [];
+        // 如果是索引数组 e.g. colors[2]
+        if (paramName.match(/\[\d+\]$/)) {
+          // 获取索引值并在对应的位置添加值
+          var index = /\[(\d+)\]/.exec(paramName)[1];
+          obj[key][index] = paramValue;
         } else {
-            // 处理字符串类型
-            if (!obj[paramName]) {
-                // 如果如果paramName不存在，则创建对象的属性
-                obj[paramName] = paramValue;
-            } else if (obj[paramName] && typeof obj[paramName] === 'string') {
-                // 如果属性存在，并且是个字符串，那么就转换为数组
-                obj[paramName] = [obj[paramName]];
-                obj[paramName].push(paramValue);
-            } else {
-                // 如果是其它的类型，还是往数组里丢
-                obj[paramName].push(paramValue);
-            }
+          // 如果是其它的类型，也放到数组中
+          obj[key].push(paramValue);
         }
+      } else {
+        // 处理字符串类型
+        if (!obj[paramName]) {
+          // 如果如果paramName不存在，则创建对象的属性
+          obj[paramName] = paramValue;
+        } else if (obj[paramName] && typeof obj[paramName] === 'string') {
+          // 如果属性存在，并且是个字符串，那么就转换为数组
+          obj[paramName] = [obj[paramName]];
+          obj[paramName].push(paramValue);
+        } else {
+          // 如果是其它的类型，还是往数组里丢
+          obj[paramName].push(paramValue);
+        }
+      }
     }
     return obj;
-}
+  }
+
+  // const low = require('lowdb')
+  // const FileSync = require('lowdb/adapters/FileSync')
+  // const adapter = new FileSync('email.json')
+  // const db = low(adapter)
+  // let dbtest = db.get('posts').value()
+
+  // console.log(dbtest)
+
+
+
   const {
     ipcRenderer
   } = require('electron')
@@ -445,7 +460,7 @@
   const settings = require('electron-settings');
   let AES = new aesjs();
   let userlist;
-
+  let ehead = []
   function notif(obj) {
     const notificaton = {
       title: obj.title || '错误提示',
@@ -455,6 +470,20 @@
     return log
   }
 
+  function nameToEmail(obj) {
+
+    let result
+    for (let i in obj) {
+
+      result = _.find(userlist, { from: obj[i] });
+      if (result) {
+        obj[i] = result['fromVal'][i]['address']
+      }
+    }
+    console.log(obj)
+    return obj
+  }
+
   $(function () {
 
     $('.dotA').click(function () {
@@ -462,21 +491,24 @@
     })
 
     let ck = "t+INmZg96TCvt7w1Rt9Q+iToWFwdT2hCq6ck1sUwxR4="
-    
+
     ipcRenderer.on('Reply', function (event, message) { // 监听父页面定义的端口
       console.table(message)
       let contentHtml = JSON.parse(message)
       console.table(contentHtml)
-      $('#content2').html(contentHtml.html)
 
-      console.log()
-      
-      if(contentHtml.rel =='Forward'){
+
+      if (contentHtml.rel == 'Forward') {
         $('#To').val('')
-      }else{
-        $('#To').val(contentHtml.to)
+        $('#content2').html(contentHtml.html)
+      } else if (contentHtml.rel == 'Reply') {
+        $('#To').val(contentHtml.from)
+        $('#content2').html(contentHtml.html)
+      } else {
+        $('#To').val('')
+        $('#content2').html('')
       }
-      
+
 
       $('#Subject').val(contentHtml.subject)
 
@@ -492,8 +524,14 @@
         </div>`
       if ($.isArray(userlist)) {
         let str = ""
-
+        let s1 = []
         userlist.map((x) => {
+          let header = x.toObj
+
+          let s3 = x.toObj.value[0]['name']
+          s1.push(x.toObj.value)
+          console.log(s3)
+
           let to1 = x.to
           //to1 = to1.split(",")[0]
           to1 = to1.text || ""
@@ -507,6 +545,17 @@
             </div>
           </div>`
           str = str + html
+        });
+        console.log(s1)
+        s1.map((x) => {
+          console.log(x)
+
+          for (let i in x) {
+            let str = x[i]
+            console.log(str.name)
+            console.log(str.address)
+            ehead.push(str)
+          }
         })
         $('.userlistDiv').html(str)
       }
@@ -548,15 +597,15 @@
         console.log('wsdata 不存在！')
       }
 
-     
+
       let to = $('#To').val()
       to = to.split(',')
       let subject = $('#Subject').val()
       let cc = $('#Cc').val()
       let bcc = $('#Bcc').val()
       let html = $('#content').html()
-      html = html +$('#content2').html()
-      console.log('html',html)
+      html = html + $('#content2').html()
+      console.log('html', html)
       let IMAP = settings.get('IMAP')
       const setIMAP = {
         Email,
@@ -590,7 +639,7 @@
         html,
       };
 
-      
+
       let toArr = to;
       if (cc) {
         mailOptions.cc = cc
@@ -604,6 +653,8 @@
       console.log(mailOptions)
 
       ws.onopen = function () {
+        debugger
+        toArr = nameToEmail(toArr)
         sendMail(toArr, ws)
       }
       ws.onmessage = function (evt) {
@@ -642,7 +693,7 @@
               mailOptions.html = html
             }
 
-           
+
             transporter.sendMail(mailOptions, (error, info) => {
 
               if (error) {
@@ -675,7 +726,7 @@
 
 
   function mailNameArraytoBase64(to) {
-
+    debugger
     if (Object.prototype.toString.call(to) === '[object Array]') {
       let tob = to.map(function (v) {
         return window.btoa(v)
