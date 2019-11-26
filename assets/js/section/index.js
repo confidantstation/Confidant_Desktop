@@ -41,19 +41,19 @@ console.log(testdata)
 // a1.push('jjjjj')
 // console.log(a1)
 console.log(settings.get('nowEmail'))
-
+let initAesjs = new aesjs()
+initAesjs.initSodium() 
 $(function () {
     // 退出
     $('.footerQuit').click(function () {
         window.close()
     });
-
-
+   
     //导入账户 存储功能
+    
     if (settings.get('QRcode')) {
 
-        let initAesjs = new aesjs()
-        initAesjs.initSodium() // 初始化  aesjs
+       // 初始化  aesjs
 
         let getqrc = settings.get('QRcode')
         console.log(getqrc)
@@ -179,7 +179,7 @@ $(function () {
             if (CircleQRcode[0] == 'type_1') {
 
                 let ASE = new aesjs(CircleQRcode[1])
-                ASE.initSodium()
+                //ASE.initSodium()
                 let rd = ASE.getaseid()
 
                 console.log('181 getaseid', rd)
@@ -381,7 +381,7 @@ $(function () {
                     if (CircleQRcode[0] == 'type_1') {
 
                         let ASE = new aesjs(CircleQRcode[1])
-                        ASE.initSodium()
+                        //ASE.initSodium()
                         let rd = ASE.getaseid()
 
                         console.log('206 getaseid', rd)

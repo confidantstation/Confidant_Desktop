@@ -137,6 +137,7 @@ class aesjs {
         return ws
     }
     async initSodium() {
+       
         if (!_sodium) {
             await _sodium.ready;
         }
@@ -148,6 +149,7 @@ class aesjs {
         @privateKey 私钥
         @return timestamp的签名
         */
+        
         const sodium = _sodium;
         let tp = sodium.crypto_sign(sodium.from_string(`${timestamp}`), privateKey)
         return tp

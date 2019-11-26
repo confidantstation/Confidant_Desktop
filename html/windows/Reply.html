@@ -459,7 +459,8 @@
   const nodemailer = require('nodemailer')
   const settings = require('electron-settings');
   let AES = new aesjs();
-  let userlist;
+  let userlist= settings.get('userlist')
+  console.log(userlist)
   let ehead = []
   function notif(obj) {
     const notificaton = {
@@ -512,8 +513,7 @@
 
       $('#Subject').val(contentHtml.subject)
 
-      userlist = settings.get('userlist')
-      console.log(userlist)
+    
       let html = `<div class="userlist">
           <div class="userlistA">
           </div>
