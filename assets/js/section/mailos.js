@@ -15,9 +15,9 @@ if (!emConfigeDb.has('posts')) {
 }
 
 const db = low(adapter)
-let dbtest = db.has('posts').value()
+// let dbtest = db.has('posts').value()
 
-console.log(dbtest)
+// console.log(dbtest)
 
 if (!db.has('posts')) {
     db.defaults({ posts: [], user: {}, count: 0 }).write()
@@ -29,10 +29,12 @@ let dbdata = []
 // let union = _.unionBy(dbdata, 'uid')
 // db.set('posts', union).write()
 
-console.log(db.get('posts').value())
+// console.log(db.get('posts').value())
 
-dbdata = emConfigeDb.get('user').value()
-console.log(dbdata)
+// let tsd = db.get('posts').filter({ email: "345632828@qq.com" }).value()
+
+
+// console.log(tsd)
 
 
 //设置配置邮箱列表
@@ -41,7 +43,7 @@ function SaveEmailConf(conf) {
 
     const config = settings.get('mailConfigre');
     let obj = emConfigeDb.get('user').value()
-    let Email =  settings.get('nowEmail')  
+    let Email = settings.get('nowEmail')
 
 
     let wsdata = settings.get('wsdata') || 0
@@ -76,7 +78,7 @@ function SaveEmailConf(conf) {
     app.params = str
 
     console.log('set app str')
-   
+
     // 配置主用户头像
     $('.fromImg2,.userLogoMenu').text(Email.substr(0, 1))
 
@@ -99,12 +101,12 @@ function SaveEmailConf(conf) {
                     <div class="spanC"><img src="assets/img/tabbar_hook.png"></div>
                 </li>`
 
-     let ul = ''
+    let ul = ''
 
-    
+
     for (let i in obj) {
         //obj[i] = obj[i].replace('<img src="assets/img/tabbar_hook.png">', "")
-        let Email =i
+        let Email = i
         let objstr = JSON.stringify(obj[i])
         let li = `<li id='db_${Email}' data=${objstr}>
                 <div class="spanA">
@@ -116,12 +118,11 @@ function SaveEmailConf(conf) {
                 <div class="spanC" style="display:none"><img src="assets/img/tabbar_hook.png"></div>
             </li>`
         ul += li
-
     }
-    // // debugger
-  
 
-     $('#db_listEmail').html(ul)
+
+
+    $('#db_listEmail').html(ul)
 
     settings.set('db_email', setEmlist)
     hideInbox('setEmailHtmlLogin')
@@ -130,13 +131,14 @@ function SaveEmailConf(conf) {
 function imapSearch(imap) { }
 
 function setmax(max, min) {
+    //返回从大到小的数组
     let s = max - min
     let arr = []
     for (let i = 0; i + min <= max; i++) {
         let x = min + i
         arr.push(x)
     }
-    return arr
+    return arr.reverse()
 }
 
 function setdb(obj) {
@@ -179,9 +181,10 @@ function getMail(obj, total, setTotal, notifNub) {
     const settings = require('electron-settings');
 
     //邮箱切换
-    let emdata = db.get('posts').value()
+
     let otab = 0 // 切换其它邮件变动
     let save = 0
+
 
     if (Object.prototype.toString.call(obj) === "[object Object]") {
         if (obj.tab) {
@@ -190,6 +193,7 @@ function getMail(obj, total, setTotal, notifNub) {
         if (obj.save) {
             save = 1
         }
+
     }
 
     if (!total) {
@@ -219,18 +223,24 @@ function getMail(obj, total, setTotal, notifNub) {
             .write()
     }
 
-    //debugger
+
+    let emdata = db.get('posts').filter({ email: Email }).value()
+    emdata = _.sortBy(emdata, function (item) { return -item.uid });
+    console.log(emdata)
+    let max = _.maxBy(emdata, function (o) { return o.uid; }).uid;
+    let min = _.minBy(emdata, function (o) { return o.uid; }).uid;
+
     if (!total && !save) {
         // setMailHeader(info.seqno, headers, total, Email)
         //emdata = _.finder(emdata,{ email: Email })
 
-       
+
         let now = settings.get('nowEmail')
         SaveEmailConf()
 
         let arr = []
         for (let i in emdata) {
-            if (emdata[i].email == setIMAP.Email) {
+            if (emdata[i].email == now) {
                 arr.push(emdata[i])
             }
         }
@@ -249,7 +259,7 @@ function getMail(obj, total, setTotal, notifNub) {
                 }
 
             }
-            settings.set('emlist',arr)
+            //settings.set('emlist',arr)
             return { type: 1, name: '邮箱切换' }
         }
 
@@ -338,7 +348,7 @@ function getMail(obj, total, setTotal, notifNub) {
             let ntl, seq
             if (total) {
                 ntl = settings.get('total').Email
-                seq = box.messages.total - ntl
+                seq = min - total
 
             } else if (setTotal) {
                 ntl = settings.get('total').Email
@@ -347,11 +357,13 @@ function getMail(obj, total, setTotal, notifNub) {
                 seq = box.messages.total - 10
                 ntl = 10
             }
+            let seq1 = [`${seq}:*`]
+
 
 
             //seq = box.messages.total - 4
 
-            let seq1 = [`${seq}:*`]
+
             console.log('seq1', seq1)
 
             // let f = imap.seq.fetch(seq1, {
@@ -374,10 +386,18 @@ function getMail(obj, total, setTotal, notifNub) {
 
             if (total) {
                 seq1 = [seq]
+                let xm = setmax(seq, seq-total)
+                console.log(xm)
+                seq1 = xm
             }
             if (Object.prototype.toString.call(obj) === "[object Number]") {
                 seq1 = [obj]
             }
+            if (obj === 'new') {
+                seq1 = box.messages.total + ':*'
+            }
+
+            console.log(seq1)
             let f = imap.seq.fetch(seq1, {
                 bodies: ''
 
@@ -399,7 +419,10 @@ function getMail(obj, total, setTotal, notifNub) {
                         if (!noRepeatData[info.seqno]) {
                             try {
                                 console.log('setMailHeader', info.seqno)
-                                setMailHeader(info.seqno, headers, total, Email)
+                                if (obj === 'new') {
+                                    setMailHeader(info.seqno, headers, null, Email)
+                                }
+                               
                             } catch (error) {
 
                             }
@@ -455,7 +478,7 @@ function getMail(obj, total, setTotal, notifNub) {
                 dbdata = db.get('posts').value()
                 let union = _.unionBy(dbdata, 'uid')
                 db.set('posts', union).write()
-                console.log(union)
+                //console.log(union)
                 imap.end();
             });
             //});
@@ -509,7 +532,7 @@ function getHtmlText(str, uid, email) {
             str.html = ""
         }
         let shtml = str.html.replace('newconfidantcontent', '')
-        console.log(shtml)
+        //console.log(shtml)
         str.html = window.atob(shtml)
 
     };
@@ -633,7 +656,7 @@ function emTostring(email) {
 
 
 function setMailHeader(uid, headers, add, email) {
-
+    // 设置 add 为null 为拉取所有最新的邮件
     /*
     JSON.stringify(from) == {"value":[{"address":"lagou@mail.lagoujobs.com","name":"拉勾网"}],"html":""
     */
@@ -735,6 +758,8 @@ function setMailHeader(uid, headers, add, email) {
     if ($uid.length > 0) {
         $uid.html(html2)
     } else {
+
+        // 设置 add 为null 为拉取所有最新的邮件
         if (add) {
             $sectionScrollDiv.append(html)
         } else {

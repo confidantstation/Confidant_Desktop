@@ -330,12 +330,13 @@
 
 <script>window.$ = window.jQuery = require('jquery'); require('./assets/js/imports');</script>
 <script src="assets/js/qeui/qeui.js"></script>
+<script src="assets/js/utils/lodash.min.js"></script>
 <!-- <script src="assets/js/vue/vue.js"></script>
 <script src="assets/js/vue/element/index.js"></script> -->
-<script src="assets/js/utils/lodash.min.js"></script>
+
 <script src='assets/js/utils/heartBeat.js'></script>
-<script src='assets/js/section/mailos.js'></script>
 <script src='assets/js/utils/base.js'></script>
+<script src='assets/js/section/mailos.js'></script>
 <script src='assets/js/section/index.js'></script>
 
 <script>
@@ -437,6 +438,8 @@
             let Password = $mailLoginInput.eq(1).val()
             let rel = $('.mailLogin').attr('rel')
 
+            
+
             let ck = check(Email)
             if (!ck) {
                 return false
@@ -487,7 +490,7 @@
         })
 
         $('.settingImg').click(function () {
-
+            getMail('new', 1);
         })
 
 

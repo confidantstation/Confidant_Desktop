@@ -51,7 +51,7 @@ $(function () {
         let from =$em.find('.from').text()
         let subject =$em.find('.subject').text()
         let date =$em.find('.date').text()
-        let html =$('#inbox-section').find(emstr).parent().html()
+        let html =$('#inbox-section').find(emstr).html()
         //debugger;
         let obj = {
            to,
