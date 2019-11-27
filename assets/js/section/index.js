@@ -282,6 +282,8 @@ $(function () {
                             if (data.params.RetCode === 0) {
                                 let datas = data.params
 
+                                //获得操作系统名称
+                                let Termial = OSnow().value
                                 let str1 = {
                                     Action: "Login",
                                     RouteId: datas.RouteId,
@@ -290,7 +292,8 @@ $(function () {
                                     RouterName: datas.RouterName,
                                     Sign: 1,
                                     DataFileVersion: 6,
-                                    NickName: datas.NickName
+                                    NickName: datas.NickName,
+                                    Termial
                                 }
                                 let circle1 = {
                                     appid: 'MIFI',

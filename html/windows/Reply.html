@@ -499,19 +499,22 @@
       console.table(contentHtml)
 
 
+      
       if (contentHtml.rel == 'Forward') {
         $('#To').val('')
         $('#content2').html(contentHtml.html)
+        $('#Subject').val(contentHtml.subject)
       } else if (contentHtml.rel == 'Reply') {
         $('#To').val(contentHtml.from)
         $('#content2').html(contentHtml.html)
+        $('#Subject').val(contentHtml.subject)
       } else {
         $('#To').val('')
         $('#content2').html('')
       }
 
 
-      $('#Subject').val(contentHtml.subject)
+     
 
     
       let html = `<div class="userlist">

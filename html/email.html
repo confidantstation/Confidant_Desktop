@@ -37,11 +37,18 @@
       
         require('./app/windows/email-windows');
         let loading = false;
-        function loadData() {
+        let loadingTop = 0
+        function loadData(k) {
 
             setTimeout(function () {
                 $('#loading').hide();
-                getMail('pull', 3);
+                if(k =='new'){
+                    //拉取所有最新邮件第二个参数必须传1
+                    getMail('new', 1);
+                }else{
+                    getMail('pull', 3);
+                }
+               
                 loading = false;
             }, 3000)
 
@@ -70,6 +77,14 @@
                 }
                 console.log($('.section-scroll').height())
                 console.log($(this).scrollTop())
+                if($(this).scrollTop()===0){
+                    console.log('已经到顶了')
+                    loadingTop++
+                    if(loadingTop>2){
+                        console.log('可以拉了')
+                        loadData('new');
+                    }
+                }
             })
 
             //查看邮件

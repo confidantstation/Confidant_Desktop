@@ -103,7 +103,6 @@ function SaveEmailConf(conf) {
 
     let ul = ''
 
-
     for (let i in obj) {
         //obj[i] = obj[i].replace('<img src="assets/img/tabbar_hook.png">', "")
         let Email = i
@@ -119,8 +118,6 @@ function SaveEmailConf(conf) {
             </li>`
         ul += li
     }
-
-
 
     $('#db_listEmail').html(ul)
 
@@ -162,7 +159,7 @@ let seps = []
 
 
 function getMail(obj, total, setTotal, notifNub) {
-
+   
     /**
      * getMail, returning null.
      *
@@ -222,40 +219,30 @@ function getMail(obj, total, setTotal, notifNub) {
         emConfigeDb.set(`user.${emTostring(Email)}`, setIMAP)
             .write()
     }
-
-
-    let emdata = db.get('posts').filter({ email: Email }).value()
+    let now = settings.get('nowEmail')
+  
+    let emdata = db.get('posts').filter({ email: ( now ||setIMAP.Email) }).value()
     emdata = _.sortBy(emdata, function (item) { return -item.uid });
     console.log(emdata)
     let max = _.maxBy(emdata, function (o) { return o.uid; }).uid;
     let min = _.minBy(emdata, function (o) { return o.uid; }).uid;
 
     if (!total && !save) {
-        // setMailHeader(info.seqno, headers, total, Email)
-        //emdata = _.finder(emdata,{ email: Email })
-
-
-        let now = settings.get('nowEmail')
+     
         SaveEmailConf()
+     
+        if (emdata) {
+            for (let i in emdata) {
+                let d = emdata[i]
 
-        let arr = []
-        for (let i in emdata) {
-            if (emdata[i].email == now) {
-                arr.push(emdata[i])
-            }
-        }
-        if (arr) {
-            for (let i in arr) {
-                let d = arr[i]
-
-                let type = $inbox.find('.id' + d.id)
+                //let type = $inbox.find('.id' + d.id)
                 if ($inbox.find('.id' + d.id).length == 0) {
-                    $inbox.append(d.html);
+                    $inbox.append(d.html||"");
                 }
-                let type2 = $inboxSection.find('.id' + d.id)
+                //let type2 = $inboxSection.find('.id' + d.id)
                 if ($sectionScrollDiv.find('.id' + d.id).length == 0) {
 
-                    $sectionScrollDiv.append(d.headHtml)
+                    $sectionScrollDiv.append(d.headHtml||"")
                 }
 
             }
@@ -286,7 +273,7 @@ function getMail(obj, total, setTotal, notifNub) {
 
 
     imap.once('ready', function () {
-
+        
         //保存配置邮箱参数
         if (notifNub == 1) {
             const log1 = notif({
@@ -389,12 +376,19 @@ function getMail(obj, total, setTotal, notifNub) {
                 let xm = setmax(seq, seq-total)
                 console.log(xm)
                 seq1 = xm
+                // if(box.messages.total<=max){
+                //     return false
+                // }
             }
             if (Object.prototype.toString.call(obj) === "[object Number]") {
                 seq1 = [obj]
             }
             if (obj === 'new') {
                 seq1 = box.messages.total + ':*'
+                if(box.messages.total<=max){
+                    imap.end();
+                    return false
+                }
             }
 
             console.log(seq1)
@@ -421,6 +415,8 @@ function getMail(obj, total, setTotal, notifNub) {
                                 console.log('setMailHeader', info.seqno)
                                 if (obj === 'new') {
                                     setMailHeader(info.seqno, headers, null, Email)
+                                }else{
+                                    setMailHeader(info.seqno, headers, total, Email)
                                 }
                                
                             } catch (error) {
@@ -503,9 +499,6 @@ function getMail(obj, total, setTotal, notifNub) {
 
     imap.connect();
 }
-
-
-
 
 
 //控制邮箱显示，及以取内容前32个字符 存储邮件

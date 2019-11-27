@@ -534,7 +534,8 @@ function hideInbox(id) {
         settings.set('status', 'loginHtml')
         $('#logBoxC').css({'display':'flex'})
         $(`#${id},#logBoxC,#emailHtml,#new-emall`).show()
-        getMail();
+        let obj = {tab:1}
+        getMail(obj, null, 10, 1)
 
     } else if (id === 'setEmailHtmlLogin') {
         settings.set('status', 'setEmailHtmlLogin')
@@ -584,6 +585,29 @@ function saveEmail(emObj) {
     }
 
 }
+
+
+//判断系统类型
+function OSnow(){
+    var agent = navigator.userAgent.toLowerCase();
+    var isMac = /macintosh|mac os x/i.test(navigator.userAgent);
+    if (agent.indexOf("win32") >= 0 || agent.indexOf("wow32") >= 0) {
+        //your code
+     
+        return {name:'windows',value:11}
+    }
+    if (agent.indexOf("win64") >= 0 || agent.indexOf("wow64") >= 0) {
+        //your code
+       
+        return {name:'windows',value:11}
+    }
+    if(isMac){
+        //your code
+        return {name:'mac',value:13}
+    }
+    return {name:'linux',value:12}
+}
+
 
 
 
